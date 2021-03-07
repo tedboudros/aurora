@@ -60,8 +60,6 @@ int main(int argc, char* args[]) {
 			accumulator -= deltaTime;
 		}
 
-		std::cout << utils::hireTimeInSeconds() << std::endl;
-
 		window.clear();
 
 		for(Entity& game : games) {
