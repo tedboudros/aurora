@@ -15,7 +15,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.1", 1600, 900);
+	RenderWindow window("Aurora v0.0.2", 1600, 900);
 	int windowRefreshRate = window.getRefreshRate();
 
 	std::cout << "Window refresh rate: " << windowRefreshRate << std::endl;
@@ -34,10 +34,11 @@ int main(int argc, char* args[]) {
 	bool isGameRunning = true;
 	SDL_Event event;
 
+/*
 	const float deltaTime = 0.01f;
 	float accumulator = 0.0f;
 	float currentTime = utils::hireTimeInSeconds();
-
+*/
 	GamepadDirectionEvent gamepadEvents;
 
 	int lastLeftRightAxisValue = 0;
@@ -45,16 +46,14 @@ int main(int argc, char* args[]) {
 
 	// Game loop:
 	while(isGameRunning) {
-
+/*
 		int startTicks = SDL_GetTicks();
-
 		float newTime = utils::hireTimeInSeconds();
 		float frameTime = newTime - currentTime;
 		currentTime = newTime;
-
 		accumulator += frameTime;
-
-		while(accumulator >= deltaTime) {
+*/
+		//while(accumulator >= deltaTime) {
 			// SDL Events:
 			while(SDL_PollEvent(&event)){
 				switch(event.type) {
@@ -93,9 +92,10 @@ int main(int argc, char* args[]) {
 			}
 
 
-			accumulator -= deltaTime;
-		}
+		//	accumulator -= deltaTime;
+		//}
 
+		// Actual Rendering
 		window.clear();
 
 		for(Entity& game : games) {
@@ -103,13 +103,12 @@ int main(int argc, char* args[]) {
 		}
 
 		window.display();
-
+ /*
 		int frameTicks = SDL_GetTicks() - startTicks;
-
 		if(frameTicks < 1000 / window.getRefreshRate()) {
 			SDL_Delay(1000 / window.getRefreshRate() - frameTicks);
 		}
-
+*/
 	}
 
 
