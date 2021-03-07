@@ -3,6 +3,10 @@
 	{
 		"selected_items":
 		[
+			[
+				"game",
+				"gameBorder"
+			]
 		]
 	},
 	"build_system": "",
@@ -37,6 +41,8 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Ted/Documents/GitHub/aurora/aurora.sublime-project",
+		"/C/Users/Ted/Documents/GitHub/aurora/main.o"
 	],
 	"find":
 	{
@@ -54,6 +60,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"float",
+			"y",
+			"}",
+			"SDL_RENDERER_ACCELERATED",
+			");\n",
 			">"
 		],
 		"highlight": true,
@@ -102,7 +113,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 133.0
+		"height": 153.0
 	},
 	"output.find_results":
 	{

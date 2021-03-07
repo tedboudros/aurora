@@ -7,9 +7,10 @@
 #include "Entity.hpp"
 #include "Math.hpp"
 #include "Utils.hpp"
+#include "Gamepad/GamepadDirectionEvent.hpp"
 
 int main(int argc, char* args[]) {
-	if (SDL_Init(SDL_INIT_VIDEO) > 0) 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
 		std::cout << "ERROR: SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << std::endl;
 	if (!(IMG_Init(IMG_INIT_PNG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
@@ -37,6 +38,11 @@ int main(int argc, char* args[]) {
 	float accumulator = 0.0f;
 	float currentTime = utils::hireTimeInSeconds();
 
+	GamepadDirectionEvent gamepadEvents;
+
+	int lastLeftRightAxisValue = 0;
+	const int axisThreshold = 20000;
+
 	// Game loop:
 	while(isGameRunning) {
 
@@ -51,8 +57,38 @@ int main(int argc, char* args[]) {
 		while(accumulator >= deltaTime) {
 			// SDL Events:
 			while(SDL_PollEvent(&event)){
-				if(event.type == SDL_QUIT){
-					isGameRunning = false;
+				switch(event.type) {
+					case SDL_QUIT:
+						isGameRunning = false;
+						break;
+
+					case SDL_JOYAXISMOTION:
+						if (( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 )) {
+							if( event.jaxis.axis == 0) {
+						        // Left-right movement code goes here
+						
+						    	if(lastLeftRightAxisValue <= axisThreshold && event.jaxis.value > axisThreshold){
+						    		// Right In
+						    		std::cout << "Right In" << std::endl;
+						    	}
+						    	if(lastLeftRightAxisValue > axisThreshold && event.jaxis.value <= axisThreshold){
+						    		// Right Out
+						    		std::cout << "Right Out" << std::endl;
+						    	}
+
+						    	if(lastLeftRightAxisValue > -axisThreshold && event.jaxis.value <= -axisThreshold){
+						    		// Left Out
+						    		std::cout << "Left In" << std::endl;
+						    	}
+						    	if(lastLeftRightAxisValue <= -axisThreshold && event.jaxis.value > -axisThreshold){
+						    		// Left In
+						    		std::cout << "Left Out" << std::endl;
+						    	}
+
+						    	lastLeftRightAxisValue = event.jaxis.value;
+						    }
+						}
+						break;
 				}
 			}
 
