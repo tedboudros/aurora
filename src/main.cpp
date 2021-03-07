@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
 
 int main(int argc, char* args[]) {
 	if (SDL_Init(SDL_INIT_VIDEO) > 0) 
@@ -13,6 +14,8 @@ int main(int argc, char* args[]) {
 	RenderWindow window("Aurora v0.0.1", 1280, 720);
 
 	SDL_Texture* auroraLogo = window.loadTexture("res/images/logo.png");
+
+	Entity logo(100, 300, auroraLogo);
 
 	bool isGameRunning = true;
 	SDL_Event event;
@@ -27,7 +30,7 @@ int main(int argc, char* args[]) {
 		}
 
 		window.clear();
-		window.render(auroraLogo);
+		window.render(logo);
 		window.display();
 
 	}
