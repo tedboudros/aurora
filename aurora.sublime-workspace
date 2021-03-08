@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"sc",
+				"screenHeight"
+			],
+			[
+				"scre",
+				"screenWidth"
+			],
+			[
+				"axis",
+				"axisThreshold"
+			],
+			[
 				"game",
 				"gameBorder"
 			]
@@ -60,6 +72,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"{\n",
 			"float",
 			"y",
 			"}",
@@ -86,7 +99,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 41.0
 	},
 	"layout":
 	{
@@ -113,7 +126,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 153.0
+		"height": 301.0
 	},
 	"output.find_results":
 	{
@@ -159,7 +172,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_width": 282.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

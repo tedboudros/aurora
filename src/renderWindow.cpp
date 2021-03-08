@@ -4,15 +4,17 @@
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Math.hpp"
 
 RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL) {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN |SDL_WINDOW_BORDERLESS);
 
 	if(window == NULL) {
 		std::cout << "Window has failed to init. Error: " << SDL_GetError() << std::endl; 
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);// | SDL_RENDERER_PRESENTVSYNC);
+	SDL_ShowCursor(false); // Hides the cursor;
 };
 
 void RenderWindow::cleanUp() {
@@ -63,4 +65,35 @@ int RenderWindow::getRefreshRate() {
 	SDL_GetDisplayMode(displayIndex, 0, &mode);
 
 	return mode.refresh_rate;
+}
+
+int RenderWindow::getDisplayWidth() {
+	int displayIndex = SDL_GetWindowDisplayIndex(window);
+
+	SDL_DisplayMode mode;
+
+	SDL_GetDisplayMode(displayIndex, 0, &mode);
+
+	return mode.w;
+}
+
+
+int RenderWindow::getDisplayHeight() {
+	int displayIndex = SDL_GetWindowDisplayIndex(window);
+
+	SDL_DisplayMode mode;
+
+	SDL_GetDisplayMode(displayIndex, 0, &mode);
+
+	return mode.h;
+}
+
+Vector2f RenderWindow::getWindowDimensions() {
+	int w,h;
+	SDL_GetWindowSize(window, &w, &h);
+	return Vector2f(w,h);
+}
+
+void RenderWindow::setFullScreen(bool isFullScreen) {
+	SDL_SetWindowFullscreen(window, isFullScreen);
 }

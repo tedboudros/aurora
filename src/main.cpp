@@ -15,10 +15,13 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.2", 1600, 900);
+	RenderWindow window("Aurora v0.0.2", 1920, 1080);
+
+	//window.setFullScreen(true);
+
 	int windowRefreshRate = window.getRefreshRate();
 
-	std::cout << "Window refresh rate: " << windowRefreshRate << std::endl;
+	std::cout << "Window Info:" << std::endl << "Current display refresh rate: " << windowRefreshRate << std::endl;
 
 	SDL_Texture* gameBorder = window.loadTexture("res/images/gameBorder.png");
 
@@ -34,11 +37,13 @@ int main(int argc, char* args[]) {
 	bool isGameRunning = true;
 	SDL_Event event;
 
-/*
-	const float deltaTime = 0.01f;
-	float accumulator = 0.0f;
-	float currentTime = utils::hireTimeInSeconds();
-*/
+	int selectedGame = 0;
+	int prevSelectedGame = 0;
+
+	Vector2f windowSize = window.getWindowDimensions();
+	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
+	Uint64 currentTime = utils::hireTime();
+
 	GamepadDirectionEvent gamepadEvents;
 
 	int lastLeftRightAxisValue = 0;
@@ -46,54 +51,69 @@ int main(int argc, char* args[]) {
 
 	// Game loop:
 	while(isGameRunning) {
-/*
-		int startTicks = SDL_GetTicks();
-		float newTime = utils::hireTimeInSeconds();
-		float frameTime = newTime - currentTime;
+		Uint64 newTime = utils::hireTime();
+		double deltaTime = ((newTime - currentTime)*1000 / (double)SDL_GetPerformanceFrequency() );
 		currentTime = newTime;
-		accumulator += frameTime;
-*/
-		//while(accumulator >= deltaTime) {
-			// SDL Events:
-			while(SDL_PollEvent(&event)){
-				switch(event.type) {
-					case SDL_QUIT:
-						isGameRunning = false;
-						break;
 
-					case SDL_JOYAXISMOTION:
-						if (( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 )) {
-							if( event.jaxis.axis == 0) {
-						        // Left-right movement code goes here
-						
-						    	if(lastLeftRightAxisValue <= axisThreshold && event.jaxis.value > axisThreshold){
-						    		// Right In
-						    		std::cout << "Right In" << std::endl;
-						    	}
-						    	if(lastLeftRightAxisValue > axisThreshold && event.jaxis.value <= axisThreshold){
-						    		// Right Out
-						    		std::cout << "Right Out" << std::endl;
-						    	}
+		std::cout << "DELTA TIME: " << deltaTime << std::endl;
 
-						    	if(lastLeftRightAxisValue > -axisThreshold && event.jaxis.value <= -axisThreshold){
-						    		// Left Out
-						    		std::cout << "Left In" << std::endl;
-						    	}
-						    	if(lastLeftRightAxisValue <= -axisThreshold && event.jaxis.value > -axisThreshold){
-						    		// Left In
-						    		std::cout << "Left Out" << std::endl;
-						    	}
+		// SDL Events:
+		while(SDL_PollEvent(&event)){
+			switch(event.type) {
+				case SDL_QUIT:
+					isGameRunning = false;
+					break;
 
-						    	lastLeftRightAxisValue = event.jaxis.value;
-						    }
-						}
-						break;
-				}
+				case SDL_JOYAXISMOTION:
+					if (( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 )) {
+						if( event.jaxis.axis == 0) {
+					        // Left-right movement code goes here
+					
+					    	if(lastLeftRightAxisValue <= axisThreshold && event.jaxis.value > axisThreshold){
+					    		// Right In
+					    		//std::cout << "Right In" << std::endl;
+
+					    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
+					    			selectedGame += 1;
+					    		}
+					    	}
+					    	if(lastLeftRightAxisValue > axisThreshold && event.jaxis.value <= axisThreshold){
+					    		// Right Out
+					    		//std::cout << "Right Out" << std::endl;
+					    	}
+
+					    	if(lastLeftRightAxisValue > -axisThreshold && event.jaxis.value <= -axisThreshold){
+					    		// Left Out
+					    		//std::cout << "Left In" << std::endl;
+
+					    		if(selectedGame != 0) {
+					    			selectedGame -= 1;
+					    		}
+					    	}
+					    	if(lastLeftRightAxisValue <= -axisThreshold && event.jaxis.value > -axisThreshold){
+					    		// Left In
+					    		//std::cout << "Left Out" << std::endl;
+					    	}
+
+					    	lastLeftRightAxisValue = event.jaxis.value;
+					    }
+					}
+
+					if(selectedGame != prevSelectedGame) {
+						std::cout << "Selected Game: " << selectedGame << std::endl;
+
+						games[selectedGame].setW(110);
+						games[selectedGame].setH(110);
+
+						games[prevSelectedGame].setW(100);
+						games[prevSelectedGame].setH(100);
+
+						prevSelectedGame = selectedGame;
+					}
+
+					break;
 			}
-
-
-		//	accumulator -= deltaTime;
-		//}
+		}
 
 		// Actual Rendering
 		window.clear();
@@ -103,14 +123,8 @@ int main(int argc, char* args[]) {
 		}
 
 		window.display();
- /*
-		int frameTicks = SDL_GetTicks() - startTicks;
-		if(frameTicks < 1000 / window.getRefreshRate()) {
-			SDL_Delay(1000 / window.getRefreshRate() - frameTicks);
-		}
-*/
-	}
 
+	}
 
 	window.cleanUp();
 	SDL_Quit();

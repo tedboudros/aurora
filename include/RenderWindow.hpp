@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "Entity.hpp"
+#include "Math.hpp"
 
 class RenderWindow {
 
@@ -11,7 +12,12 @@ public:
 	SDL_Texture* loadTexture(const char* p_filepath);
 
 	int getRefreshRate();
+	int getDisplayWidth();
+	int getDisplayHeight();
 
+	Vector2f getWindowDimensions();
+
+	void setFullScreen(bool isFullScreen);
 	void cleanUp();
 	void clear();
 	void render(Entity& p_entity);

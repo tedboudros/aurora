@@ -13,6 +13,22 @@ public:
 		return dest;
 	};
 
+	void setX(float p_x) {
+		dest.x = p_x;
+	};
+
+	void setY(float p_y) {
+		dest.y = p_y;
+	};
+
+	void setW(float p_w) {
+		dest.w = p_w;
+	};
+
+	void setH(float p_h) {
+		dest.h = p_h;
+	};
+
 	SDL_Texture* getTexture() {
 		return texture;
 	};
