@@ -29,6 +29,26 @@ public:
 		dest.h = p_h;
 	};
 
+	void setAnimation(Vector4f p_animationRect, float p_animationTime) {
+		animationTime = p_animationTime;
+		currentAnimationTime = 0;
+
+		originalRect = dest;
+		animationRect = p_animationRect;
+
+		isAnimationActive = true;
+
+	}
+
+	void finishAnimation() {
+		originalRect = animationRect;
+		dest = animationRect;
+
+		isAnimationActive = false;
+	}
+
+	void animate(float p_deltaTime);
+
 	SDL_Texture* getTexture() {
 		return texture;
 	};
@@ -41,4 +61,9 @@ private:
 	Vector4f dest;
 	SDL_Rect currentFrame;
 	SDL_Texture* texture;
+	float animationTime;
+	float currentAnimationTime;
+	bool isAnimationActive = false;
+	Vector4f animationRect;
+	Vector4f originalRect;
 };

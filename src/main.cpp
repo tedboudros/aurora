@@ -15,7 +15,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.2", 1920, 1080);
+	RenderWindow window("Aurora v0.0.2", 1600, 900);
 
 	//window.setFullScreen(true);
 
@@ -55,7 +55,7 @@ int main(int argc, char* args[]) {
 		double deltaTime = ((newTime - currentTime)*1000 / (double)SDL_GetPerformanceFrequency() );
 		currentTime = newTime;
 
-		std::cout << "DELTA TIME: " << deltaTime << std::endl;
+		//std::cout << "DELTA TIME: " << deltaTime << std::endl;
 
 		// SDL Events:
 		while(SDL_PollEvent(&event)){
@@ -102,11 +102,11 @@ int main(int argc, char* args[]) {
 					if(selectedGame != prevSelectedGame) {
 						std::cout << "Selected Game: " << selectedGame << std::endl;
 
-						games[selectedGame].setW(110);
-						games[selectedGame].setH(110);
+						const Vector4f selectedGameRect = games[selectedGame].getDest();
+						const Vector4f prevSelectedGameRect = games[prevSelectedGame].getDest();
 
-						games[prevSelectedGame].setW(100);
-						games[prevSelectedGame].setH(100);
+						games[selectedGame].setAnimation(Vector4f(selectedGameRect.x, selectedGameRect.y, 120, 120), 120);
+						games[prevSelectedGame].setAnimation(Vector4f(prevSelectedGameRect.x, prevSelectedGameRect.y, 100, 100), 120);
 
 						prevSelectedGame = selectedGame;
 					}
@@ -119,6 +119,7 @@ int main(int argc, char* args[]) {
 		window.clear();
 
 		for(Entity& game : games) {
+			game.animate(deltaTime);
 			window.render(game);
 		}
 

@@ -72,6 +72,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"float",
 			"{\n",
 			"float",
 			"y",
@@ -126,13 +127,13 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 301.0
+		"height": 158.0
 	},
 	"output.find_results":
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "Build Debug",
+	"pinned_build_system": "Build Release",
 	"replace":
 	{
 		"height": 52.0
