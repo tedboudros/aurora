@@ -13,7 +13,7 @@ RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :wind
 		std::cout << "Window has failed to init. Error: " << SDL_GetError() << std::endl; 
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );// | SDL_RENDERER_PRESENTVSYNC);// 
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);// );//
 	SDL_ShowCursor(false); // Hides the cursor;
 };
 

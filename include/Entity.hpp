@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "Math.hpp"
+#include "Animation/Easing.h"
 
 class Entity {
 

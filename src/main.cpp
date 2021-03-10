@@ -29,7 +29,7 @@ int main(int argc, char* args[]) {
 
 	for (int i = 0; i < 10; i++) {
 		{
-			Entity anotherGame(Vector4f(i*125 + 10,10, 100, 100), gameBorder);
+			Entity anotherGame(i == 0 ? Vector4f(24, 24, 112, 112) : Vector4f(i*160 + 16,16, 128, 128), gameBorder);
 			games.push_back(anotherGame);
 		}
 	}
@@ -105,8 +105,8 @@ int main(int argc, char* args[]) {
 						const Vector4f selectedGameRect = games[selectedGame].getDest();
 						const Vector4f prevSelectedGameRect = games[prevSelectedGame].getDest();
 
-						games[selectedGame].setAnimation(Vector4f(selectedGameRect.x, selectedGameRect.y, 120, 120), 120);
-						games[prevSelectedGame].setAnimation(Vector4f(prevSelectedGameRect.x, prevSelectedGameRect.y, 100, 100), 120);
+						games[selectedGame].setAnimation(Vector4f(selectedGameRect.x+8, selectedGameRect.y+8, 112, 112), 120);
+						games[prevSelectedGame].setAnimation(Vector4f(prevSelectedGameRect.x-8, prevSelectedGameRect.y-8, 128, 128), 120);
 
 						prevSelectedGame = selectedGame;
 					}

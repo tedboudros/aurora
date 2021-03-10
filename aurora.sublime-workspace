@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"animationDif",
+				"animationDiffW"
+			],
+			[
+				"curre",
+				"currentAnimationTime"
+			],
+			[
+				"animation",
+				"animationStepX"
+			],
+			[
+				"p_anim",
+				"p_animationTime"
+			],
+			[
 				"sc",
 				"screenHeight"
 			],
@@ -53,12 +69,13 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Ted/Documents/GitHub/aurora/src/main.cpp",
 		"/C/Users/Ted/Documents/GitHub/aurora/aurora.sublime-project",
 		"/C/Users/Ted/Documents/GitHub/aurora/main.o"
 	],
 	"find":
 	{
-		"height": 28.0
+		"height": 27.0
 	},
 	"find_in_files":
 	{
@@ -72,6 +89,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"};\n",
 			"float",
 			"{\n",
 			"float",
@@ -96,7 +114,7 @@
 	},
 	"incremental_find":
 	{
-		"height": 28.0
+		"height": 27.0
 	},
 	"input":
 	{
@@ -127,16 +145,16 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 158.0
+		"height": 226.0
 	},
 	"output.find_results":
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "Build Release",
+	"pinned_build_system": "Build Debug",
 	"replace":
 	{
-		"height": 52.0
+		"height": 50.0
 	},
 	"save_all_on_build": true,
 	"select_file":

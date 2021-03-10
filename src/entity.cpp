@@ -3,6 +3,7 @@
 
 #include "Entity.hpp"
 #include "Math.hpp"
+#include "Animation/Easing.h"
 
 Entity::Entity(Vector4f p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(p_texture) {
 	currentFrame.x = 0;
@@ -19,7 +20,7 @@ void Entity::animate(float p_deltaTime) {
 		if(currentAnimationTime >= animationTime) {
 			this->finishAnimation();
 		}else {
-			const float animationPercentageDone =  currentAnimationTime / animationTime;
+			const float animationPercentageDone = CubicEaseInOut(currentAnimationTime / animationTime);
 
 			const float animationDiffX = animationRect.x - originalRect.x;
 			const float newX = originalRect.x + (animationDiffX * animationPercentageDone);
@@ -33,21 +34,10 @@ void Entity::animate(float p_deltaTime) {
 			const float animationDiffH = animationRect.h - originalRect.h;
 			const float newH = originalRect.h + (animationDiffH * animationPercentageDone);
 
-			if(animationDiffX != 0 && originalRect.x != newX)  {
-				dest.x = newX;
-			}
-
-			if(animationDiffY != 0 && originalRect.y != newY)  {
-				dest.y = newY;
-			}
-
-			if(animationDiffW != 0 && originalRect.w != newW)  {
-				dest.w = newW;
-			}
-
-			if(animationDiffH != 0 && originalRect.h != newH)  {
-				dest.h = newH;
-			}
+			dest.x = newX;
+			dest.y = newY;
+			dest.w = newW;
+			dest.h = newH;
 		}
 	}
 };
