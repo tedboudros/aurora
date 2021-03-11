@@ -6,10 +6,14 @@
 #include "Animation/Easing.h"
 
 Entity::Entity(Vector4f p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(p_texture) {
-	currentFrame.x = 0;
-	currentFrame.y = 0;
-	currentFrame.w = 1024;
-	currentFrame.h = 1024;
+	int w, h;
+
+	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+
+	originalDimensions.x = 0;
+	originalDimensions.y = 0;
+	originalDimensions.w = w;
+	originalDimensions.h = h;
 }; 
 
 void Entity::animate(float p_deltaTime) {

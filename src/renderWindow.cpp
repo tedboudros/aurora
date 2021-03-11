@@ -6,14 +6,16 @@
 #include "Entity.hpp"
 #include "Math.hpp"
 
-RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL) {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN); ////|SDL_WINDOW_BORDERLESS);
+RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL), windowWidth(p_width), windowHeight(p_height) {
+	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN);// | SDL_WINDOW_FULLSCREEN_DESKTOP);
 
 	if(window == NULL) {
 		std::cout << "Window has failed to init. Error: " << SDL_GetError() << std::endl; 
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);// );//
+	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" );
+
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);//);// 
 	SDL_ShowCursor(false); // Hides the cursor;
 };
 
@@ -40,10 +42,10 @@ void RenderWindow::render(Entity& p_entity) {
 
 	SDL_Rect src, dest;
 
-	src.x = p_entity.getCurrentFrame().x;
-	src.y = p_entity.getCurrentFrame().y;
-	src.w = p_entity.getCurrentFrame().w;
-	src.h = p_entity.getCurrentFrame().h;
+	src.x = p_entity.getOriginalDimensions().x;
+	src.y = p_entity.getOriginalDimensions().y;
+	src.w = p_entity.getOriginalDimensions().w;
+	src.h = p_entity.getOriginalDimensions().h;
 
 	dest.x = p_entity.getDest().x;
 	dest.y = p_entity.getDest().y;

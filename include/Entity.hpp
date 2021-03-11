@@ -14,22 +14,6 @@ public:
 		return dest;
 	};
 
-	void setX(float p_x) {
-		dest.x = p_x;
-	};
-
-	void setY(float p_y) {
-		dest.y = p_y;
-	};
-
-	void setW(float p_w) {
-		dest.w = p_w;
-	};
-
-	void setH(float p_h) {
-		dest.h = p_h;
-	};
-
 	void setAnimation(Vector4f p_animationRect, float p_animationTime) {
 		animationTime = p_animationTime;
 		currentAnimationTime = 0;
@@ -54,13 +38,13 @@ public:
 		return texture;
 	};
 
-	SDL_Rect getCurrentFrame() {
-		return currentFrame;
+	SDL_Rect getOriginalDimensions() {
+		return originalDimensions;
 	};
 
 private:
 	Vector4f dest;
-	SDL_Rect currentFrame;
+	SDL_Rect originalDimensions;
 	SDL_Texture* texture;
 	float animationTime;
 	float currentAnimationTime;
