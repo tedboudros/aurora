@@ -1,3 +1,5 @@
 *.o
 bin/debug/*
 bin/release/*
+api/node_modules/
+api/yarn.lock

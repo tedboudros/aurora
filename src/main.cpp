@@ -15,7 +15,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.5", 1920, 1000);
+	RenderWindow window("Aurora v0.0.5", 1920, 1080);
 
 	//window.setFullScreen(true);
 
@@ -67,6 +67,7 @@ int main(int argc, char* args[]) {
 
 	int lastLeftRightAxisValue = 0;
 	const int axisThreshold = 20000;
+
 
 	// Game loop:
 	while(isGameRunning) {
