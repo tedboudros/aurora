@@ -6,7 +6,11 @@
 #include "Entity.hpp"
 #include "Math.hpp"
 
-RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL), windowWidth(p_width), windowHeight(p_height) {
+float calculateSize(Size value, Vector2f windowDimensions) {
+	return (value.val / 100)  * (value.type == SIZE_HEIGHT ? windowDimensions.y : windowDimensions.x);
+}
+
+RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL), windowDims(Vector2f(p_width, p_height)) {
 	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN);// | SDL_WINDOW_FULLSCREEN_DESKTOP);
 
 	if(window == NULL) {
@@ -47,10 +51,10 @@ void RenderWindow::render(Entity& p_entity) {
 	src.w = p_entity.getOriginalDimensions().w;
 	src.h = p_entity.getOriginalDimensions().h;
 
-	dest.x = p_entity.getDest().x;
-	dest.y = p_entity.getDest().y;
-	dest.w = p_entity.getDest().w;
-	dest.h = p_entity.getDest().h;
+	dest.x = calculateSize(p_entity.getDest().x, windowDims);
+	dest.y = calculateSize(p_entity.getDest().y, windowDims);
+	dest.w = calculateSize(p_entity.getDest().w, windowDims);
+	dest.h = calculateSize(p_entity.getDest().h, windowDims);
 
 	SDL_RenderCopy(renderer, p_entity.getTexture(), &src, &dest);
 }

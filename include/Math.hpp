@@ -2,6 +2,14 @@
 
 #include <iostream>
 
+#ifndef SIZE_HEIGHT
+    #define SIZE_HEIGHT false
+#endif
+
+#ifndef SIZE_WIDTH
+    #define SIZE_WIDTH true
+#endif
+
 struct Vector2f {
 	Vector2f() :x(0.0f), y(0.0f) {};
 	Vector2f(float p_x, float p_y) :x(p_x), y(p_y) {};
@@ -22,4 +30,39 @@ struct Vector4f {
 	};
 
 	float x,y,w,h;
+};
+
+struct Size {
+	Size() :val(0.0f), type(SIZE_WIDTH) {};
+	Size(float p_val, bool p_type) :val(p_val), type(p_type) {};
+
+	void print() {
+		std::cout << "Size(val, type): " << val << ", " << (type == true ? "SIZE_WIDTH" : "SIZE_HEIGHT") << std::endl;
+	};
+
+	float val; // Percentage
+	bool type; // Width, Height
+};
+
+struct MultiSize {
+	MultiSize() :x(Size()), y(Size()), w(Size()), h(Size()) {};
+	MultiSize(Size p_x, Size p_y, Size p_w, Size p_h) :x(p_x), y(p_y), w(p_w), h(p_h) {};
+
+	void setX(float p_val) {
+		x.val = p_val;
+	}
+
+	void setY(float p_val) {
+		y.val = p_val;
+	}
+
+	void setW(float p_val) {
+		w.val = p_val;
+	}
+
+	void setH(float p_val) {
+		h.val = p_val;
+	}
+
+	Size x,y,w,h;
 };

@@ -5,7 +5,7 @@
 #include "Math.hpp"
 #include "Animation/Easing.h"
 
-Entity::Entity(Vector4f p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(p_texture) {
+Entity::Entity(MultiSize p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(p_texture) {
 	int w, h;
 
 	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
@@ -26,22 +26,22 @@ void Entity::animate(float p_deltaTime) {
 		}else {
 			const float animationPercentageDone = CubicEaseInOut(currentAnimationTime / animationTime);
 
-			const float animationDiffX = animationRect.x - originalRect.x;
-			const float newX = originalRect.x + (animationDiffX * animationPercentageDone);
+			const float animationDiffX = animationRect.x.val - originalRect.x.val;
+			const float newX = originalRect.x.val + (animationDiffX * animationPercentageDone);
 
-			const float animationDiffY = animationRect.y - originalRect.y;
-			const float newY = originalRect.y + (animationDiffY * animationPercentageDone);
+			const float animationDiffY = animationRect.y.val - originalRect.y.val;
+			const float newY = originalRect.y.val + (animationDiffY * animationPercentageDone);
 
-			const float animationDiffW = animationRect.w - originalRect.w;
-			const float newW = originalRect.w + (animationDiffW * animationPercentageDone);
+			const float animationDiffW = animationRect.w.val - originalRect.w.val;
+			const float newW = originalRect.w.val + (animationDiffW * animationPercentageDone);
 
-			const float animationDiffH = animationRect.h - originalRect.h;
-			const float newH = originalRect.h + (animationDiffH * animationPercentageDone);
+			const float animationDiffH = animationRect.h.val - originalRect.h.val;
+			const float newH = originalRect.h.val + (animationDiffH * animationPercentageDone);
 
-			dest.x = newX;
-			dest.y = newY;
-			dest.w = newW;
-			dest.h = newH;
+			dest.setX(newX);
+			dest.setY(newY);
+			dest.setW(newW);
+			dest.setH(newH);
 		}
 	}
 };

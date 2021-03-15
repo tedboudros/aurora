@@ -8,13 +8,13 @@
 class Entity {
 
 public: 
-	Entity(Vector4f p_dest, SDL_Texture* p_texture);
+	Entity(MultiSize p_dest, SDL_Texture* p_texture);
 
-	Vector4f& getDest() {
+	MultiSize& getDest() {
 		return dest;
 	};
 
-	void setAnimation(Vector4f p_animationRect, float p_animationTime) {
+	void setAnimation(MultiSize p_animationRect, float p_animationTime) {
 		animationTime = p_animationTime;
 		currentAnimationTime = 0;
 
@@ -43,12 +43,12 @@ public:
 	};
 
 private:
-	Vector4f dest;
+	MultiSize dest;
 	SDL_Rect originalDimensions;
 	SDL_Texture* texture;
 	float animationTime;
 	float currentAnimationTime;
 	bool isAnimationActive = false;
-	Vector4f animationRect;
-	Vector4f originalRect;
+	MultiSize animationRect;
+	MultiSize originalRect;
 };

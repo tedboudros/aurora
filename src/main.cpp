@@ -15,7 +15,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.5", 1600, 900);
+	RenderWindow window("Aurora v0.0.5", 1920, 1000);
 
 	//window.setFullScreen(true);
 
@@ -29,18 +29,21 @@ int main(int argc, char* args[]) {
 	std::vector<Entity> games = {};
 
 	// CONSTANTS HERE FOR NOW:
-	const int gameSizeNormal = 128;
-	const int gameSizeSelected = 136;
-	const int selectedGameOffset = 4;
-	const int generalGameOffset = 48;
-	const int marginBetweenGames = 16;
-	const int normalY = 24;
-	const int selectedYOffset = 16;
-	const int transitionTime = 130;
+	const float gameSizeNormal = 12;
+	const float gameSizeSelected = 15;
+	const float selectedGameOffset = (gameSizeSelected - gameSizeNormal);
+	const float gameOffset = 3;
+	const float marginBetweenGames = 1;
+	const float normalY = 100 - gameSizeNormal - 2;
+	const int transitionTime = 135;
 	
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		{
-			Entity anotherGame(i == 0 ? Vector4f(generalGameOffset - selectedGameOffset, normalY+selectedYOffset, gameSizeSelected, gameSizeSelected) : Vector4f(i*(gameSizeNormal + (marginBetweenGames * 2)) + generalGameOffset,normalY, gameSizeNormal, gameSizeNormal), gameBorder);
+			const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
+
+			const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY+selectedGameOffset, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
+
+			Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 			games.push_back(anotherGame);
 		}
 	}
@@ -55,7 +58,7 @@ int main(int argc, char* args[]) {
 	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
 
 	
-	Entity wallpaperEntity(Vector4f(0,0,windowSize.x,windowSize.y), wallpaper);
+	Entity wallpaperEntity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
 	
 
 	Uint64 currentTime = utils::hireTime();
@@ -87,7 +90,6 @@ int main(int argc, char* args[]) {
 					
 					    	if(lastLeftRightAxisValue <= axisThreshold && event.jaxis.value > axisThreshold){
 					    		// Right In
-					    		//std::cout << "Right In" << std::endl;
 
 					    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
 					    			selectedGame += 1;
@@ -95,12 +97,10 @@ int main(int argc, char* args[]) {
 					    	}
 					    	if(lastLeftRightAxisValue > axisThreshold && event.jaxis.value <= axisThreshold){
 					    		// Right Out
-					    		//std::cout << "Right Out" << std::endl;
 					    	}
 
 					    	if(lastLeftRightAxisValue > -axisThreshold && event.jaxis.value <= -axisThreshold){
 					    		// Left Out
-					    		//std::cout << "Left In" << std::endl;
 
 					    		if(selectedGame != 0) {
 					    			selectedGame -= 1;
@@ -108,7 +108,6 @@ int main(int argc, char* args[]) {
 					    	}
 					    	if(lastLeftRightAxisValue <= -axisThreshold && event.jaxis.value > -axisThreshold){
 					    		// Left In
-					    		//std::cout << "Left Out" << std::endl;
 					    	}
 
 					    	lastLeftRightAxisValue = event.jaxis.value;
@@ -125,19 +124,22 @@ int main(int argc, char* args[]) {
 			for(int i = 0; i < static_cast<int>(games.size()); i++) {
 				int newX,newY,newW,newH;
 
-				newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + generalGameOffset;
+				newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
 				newY = normalY;
 				newW = gameSizeNormal;
 				newH = gameSizeNormal;
 
 				if(i == selectedGame) {
-					newX -= selectedGameOffset;
-					newY += selectedYOffset;
+					newY -= selectedGameOffset;
 					newW = gameSizeSelected;
 					newH = gameSizeSelected;
 				}
 
-				games[i].setAnimation(Vector4f(newX, newY, newW, newH), transitionTime);
+				if(i > selectedGame) {
+					newX += selectedGameOffset;
+				}
+
+				games[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), transitionTime);
 			}
 
 			prevSelectedGame = selectedGame;

@@ -26,5 +26,5 @@ public:
 private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	int windowWidth, windowHeight;
+	Vector2f windowDims;
 };
