@@ -9,16 +9,58 @@
 	],
 	"build_systems": [
 		{
-			"name": "Build Debug",
+			"name": "Clean - Windows (Debug)",
 			"working_dir": "${project_path}",
-			"cmd": "gcc -c src/*.c -std=c17 -g -Wall -m64 -I include && g++ -c src/*.cpp -std=c++14 -g -Wall -m64 -I include -I C:/SDL2-w64/include && g++ *.o -o bin/debug/main -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && start bin/debug/main",
+			"cmd": "del /f /s /q \"bin\\debug\\*\" && rmdir /s /q \"bin\\debug\" && mkdir \"bin\\debug\"",
 			"selector": "source.c++",
 			"shell": true
 		},
 		{
-			"name": "Build Release",
+			"name": "Prepare files - Windows (Debug)",
 			"working_dir": "${project_path}",
-			"cmd": "gcc -c src/*.c -std=c17 -g -Wall -m64 -I include && g++ -c src/*.cpp -std=c++14 -O3 -Wall -m64 -I include -I C:/SDL2-w64/include && g++ *.o -o bin/release/main -s -mwindows -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && start bin/release/main",
+			"cmd": "copy \"static\\windows\\*\" \"bin\\debug\\\" && Xcopy \"res\\\" \"bin\\debug\\res\\\" /E/H/C/I",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Build & Run - Windows (Debug)",
+			"working_dir": "${project_path}",
+			"cmd": "cd compilation && gcc -c ../src/*.c -std=c17 -g -Wall -m64 -I ../include && g++ -c ../src/*.cpp -std=c++14 -g -Wall -m64 -I ../include -I C:/SDL2-w64/include && cd ../ && g++ compilation/*.o -o bin/debug/main -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && start bin/debug/main",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Compress - Windows (Debug)",
+			"working_dir": "${project_path}",
+			"cmd": "cd \"bin\" && tar -a -c -f Aurora-DEBUG.zip \"debug\" && move Aurora-DEBUG.zip \"%USERPROFILE%\\Desktop\"",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Clean - Windows (Release)",
+			"working_dir": "${project_path}",
+			"cmd": "del /f /s /q \"bin\\release\\*\" && rmdir /s /q \"bin\\release\" && mkdir \"bin\\release\"",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Prepare files - Windows (Release)",
+			"working_dir": "${project_path}",
+			"cmd": "copy \"static\\windows\\*\" \"bin\\release\\\" && Xcopy \"res\\\" \"bin\\release\\res\\\" /E/H/C/I",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Build & Run - Windows (Release)",
+			"working_dir": "${project_path}",
+			"cmd": "cd compilation && gcc -c ../src/*.c -std=c17 -g -Wall -m64 -I ../include && g++ -c ../src/*.cpp -std=c++14 -O3 -Wall -m64 -I ../include -I C:/SDL2-w64/include && cd ../ && g++ compilation/*.o -o bin/release/main -s -mwindows -L C:/SDL2-w64/lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image && start bin/release/main",
+			"selector": "source.c++",
+			"shell": true
+		},
+		{
+			"name": "Compress - Windows (Release)",
+			"working_dir": "${project_path}",
+			"cmd": "cd \"bin\" && tar -a -c -f Aurora-RELEASE.zip \"release\" && move Aurora-RELEASE.zip \"%USERPROFILE%\\Desktop\"",
 			"selector": "source.c++",
 			"shell": true
 		}

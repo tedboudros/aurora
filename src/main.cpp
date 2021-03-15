@@ -37,7 +37,7 @@ int main(int argc, char* args[]) {
 	const int normalY = 24;
 	const int selectedYOffset = 16;
 	const int transitionTime = 130;
-
+	
 	for (int i = 0; i < 10; i++) {
 		{
 			Entity anotherGame(i == 0 ? Vector4f(generalGameOffset - selectedGameOffset, normalY+selectedYOffset, gameSizeSelected, gameSizeSelected) : Vector4f(i*(gameSizeNormal + (marginBetweenGames * 2)) + generalGameOffset,normalY, gameSizeNormal, gameSizeNormal), gameBorder);
@@ -120,7 +120,7 @@ int main(int argc, char* args[]) {
 		}
 
 		if(selectedGame != prevSelectedGame) {
-			std::cout << "Selected Game: " << selectedGame << std::endl;
+			// std::cout << "Selected Game: " << selectedGame << std::endl;
 
 			for(int i = 0; i < static_cast<int>(games.size()); i++) {
 				int newX,newY,newW,newH;

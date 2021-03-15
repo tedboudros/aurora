@@ -48,6 +48,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"install",
+				"Package Control: Install Package"
+			]
 		],
 		"width": 0.0
 	},
@@ -69,8 +73,15 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Ted/Documents/GitHub/aurora/src/math.cpp",
 		"/C/Users/Ted/Documents/GitHub/aurora/src/main.cpp",
+		"/C/Users/Ted/Documents/GitHub/aurora/src/entity.cpp",
+		"/C/Users/Ted/Documents/GitHub/aurora/src/easing.c",
+		"/C/Users/Ted/Documents/GitHub/aurora/include/Animation/Easing.h",
+		"/C/Users/Ted/Documents/GitHub/aurora/include/Entity.hpp",
 		"/C/Users/Ted/Documents/GitHub/aurora/aurora.sublime-project",
+		"/C/Users/Ted/Documents/GitHub/aurora/include/Animation/Bezier.h",
+		"/C/Users/Ted/AppData/Local/Temp/Rar$DRa17592.10907/AHEasing-master/AHEasing/easing.h",
 		"/C/Users/Ted/Documents/GitHub/aurora/main.o"
 	],
 	"find":
@@ -89,6 +100,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			";\n",
 			"};\n",
 			"float",
 			"{\n",
@@ -143,6 +155,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
 	"output.exec":
 	{
 		"height": 226.0
