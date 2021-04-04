@@ -7,7 +7,7 @@
 #include "Entity.hpp"
 #include "Math.hpp"
 #include "Utils.hpp"
-#include "Gamepad/GamepadDirectionEvent.hpp"
+#include "Gamepad/GamepadController.hpp"
 
 int main(int argc, char* args[]) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
@@ -15,7 +15,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.5", 1920, 1080);
+	RenderWindow window("Aurora v0.0.6", 1920, 1080);
 
 	//window.setFullScreen(true);
 
@@ -24,24 +24,24 @@ int main(int argc, char* args[]) {
 	std::cout << "Window Info:" << std::endl << "Current display refresh rate: " << windowRefreshRate << std::endl;
 
 	SDL_Texture* gameBorder = window.loadTexture("res/images/game.png");
-	SDL_Texture* wallpaper = window.loadTexture("res/images/wallpaper.jpg");
+	SDL_Texture* wallpaper = window.loadTexture("res/images/bg.png");
 
 	std::vector<Entity> games = {};
 
 	// CONSTANTS HERE FOR NOW:
-	const float gameSizeNormal = 12;
-	const float gameSizeSelected = 15;
+	const float gameSizeNormal = 15;
+	const float gameSizeSelected = 18;
 	const float selectedGameOffset = (gameSizeSelected - gameSizeNormal);
 	const float gameOffset = 3;
-	const float marginBetweenGames = 1;
-	const float normalY = 100 - gameSizeNormal - 2;
+	const float marginBetweenGames = 0.5f;
+	const float normalY = 3; //100 - gameSizeNormal - 2;
 	const int transitionTime = 135;
 	
 	for (int i = 0; i < 20; i++) {
 		{
 			const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
 
-			const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY+selectedGameOffset, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
+			const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
 
 			Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 			games.push_back(anotherGame);
@@ -63,10 +63,12 @@ int main(int argc, char* args[]) {
 
 	Uint64 currentTime = utils::hireTime();
 
-	GamepadDirectionEvent gamepadEvents;
+	GamepadController gamepadController;
 
 	int lastLeftRightAxisValue = 0;
 	const int axisThreshold = 20000;
+
+	bool isLeft = false, isRight = false;
 
 
 	// Game loop:
@@ -77,7 +79,7 @@ int main(int argc, char* args[]) {
 
 		//std::cout << "DELTA TIME: " << deltaTime << std::endl;
 
-		// SDL Events:
+		// SDL Events:															
 		while(SDL_PollEvent(&event)){
 			switch(event.type) {
 				case SDL_QUIT:
@@ -85,38 +87,31 @@ int main(int argc, char* args[]) {
 					break;
 
 				case SDL_JOYAXISMOTION:
-					if (( event.jaxis.value < -3200 ) || (event.jaxis.value > 3200 )) {
-						if( event.jaxis.axis == 0) {
-					        // Left-right movement code goes here
-					
-					    	if(lastLeftRightAxisValue <= axisThreshold && event.jaxis.value > axisThreshold){
-					    		// Right In
-
-					    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
-					    			selectedGame += 1;
-					    		}
-					    	}
-					    	if(lastLeftRightAxisValue > axisThreshold && event.jaxis.value <= axisThreshold){
-					    		// Right Out
-					    	}
-
-					    	if(lastLeftRightAxisValue > -axisThreshold && event.jaxis.value <= -axisThreshold){
-					    		// Left Out
-
-					    		if(selectedGame != 0) {
-					    			selectedGame -= 1;
-					    		}
-					    	}
-					    	if(lastLeftRightAxisValue <= -axisThreshold && event.jaxis.value > -axisThreshold){
-					    		// Left In
-					    	}
-
-					    	lastLeftRightAxisValue = event.jaxis.value;
-					    }
+					gamepadController.execFrame(event);
+					if(gamepadController.onLeft()) {
+			    		if(selectedGame != 0) {
+			    			selectedGame -= 1;
+			    		}
+					}else if(gamepadController.onRight()){				
+			    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
+			    			selectedGame += 1;
+			    		}
 					}
 
 					break;
 			}
+		}
+
+		gamepadController.spamController(deltaTime);
+
+		if(gamepadController.onLeftSpam()) {
+    		if(selectedGame != 0) {
+    			selectedGame -= 1;
+    		}
+		}else if(gamepadController.onRightSpam()){				
+    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
+    			selectedGame += 1;
+    		}
 		}
 
 		if(selectedGame != prevSelectedGame) {
@@ -131,7 +126,6 @@ int main(int argc, char* args[]) {
 				newH = gameSizeNormal;
 
 				if(i == selectedGame) {
-					newY -= selectedGameOffset;
 					newW = gameSizeSelected;
 					newH = gameSizeSelected;
 				}
