@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include "RenderWindow.hpp"
@@ -8,6 +9,10 @@
 #include "Math.hpp"
 #include "Utils.hpp"
 #include "Gamepad/GamepadController.hpp"
+#include <Parsers/JSON.hpp>
+
+// for convenience
+using json = nlohmann::json;
 
 int main(int argc, char* args[]) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
@@ -15,7 +20,7 @@ int main(int argc, char* args[]) {
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
 	
-	RenderWindow window("Aurora v0.0.6", 1920, 1080);
+	RenderWindow window("Aurora v0.0.7", 1920, 1080);
 
 	//window.setFullScreen(true);
 
@@ -28,14 +33,32 @@ int main(int argc, char* args[]) {
 
 	std::vector<Entity> games = {};
 
+
+	std::ifstream gameStylesJSON("res/styles/game.json");
+	json gameStyles;
+	gameStylesJSON >> gameStyles;
+
+	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY;
+	int normalTransitionTime, spamTransitionTime;
+
+	auto readGameStyles = [&] () {	
+		std::ifstream gameStylesJSON("res/styles/game.json");
+		json gameStyles;
+		gameStylesJSON >> gameStyles;
+
+		gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
+		gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
+		selectedGameOffset = (gameSizeSelected - gameSizeNormal);
+		gameOffset = gameStyles["game-container"]["x"]["value"];
+		marginBetweenGames = gameStyles["game-container"]["spacing"]["value"];
+		normalY = gameStyles["game-container"]["y"]["value"];
+		normalTransitionTime = gameStyles["game-container"]["normalTransition"];
+		spamTransitionTime = gameStyles["game-container"]["spamTransition"];
+	};
+
+	readGameStyles();
+
 	// CONSTANTS HERE FOR NOW:
-	const float gameSizeNormal = 15;
-	const float gameSizeSelected = 18;
-	const float selectedGameOffset = (gameSizeSelected - gameSizeNormal);
-	const float gameOffset = 3;
-	const float marginBetweenGames = 0.5f;
-	const float normalY = 3; //100 - gameSizeNormal - 2;
-	const int transitionTime = 135;
 	
 	for (int i = 0; i < 20; i++) {
 		{
@@ -51,7 +74,7 @@ int main(int argc, char* args[]) {
 	bool isGameRunning = true;
 	SDL_Event event;
 
-	int selectedGame = 1;
+	int selectedGame = 0;
 	int prevSelectedGame = 0;
 
 	Vector2f windowSize = window.getWindowDimensions();
@@ -68,8 +91,32 @@ int main(int argc, char* args[]) {
 	int lastLeftRightAxisValue = 0;
 	const int axisThreshold = 20000;
 
-	bool isLeft = false, isRight = false;
+	bool isLeft = false, isRight = false, isSpamming = false;
 
+
+	auto animateGames = [&] () {
+		for(int i = 0; i < static_cast<int>(games.size()); i++) {
+			int newX,newY,newW,newH;
+
+			newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
+			newY = normalY;
+			newW = gameSizeNormal;
+			newH = gameSizeNormal;
+
+			if(i == selectedGame) {
+				newW = gameSizeSelected;
+				newH = gameSizeSelected;
+			}
+
+			if(i > selectedGame) {
+				newX += selectedGameOffset;
+			}
+
+			games[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
+		}
+	};
+
+	animateGames();
 
 	// Game loop:
 	while(isGameRunning) {
@@ -83,16 +130,22 @@ int main(int argc, char* args[]) {
 		while(SDL_PollEvent(&event)){
 			switch(event.type) {
 				case SDL_QUIT:
-					isGameRunning = false;
+					readGameStyles();
+					animateGames();
+					//isGameRunning = false;
 					break;
 
 				case SDL_JOYAXISMOTION:
 					gamepadController.execFrame(event);
 					if(gamepadController.onLeft()) {
+						isSpamming = false;
+
 			    		if(selectedGame != 0) {
 			    			selectedGame -= 1;
 			    		}
-					}else if(gamepadController.onRight()){				
+					}else if(gamepadController.onRight()){		
+						isSpamming = false;		
+
 			    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
 			    			selectedGame += 1;
 			    		}
@@ -105,38 +158,21 @@ int main(int argc, char* args[]) {
 		gamepadController.spamController(deltaTime);
 
 		if(gamepadController.onLeftSpam()) {
+			isSpamming = true;
+
     		if(selectedGame != 0) {
     			selectedGame -= 1;
     		}
-		}else if(gamepadController.onRightSpam()){				
+		}else if(gamepadController.onRightSpam()){		
+			isSpamming = true;
+
     		if(selectedGame != (static_cast<int>(games.size()) -1)) {
     			selectedGame += 1;
     		}
 		}
 
 		if(selectedGame != prevSelectedGame) {
-			// std::cout << "Selected Game: " << selectedGame << std::endl;
-
-			for(int i = 0; i < static_cast<int>(games.size()); i++) {
-				int newX,newY,newW,newH;
-
-				newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
-				newY = normalY;
-				newW = gameSizeNormal;
-				newH = gameSizeNormal;
-
-				if(i == selectedGame) {
-					newW = gameSizeSelected;
-					newH = gameSizeSelected;
-				}
-
-				if(i > selectedGame) {
-					newX += selectedGameOffset;
-				}
-
-				games[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), transitionTime);
-			}
-
+			animateGames();
 			prevSelectedGame = selectedGame;
 		}
 

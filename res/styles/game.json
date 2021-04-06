@@ -1,0 +1,32 @@
+{
+	"game": {
+		"normal": {
+			"size": {
+				"value": 15,
+				"%": "HEIGHT"
+			}
+		},
+		"active": {
+			"size": {
+				"value": 18,
+				"%": "HEIGHT"
+			}
+		}
+	},
+	"game-container": {
+		"normalTransition": 200,
+		"spamTransition": 150,
+		"y": {
+			"value": 2,
+			"%": "HEIGHT"
+		},
+		"x": {
+			"value": 2,
+			"%": "HEIGHT"
+		},
+		"spacing": {
+			"value": 0.5,
+			"%": "HEIGHT"
+		}
+	}
+}
