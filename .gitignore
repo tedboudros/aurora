@@ -1,6 +1,5 @@
 *.o
-bin/debug/*
-bin/release/*
+bin/*
 api/node_modules/
 api/yarn.lock
 *.sublime-workspace
