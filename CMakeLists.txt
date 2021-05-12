@@ -36,7 +36,7 @@ find_package(SDL2 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)
 
 # SDL_Image doesn't have a script for find_package(), so using find_library().
-find_library(SDL2_IMAGE_LIB SDL2_Image)
+find_library(SDL2_IMAGE_LIB SDL2_image)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIB})
 
 
@@ -45,9 +45,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIB})
 set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
 set(CMAKE_INSTALL_PREFIX "${BIN_DIR}/${CMAKE_BUILD_TYPE}")
 install(TARGETS ${PROJECT_NAME} DESTINATION .)
-file(GLOB STATIC_WIN_FILES ${PROJECT_SOURCE_DIR}/static/windows/*)
-install(FILES ${STATIC_WIN_FILES} DESTINATION .)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/res DESTINATION .)
+if(WIN32)
+    file(GLOB STATIC_WIN_FILES ${PROJECT_SOURCE_DIR}/static/windows/*)
+    install(FILES ${STATIC_WIN_FILES} DESTINATION .)
+endif()
 
 
 # Zip 
