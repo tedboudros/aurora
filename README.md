@@ -7,7 +7,7 @@
 `pacman -Syuu`
 
 - Install GCC
-`pacman -S mingw-w64-gcc`
+`pacman -S mingw-w64-x86_64-gcc`
 
 - Install CMake, make, SDL, SDL2_Image:
 `pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-make make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
