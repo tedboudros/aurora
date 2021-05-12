@@ -6,11 +6,8 @@
 - Update MSYS2 (may be necessary to run several times):
 `pacman -Syuu`
 
-- Install GCC
-`pacman -S mingw-w64-x86_64-gcc`
-
-- Install CMake, make, SDL, SDL2_Image:
-`pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-make make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
+- Install GCC, CMake, Make, SDL, SDL2_Image:
+`pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
 
 #### Linux:
 
