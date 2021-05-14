@@ -7,7 +7,7 @@
 `pacman -Syuu`
 
 - Install GCC, CMake, Make, SDL, SDL2_Image:
-`pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
+`pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
 
 #### Linux:
 
@@ -32,7 +32,7 @@ And then run CMake like:
 or
 `cmake ../aurora/ -DCMAKE_BUILD_TYPE=Release`
 
-On **Windows** it may be necessary to add the MinGW generator (**-G**) because if the Visual Studio compiler is installed then CMake will use it by default:
+On **Windows** it may be necessary to add the MinGW generator (**-G**) because if the Visual Studio compiler is installed then CMake will use it by default and if not installed then it will try to use NMake:
 
 `cmake -G "MinGW Makefiles" ../aurora/ -DCMAKE_BUILD_TYPE=Debug`
 or
@@ -46,5 +46,5 @@ Building the project:
 Installing/copying files to bin/Debug or bin/Release:
 `cmake --install .`
 
-Creating a zip-file for the current bin/<Config>:
+Creating a zip-file for the current bin/"Config":
 `cmake --build . --target make_zip`
