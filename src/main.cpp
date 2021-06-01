@@ -40,6 +40,8 @@ int main(int argc, char* args[]) {
 
 	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY;
 	int normalTransitionTime, spamTransitionTime;
+	std::string gameFontFName;
+	int gameFontSize = 10;
 
 	auto readGameStyles = [&] () {	
 		std::ifstream gameStylesJSON("res/styles/game.json");
@@ -49,6 +51,8 @@ int main(int argc, char* args[]) {
 		gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
 		gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
 		selectedGameOffset = (gameSizeSelected - gameSizeNormal);
+		gameFontFName = gameStyles["game"]["font"]["filename"];
+		gameFontSize = gameStyles["game"]["font"]["size"];
 		gameOffset = gameStyles["game-container"]["x"]["value"];
 		marginBetweenGames = gameStyles["game-container"]["spacing"]["value"];
 		normalY = gameStyles["game-container"]["y"]["value"];

@@ -11,6 +11,10 @@
 				"value": 18,
 				"%": "HEIGHT"
 			}
+		},
+		"font": {
+			"filename": "res/style/fonts/Oxygen-Regular.ttf",
+			"size": 20
 		}
 	},
 	"game-container": {

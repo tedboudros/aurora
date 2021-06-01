@@ -12,6 +12,7 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(SRC_LIST "src/easing.c" "src/entity.cpp" "src/gamepadController.cpp"
              "src/main.cpp" "src/math.cpp" "src/renderWindow.cpp"
+			 "src/text.cpp" "include/Text.hpp"
              "include/Animation/Easing.h" "include/Gamepad/GamepadController.hpp"
              "include/Parsers/JSON.hpp"
              "include/Entity.hpp" "include/Math.hpp"
@@ -38,6 +39,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)
 # SDL_Image doesn't have a script for find_package(), so using find_library().
 find_library(SDL2_IMAGE_LIB SDL2_image)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIB})
+find_library(SDL2_TTF_LIB SDL2_ttf)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIB})
 
 
 # Install (copy files to aurora/bin/<Config>)
