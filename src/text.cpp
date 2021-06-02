@@ -4,17 +4,16 @@
 
 Text::Text()
 	: font(NULL), style(TTF_STYLE_NORMAL), outline(0),
-	  hinting(TTF_HINTING_NORMAL), kerning(true),
-	  tex(NULL), needUpdate(true)
-{
+	  hinting(TTF_HINTING_NORMAL), kerning(true), texture(NULL),
+	  texW(0), texH(0), needUpdate(true), useTextureSize(true) {
 	color.r = color.g = color.b = 0;
 	color.a = 255;
 }
 
 Text::~Text()
 {
-	if (tex)
-		SDL_DestroyTexture(tex);
+	if (texture)
+		SDL_DestroyTexture(texture);
 }
 
 void Text::setFont(TTF_Font *font)
@@ -89,12 +88,31 @@ void Text::setText(const std::string &str)
 	}
 }
 
+void Text::setDestRect(MultiSize rect)
+{
+	destRect = rect;
+}
+
+void Text::setDestPos(Size x, Size y)
+{
+	destRect.x = x;
+	destRect.y = y;
+}
+
+void Text::setUseTextureSize(bool use)
+{
+	useTextureSize = use;
+}
+
 void Text::updateTexture(SDL_Renderer *renderer)
 {
+	if (!needUpdate)
+		return;
+	
 	int curr_style = TTF_GetFontStyle(font);
 	if (curr_style != style)
 		TTF_SetFontStyle(font, style);
-		
+	
 	int curr_outline = TTF_GetFontOutline(font);
 	if (curr_outline != outline)
 		TTF_SetFontOutline(font, outline);
@@ -114,8 +132,9 @@ void Text::updateTexture(SDL_Renderer *renderer)
 		SDL_Texture *new_tex = SDL_CreateTextureFromSurface(renderer, surf);
 		if (new_tex)
 		{
-			SDL_DestroyTexture(tex);
-			tex = new_tex;
+			SDL_DestroyTexture(texture);
+			texture = new_tex;
+			SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
 		}
 		SDL_FreeSurface(surf);
 	}

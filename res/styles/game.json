@@ -13,7 +13,7 @@
 			}
 		},
 		"font": {
-			"filename": "res/style/fonts/Oxygen-Regular.ttf",
+			"filename": "res/fonts/Oxygen-Regular.ttf",
 			"size": 20
 		}
 	},

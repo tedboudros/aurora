@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "Entity.hpp"
+#include "Text.hpp"
 #include "Math.hpp"
 
 class RenderWindow {
@@ -21,6 +22,7 @@ public:
 	void cleanUp();
 	void clear();
 	void render(Entity& p_entity);
+	void render(Text& p_text);
 	void display();
 
 private:

@@ -1,11 +1,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Text.hpp"
 #include "Math.hpp"
 #include "Utils.hpp"
 #include "Gamepad/GamepadController.hpp"
@@ -73,6 +75,25 @@ int main(int argc, char* args[]) {
 			Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 			games.push_back(anotherGame);
 		}
+	}
+	
+	Text sampleText;
+	TTF_Font *font = NULL;
+	if (TTF_Init() < 0) {
+		std::cout << "TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
+	} else {
+		std::cout << "gameFontFName: " << gameFontFName << ", size: " << gameFontSize << std::endl;
+		font = TTF_OpenFont(gameFontFName.c_str(), gameFontSize);
+		if (font) {
+			std::cout << "Font opened." << std::endl;
+			sampleText.setFont(font);
+			sampleText.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText.setText("Sample Text");
+			sampleText.setDestPos(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT));
+			//sampleText.setDestRect(MultiSize(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT), Size(15, SIZE_WIDTH), Size(5, SIZE_HEIGHT)));
+			//sampleText.setUseTextureSize(false);
+		} else
+			std::cout << "Font not opened. TTF error: " << TTF_GetError() << std::endl;
 	}
 
 	bool isGameRunning = true;
@@ -189,11 +210,16 @@ int main(int argc, char* args[]) {
 			game.animate(deltaTime);
 			window.render(game);
 		}
+		
+		if (font)
+			window.render(sampleText);
 
 		window.display();
 
 	}
 
+	TTF_CloseFont(font);
+	TTF_Quit();
 	window.cleanUp();
 	SDL_Quit();
 

@@ -3,8 +3,9 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 
-class Text
-{
+#include "Math.hpp"
+
+class Text {
 public:
 	Text();
 	~Text();
@@ -17,17 +18,25 @@ public:
 	void setColor(SDL_Color col);
 	void setText(const char *s);
 	void setText(const std::string &str);
+	void setDestRect(MultiSize rect);
+	void setDestPos(Size x, Size y);
+	void setUseTextureSize(bool use);
 	
-	TTF_Font* getFont() const			{ return font; }
-	int getStyle() const				{ return style; }
-	int getOutline() const				{ return outline; }
-	int getHinting() const				{ return hinting; }
-	int getKerning() const				{ return kerning; }
-	SDL_Color getColor() const			{ return color; }
-	const std::string& getText() const	{ return str; }
-	const char* getTextAsChars() const	{ return str.c_str(); }
+	TTF_Font* getFont() const				{ return font; }
+	int getStyle() const					{ return style; }
+	int getOutline() const					{ return outline; }
+	int getHinting() const					{ return hinting; }
+	int getKerning() const					{ return kerning; }
+	SDL_Color getColor() const				{ return color; }
+	const std::string& getText() const		{ return str; }
+	const char* getTextAsChars() const		{ return str.c_str(); }
+	const MultiSize& getDestRect() const	{ return destRect; }
+	SDL_Texture* getTexture()				{ return texture; }
+	int getOriginalWidth() const			{ return texW; }
+	int getOriginalHeight() const			{ return texH; }
+	bool getUseTextureSize() const			{ return useTextureSize; }
 	
-	void render(SDL_Renderer *renderer, int x, int y);
+	void updateTexture(SDL_Renderer *renderer);
 	
 private:
 	TTF_Font *font;
@@ -37,8 +46,9 @@ private:
 	bool kerning;
 	SDL_Color color;
 	std::string str;
-	SDL_Texture *tex;
+	SDL_Texture *texture;
+	int texW, texH;
 	bool needUpdate;
-	
-	void updateTexture(SDL_Renderer *renderer);
+	MultiSize destRect;
+	bool useTextureSize;
 };
