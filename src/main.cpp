@@ -77,7 +77,7 @@ int main(int argc, char* args[]) {
 		}
 	}
 	
-	Text sampleText;
+	Text sampleText1, sampleText2, sampleText3;
 	TTF_Font *font = NULL;
 	if (TTF_Init() < 0) {
 		std::cout << "TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
@@ -86,12 +86,27 @@ int main(int argc, char* args[]) {
 		font = TTF_OpenFont(gameFontFName.c_str(), gameFontSize);
 		if (font) {
 			std::cout << "Font opened." << std::endl;
-			sampleText.setFont(font);
-			sampleText.setColor(SDL_Color{255, 255, 255, 255});
-			sampleText.setText("Sample Text");
-			sampleText.setDestPos(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT));
-			//sampleText.setDestRect(MultiSize(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT), Size(15, SIZE_WIDTH), Size(5, SIZE_HEIGHT)));
-			//sampleText.setUseTextureSize(false);
+			// sampleText1
+			sampleText1.setFont(font);
+			sampleText1.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText1.setText("Sample Text (Solid Method)");
+			sampleText1.setRenderMethod(Text::RenderMethod::Solid);
+			sampleText1.setDestPos(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT));
+			//sampleText1.setDestRect(MultiSize(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT), Size(15, SIZE_WIDTH), Size(5, SIZE_HEIGHT)));
+			//sampleText1.setUseTextureSize(false);
+			// sampleText2
+			sampleText2.setFont(font);
+			sampleText2.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText2.setBackGndColor(SDL_Color{64, 140, 196, 255});
+			sampleText2.setText("Sample Text (Shaded Method)");
+			sampleText2.setRenderMethod(Text::RenderMethod::Shaded);
+			sampleText2.setDestPos(Size(5, SIZE_WIDTH), Size(55, SIZE_HEIGHT));
+			// sampleText3
+			sampleText3.setFont(font);
+			sampleText3.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText3.setText("Sample Text (Blended Method)");
+			sampleText3.setRenderMethod(Text::RenderMethod::Blended);
+			sampleText3.setDestPos(Size(5, SIZE_WIDTH), Size(60, SIZE_HEIGHT));
 		} else
 			std::cout << "Font not opened. TTF error: " << TTF_GetError() << std::endl;
 	}
@@ -211,8 +226,11 @@ int main(int argc, char* args[]) {
 			window.render(game);
 		}
 		
-		if (font)
-			window.render(sampleText);
+		if (font) {
+			window.render(sampleText1);
+			window.render(sampleText2);
+			window.render(sampleText3);
+		}
 
 		window.display();
 

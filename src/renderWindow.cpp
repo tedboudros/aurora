@@ -66,15 +66,15 @@ void RenderWindow::render(Text& p_text) {
 	p_text.updateTexture(renderer);
 	
 	src.x = src.y = 0;
-	src.w = p_text.getOriginalWidth();
-	src.h = p_text.getOriginalHeight();
+	src.w = p_text.getTextureWidth();
+	src.h = p_text.getTextureHeight();
 	
 	dest.x = calculateSize(p_text.getDestRect().x, windowDims);
 	dest.y = calculateSize(p_text.getDestRect().y, windowDims);
 	if (p_text.getUseTextureSize())
 	{
-		dest.w = p_text.getOriginalWidth();
-		dest.h = p_text.getOriginalHeight();
+		dest.w = p_text.getTextureWidth();
+		dest.h = p_text.getTextureHeight();
 	} else {
 		dest.w = calculateSize(p_text.getDestRect().w, windowDims);
 		dest.h = calculateSize(p_text.getDestRect().h, windowDims);
