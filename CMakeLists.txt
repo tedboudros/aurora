@@ -10,12 +10,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-set(SRC_LIST "src/easing.c" "src/entity.cpp" "src/gamepadController.cpp"
-             "src/main.cpp" "src/math.cpp" "src/renderWindow.cpp"
-             "include/Animation/Easing.h" "include/Gamepad/GamepadController.hpp"
-             "include/Parsers/JSON.hpp"
-             "include/Entity.hpp" "include/Math.hpp"
-             "include/RenderWindow.hpp" "include/Utils.hpp")
+file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
