@@ -30,8 +30,11 @@ target_compile_features(${PROJECT_NAME} PRIVATE c_std_11)
 find_package(SDL2 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main SDL2::SDL2)
 
-# SDL_Image doesn't have a script for find_package(), so using find_library().
+# SDL2_image doesn't have a script for find_package(), so using find_library().
 find_library(SDL2_IMAGE_LIB SDL2_image)
+if(NOT SDL2_IMAGE_LIB)
+	message(FATAL_ERROR "SDL2_image library is required, but not found.")
+endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIB})
 
 
