@@ -17,6 +17,8 @@ set(SRC_LIST "src/easing.c" "src/entity.cpp" "src/gamepadController.cpp"
              "include/Parsers/JSON.hpp"
              "include/Entity.hpp" "include/Math.hpp"
              "include/RenderWindow.hpp" "include/Utils.hpp")
+             
+file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
