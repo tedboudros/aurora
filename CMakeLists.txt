@@ -9,14 +9,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-set(SRC_LIST "src/easing.c" "src/entity.cpp" "src/gamepadController.cpp"
-             "src/main.cpp" "src/math.cpp" "src/renderWindow.cpp"
-			 "src/text.cpp" "include/Text.hpp"
-             "include/Animation/Easing.h" "include/Gamepad/GamepadController.hpp"
-             "include/Parsers/JSON.hpp"
-             "include/Entity.hpp" "include/Math.hpp"
-             "include/RenderWindow.hpp" "include/Utils.hpp")
              
 file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 
