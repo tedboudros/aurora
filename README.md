@@ -14,6 +14,9 @@
 - Install CMake:
 `sudo apt install cmake`
 
+- Install G++:
+`sudo apt install g++ gcc`
+
 - Install SDL2, SDL2_image and SDL2_ttf:
 `sudo apt install libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0`
 
