@@ -6,16 +6,16 @@
 - Update MSYS2 (may be necessary to run several times):
 `pacman -Syuu`
 
-- Install GCC, CMake, Make, SDL, SDL2_Image:
-`pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image`
+- Install GCC, CMake, Make, SDL2, SDL2_image, SDL2_ttf:
+`pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf`
 
 #### Linux:
 
 - Install CMake:
 `sudo apt install cmake`
 
-- Install SDL2 and SDL2_Image:
-`sudo apt install libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0`
+- Install SDL2, SDL2_image and SDL2_ttf:
+`sudo apt install libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0`
 
 ## Building
 

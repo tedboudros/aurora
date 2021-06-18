@@ -9,7 +9,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
+             
 file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
@@ -36,6 +36,13 @@ if(NOT SDL2_IMAGE_LIB)
 	message(FATAL_ERROR "SDL2_image library is required, but not found.")
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIB})
+
+# Same for SDL2_ttf.
+find_library(SDL2_TTF_LIB SDL2_ttf)
+if(NOT SDL2_TTF_LIB)
+	message(FATAL_ERROR "SDL2_ttf library is required, but not found.")
+endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIB})
 
 
 # Install (copy files to aurora/bin/<Config>)

@@ -4,6 +4,7 @@
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Text.hpp"
 #include "Math.hpp"
 
 float calculateSize(Size value, Vector2f windowDimensions) {
@@ -57,6 +58,29 @@ void RenderWindow::render(Entity& p_entity) {
 	dest.h = calculateSize(p_entity.getDest().h, windowDims);
 
 	SDL_RenderCopy(renderer, p_entity.getTexture(), &src, &dest);
+}
+
+void RenderWindow::render(Text& p_text) {
+	SDL_Rect src, dest;
+	
+	p_text.updateTexture(renderer);
+	
+	src.x = src.y = 0;
+	src.w = p_text.getTextureWidth();
+	src.h = p_text.getTextureHeight();
+	
+	dest.x = calculateSize(p_text.getDestRect().x, windowDims);
+	dest.y = calculateSize(p_text.getDestRect().y, windowDims);
+	if (p_text.getUseTextureSize())
+	{
+		dest.w = p_text.getTextureWidth();
+		dest.h = p_text.getTextureHeight();
+	} else {
+		dest.w = calculateSize(p_text.getDestRect().w, windowDims);
+		dest.h = calculateSize(p_text.getDestRect().h, windowDims);
+	}
+
+	SDL_RenderCopy(renderer, p_text.getTexture(), &src, &dest);
 }
 
 void RenderWindow::display() {

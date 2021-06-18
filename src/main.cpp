@@ -1,11 +1,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Text.hpp"
 #include "Math.hpp"
 #include "Utils.hpp"
 #include "Gamepad/GamepadController.hpp"
@@ -40,6 +42,8 @@ int main(int argc, char* args[]) {
 
 	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY;
 	int normalTransitionTime, spamTransitionTime;
+	std::string gameFontFName;
+	int gameFontSize = 10;
 
 	auto readGameStyles = [&] () {	
 		std::ifstream gameStylesJSON("res/styles/game.json");
@@ -49,6 +53,8 @@ int main(int argc, char* args[]) {
 		gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
 		gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
 		selectedGameOffset = (gameSizeSelected - gameSizeNormal);
+		gameFontFName = gameStyles["game"]["font"]["filename"];
+		gameFontSize = gameStyles["game"]["font"]["size"];
 		gameOffset = gameStyles["game-container"]["x"]["value"];
 		marginBetweenGames = gameStyles["game-container"]["spacing"]["value"];
 		normalY = gameStyles["game-container"]["y"]["value"];
@@ -69,6 +75,40 @@ int main(int argc, char* args[]) {
 			Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 			games.push_back(anotherGame);
 		}
+	}
+	
+	Text sampleText1, sampleText2, sampleText3;
+	TTF_Font *font = NULL;
+	if (TTF_Init() < 0) {
+		std::cout << "TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
+	} else {
+		std::cout << "gameFontFName: " << gameFontFName << ", size: " << gameFontSize << std::endl;
+		font = TTF_OpenFont(gameFontFName.c_str(), gameFontSize);
+		if (font) {
+			std::cout << "Font opened." << std::endl;
+			// sampleText1
+			sampleText1.setFont(font);
+			sampleText1.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText1.setText("Sample Text (Solid Method)");
+			sampleText1.setRenderMethod(Text::RenderMethod::Solid);
+			sampleText1.setDestPos(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT));
+			//sampleText1.setDestRect(MultiSize(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT), Size(15, SIZE_WIDTH), Size(5, SIZE_HEIGHT)));
+			//sampleText1.setUseTextureSize(false);
+			// sampleText2
+			sampleText2.setFont(font);
+			sampleText2.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText2.setBackGndColor(SDL_Color{64, 140, 196, 255});
+			sampleText2.setText("Sample Text (Shaded Method)");
+			sampleText2.setRenderMethod(Text::RenderMethod::Shaded);
+			sampleText2.setDestPos(Size(5, SIZE_WIDTH), Size(55, SIZE_HEIGHT));
+			// sampleText3
+			sampleText3.setFont(font);
+			sampleText3.setColor(SDL_Color{255, 255, 255, 255});
+			sampleText3.setText("Sample Text (Blended Method)");
+			sampleText3.setRenderMethod(Text::RenderMethod::Blended);
+			sampleText3.setDestPos(Size(5, SIZE_WIDTH), Size(60, SIZE_HEIGHT));
+		} else
+			std::cout << "Font not opened. TTF error: " << TTF_GetError() << std::endl;
 	}
 
 	bool isGameRunning = true;
@@ -185,11 +225,19 @@ int main(int argc, char* args[]) {
 			game.animate(deltaTime);
 			window.render(game);
 		}
+		
+		if (font) {
+			window.render(sampleText1);
+			window.render(sampleText2);
+			window.render(sampleText3);
+		}
 
 		window.display();
 
 	}
 
+	TTF_CloseFont(font);
+	TTF_Quit();
 	window.cleanUp();
 	SDL_Quit();
 
