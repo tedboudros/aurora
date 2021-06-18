@@ -14,6 +14,9 @@
 - Install CMake:
 `sudo apt install cmake`
 
+- **Fix for Ubuntu 21.04:**
+`sudo apt install libudev1=247.3-3ubuntu3.1`
+
 - Install SDL2, SDL2_image and SDL2_ttf:
 `sudo apt install libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0`
 
