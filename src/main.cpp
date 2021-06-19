@@ -170,9 +170,9 @@ int main(int argc, char* args[]) {
 		while(SDL_PollEvent(&event)){
 			switch(event.type) {
 				case SDL_QUIT:
-					readGameStyles();
-					animateGames();
-					//isGameRunning = false;
+					//readGameStyles();
+					//animateGames();
+					isGameRunning = false;
 					break;
 
 				case SDL_JOYAXISMOTION:

@@ -3,3 +3,12 @@ bin/*
 api/node_modules/
 api/yarn.lock
 *.sublime-workspace
+
+build-debug/
+build-release/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CMakeFiles/
+Makefile
+Aurora
