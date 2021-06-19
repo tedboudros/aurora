@@ -1,5 +1,5 @@
 #!/bin/bash
-# Compile for target Ubuntu. G++.v
+# Tested with (Ubuntu 21.04 w/ G++, Windows 10 w/ MSYS MinGW64)
 
 RED_COLOR='\033[0;31m'
 GREEN_COLOR='\033[1;32m'
@@ -60,7 +60,13 @@ else
     eval "mkdir $FOLDER_ENV && cd $FOLDER_ENV $HAS_OUTPUT"
 fi
 
-eval "cmake .. -DCMAKE_BUILD_TYPE=$ENV $HAS_OUTPUT"
+BUILD_EXTRA_PARAMS=""
+
+if [[ "$OSTYPE" == "msys" ]]; then
+    BUILD_EXTRA_PARAMS=' -G "MinGW Makefiles"'
+fi
+
+eval "cmake$BUILD_EXTRA_PARAMS .. -DCMAKE_BUILD_TYPE=$ENV $HAS_OUTPUT"
 eval "cmake --build . $HAS_OUTPUT"
 eval "cmake --install . $HAS_OUTPUT"
 
