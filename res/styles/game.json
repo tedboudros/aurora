@@ -1,36 +1,38 @@
 {
-	"game": {
-		"normal": {
-			"size": {
-				"value": 15,
-				"%": "HEIGHT"
-			}
-		},
-		"active": {
-			"size": {
-				"value": 18,
-				"%": "HEIGHT"
-			}
-		},
-		"font": {
-			"filename": "res/fonts/Oxygen-Regular.ttf",
-			"size": 20
-		}
-	},
-	"game-container": {
-		"normalTransition": 200,
-		"spamTransition": 150,
-		"y": {
-			"value": 2,
-			"%": "HEIGHT"
-		},
-		"x": {
-			"value": 2,
-			"%": "HEIGHT"
-		},
-		"spacing": {
-			"value": 0.5,
-			"%": "HEIGHT"
-		}
-	}
+  "game": {
+    "normal": {
+      "size": {
+        "value": 15,
+        "%": "HEIGHT"
+      }
+    },
+    "active": {
+      "size": {
+        "value": 18,
+        "%": "HEIGHT"
+      }
+    },
+    "font": {
+      "filename": "res/fonts/Oxygen-Regular.ttf",
+      "size": 20,
+      "x": 2,
+      "y": 95
+    }
+  },
+  "game-container": {
+    "normalTransition": 200,
+    "spamTransition": 150,
+    "y": {
+      "value": 2,
+      "%": "HEIGHT"
+    },
+    "x": {
+      "value": 2,
+      "%": "HEIGHT"
+    },
+    "spacing": {
+      "value": 0.5,
+      "%": "HEIGHT"
+    }
+  }
 }

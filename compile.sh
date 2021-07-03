@@ -7,7 +7,6 @@ BLUE_COLOR='\033[1;34m'
 NO_COLOR='\033[0m' # No Color
 
 error () {
-    clear
     echo -e "🚫 ${RED_COLOR}ERROR - $1!${NO_COLOR}"
 }
 
@@ -70,7 +69,11 @@ eval "cmake$BUILD_EXTRA_PARAMS .. -DCMAKE_BUILD_TYPE=$ENV $HAS_OUTPUT"
 eval "cmake --build . $HAS_OUTPUT"
 eval "cmake --install . $HAS_OUTPUT"
 
-success "Built for $ENV env"
+if [ -f "Aurora.exe" ]; then
+  success "Built for $ENV env"
+else
+  die " Build failed. Please run the command with -v to see more details"
+fi
 
 for i in "$@" ; do
     if [[ $i == "-zip" ]] ; then

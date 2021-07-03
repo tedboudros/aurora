@@ -21,8 +21,11 @@ int main(int argc, char* args[]) {
 		std::cout << "ERROR: SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << std::endl;
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
+	if (!TTF_Init()) {
+		std::cout << "ERROR: TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
+	}
 	
-	RenderWindow window("Aurora v0.0.7", 1920, 1080);
+	RenderWindow window("Aurora v0.1", 1920, 1080);
 
 	//window.setFullScreen(true);
 
@@ -41,9 +44,8 @@ int main(int argc, char* args[]) {
 	gameStylesJSON >> gameStyles;
 
 	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY;
-	int normalTransitionTime, spamTransitionTime;
-	std::string gameFontFName;
-	int gameFontSize = 10;
+	int normalTransitionTime, spamTransitionTime, gameTitleFontSize = 10, gameTitleX, gameTitleY;
+	std::string gameFontFamilyName;
 
 	auto readGameStyles = [&] () {	
 		std::ifstream gameStylesJSON("res/styles/game.json");
@@ -53,8 +55,10 @@ int main(int argc, char* args[]) {
 		gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
 		gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
 		selectedGameOffset = (gameSizeSelected - gameSizeNormal);
-		gameFontFName = gameStyles["game"]["font"]["filename"];
-		gameFontSize = gameStyles["game"]["font"]["size"];
+		gameFontFamilyName = gameStyles["game"]["font"]["filename"];
+		gameTitleFontSize = gameStyles["game"]["font"]["size"];
+		gameTitleX = gameStyles["game"]["font"]["x"];
+		gameTitleY = gameStyles["game"]["font"]["y"];
 		gameOffset = gameStyles["game-container"]["x"]["value"];
 		marginBetweenGames = gameStyles["game-container"]["spacing"]["value"];
 		normalY = gameStyles["game-container"]["y"]["value"];
@@ -77,39 +81,19 @@ int main(int argc, char* args[]) {
 		}
 	}
 	
-	Text sampleText1, sampleText2, sampleText3;
+	Text gameTitle;
 	TTF_Font *font = NULL;
-	if (TTF_Init() < 0) {
-		std::cout << "TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
-	} else {
-		std::cout << "gameFontFName: " << gameFontFName << ", size: " << gameFontSize << std::endl;
-		font = TTF_OpenFont(gameFontFName.c_str(), gameFontSize);
-		if (font) {
-			std::cout << "Font opened." << std::endl;
-			// sampleText1
-			sampleText1.setFont(font);
-			sampleText1.setColor(SDL_Color{255, 255, 255, 255});
-			sampleText1.setText("Sample Text (Solid Method)");
-			sampleText1.setRenderMethod(Text::RenderMethod::Solid);
-			sampleText1.setDestPos(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT));
-			//sampleText1.setDestRect(MultiSize(Size(5, SIZE_WIDTH), Size(50, SIZE_HEIGHT), Size(15, SIZE_WIDTH), Size(5, SIZE_HEIGHT)));
-			//sampleText1.setUseTextureSize(false);
-			// sampleText2
-			sampleText2.setFont(font);
-			sampleText2.setColor(SDL_Color{255, 255, 255, 255});
-			sampleText2.setBackGndColor(SDL_Color{64, 140, 196, 255});
-			sampleText2.setText("Sample Text (Shaded Method)");
-			sampleText2.setRenderMethod(Text::RenderMethod::Shaded);
-			sampleText2.setDestPos(Size(5, SIZE_WIDTH), Size(55, SIZE_HEIGHT));
-			// sampleText3
-			sampleText3.setFont(font);
-			sampleText3.setColor(SDL_Color{255, 255, 255, 255});
-			sampleText3.setText("Sample Text (Blended Method)");
-			sampleText3.setRenderMethod(Text::RenderMethod::Blended);
-			sampleText3.setDestPos(Size(5, SIZE_WIDTH), Size(60, SIZE_HEIGHT));
-		} else
-			std::cout << "Font not opened. TTF error: " << TTF_GetError() << std::endl;
-	}
+	font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
+	
+	auto setGameTitleFont = [&] () { 
+		gameTitle.setFont(font);
+		gameTitle.setColor(SDL_Color{255, 255, 255, 255});
+		gameTitle.setText("Sample Text (Solid Method)");
+		gameTitle.setRenderMethod(Text::RenderMethod::Blended);
+		gameTitle.setDestPos(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+	};
+
+	setGameTitleFont();
 
 	bool isGameRunning = true;
 	SDL_Event event;
@@ -170,9 +154,10 @@ int main(int argc, char* args[]) {
 		while(SDL_PollEvent(&event)){
 			switch(event.type) {
 				case SDL_QUIT:
-					//readGameStyles();
-					//animateGames();
-					isGameRunning = false;
+					readGameStyles();
+					animateGames();
+					setGameTitleFont();	
+					//isGameRunning = false;
 					break;
 
 				case SDL_JOYAXISMOTION:
@@ -212,7 +197,7 @@ int main(int argc, char* args[]) {
 		}
 
 		if(selectedGame != prevSelectedGame) {
-			animateGames();
+			animateGames();	
 			prevSelectedGame = selectedGame;
 		}
 
@@ -227,9 +212,7 @@ int main(int argc, char* args[]) {
 		}
 		
 		if (font) {
-			window.render(sampleText1);
-			window.render(sampleText2);
-			window.render(sampleText3);
+			window.render(gameTitle);
 		}
 
 		window.display();
