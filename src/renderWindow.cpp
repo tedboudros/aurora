@@ -71,10 +71,12 @@ void RenderWindow::render(Text& p_text) {
 	
 	dest.x = calculateSize(p_text.getDestRect().x, windowDims);
 	dest.y = calculateSize(p_text.getDestRect().y, windowDims);
+
+	// Use the height from the destRect (MultiSize) as a scale for the font.
 	if (p_text.getUseTextureSize())
 	{
-		dest.w = p_text.getTextureWidth();
-		dest.h = p_text.getTextureHeight();
+		dest.w = p_text.getTextureWidth() * (p_text.getFontScale());
+		dest.h = p_text.getTextureHeight() * (p_text.getFontScale());
 	} else {
 		dest.w = calculateSize(p_text.getDestRect().w, windowDims);
 		dest.h = calculateSize(p_text.getDestRect().h, windowDims);

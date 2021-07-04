@@ -43,8 +43,8 @@ int main(int argc, char* args[]) {
 	json gameStyles;
 	gameStylesJSON >> gameStyles;
 
-	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY;
-	int normalTransitionTime, spamTransitionTime, gameTitleFontSize = 10, gameTitleX, gameTitleY;
+	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY, gameTitleFontScale, gameTitleX, gameTitleY;
+	int normalTransitionTime, spamTransitionTime, gameTitleFontSize;
 	std::string gameFontFamilyName;
 
 	auto readGameStyles = [&] () {	
@@ -57,6 +57,7 @@ int main(int argc, char* args[]) {
 		selectedGameOffset = (gameSizeSelected - gameSizeNormal);
 		gameFontFamilyName = gameStyles["game"]["font"]["filename"];
 		gameTitleFontSize = gameStyles["game"]["font"]["size"];
+		gameTitleFontScale = gameStyles["game"]["font"]["scale"];
 		gameTitleX = gameStyles["game"]["font"]["x"];
 		gameTitleY = gameStyles["game"]["font"]["y"];
 		gameOffset = gameStyles["game-container"]["x"]["value"];
@@ -80,7 +81,7 @@ int main(int argc, char* args[]) {
 		"Tomb Raider",
 	};
 	
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		{
 			const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
 
@@ -93,7 +94,6 @@ int main(int argc, char* args[]) {
 	
 	Text gameTitle;
 	TTF_Font *font = NULL;
-	font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
 	
 	bool isGameRunning = true;
 	SDL_Event event;
@@ -105,11 +105,14 @@ int main(int argc, char* args[]) {
 	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
 
 	auto setGameTitleFont = [&] () { 
+		font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
+
 		gameTitle.setFont(font);
 		gameTitle.setColor(SDL_Color{255, 255, 255, 255});
 		gameTitle.setText(gameNames[selectedGame]);
+		gameTitle.setFontScale(gameTitleFontScale);
 		gameTitle.setRenderMethod(Text::RenderMethod::Blended);
-		gameTitle.setDestPos(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+		gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
 	};
 
 	setGameTitleFont();

@@ -6,7 +6,7 @@ Text::Text()
 	: font(NULL), style(TTF_STYLE_NORMAL), outline(0),
 	  hinting(TTF_HINTING_NORMAL), kerning(true),
 	  renderMethod(RenderMethod::Blended), texture(NULL),
-	  texW(0), texH(0), needUpdate(true), useTextureSize(true) {
+	  texW(0), texH(0), needUpdate(true), useTextureSize(true), fontScale(1) {
 	color.r = color.g = color.b = 255;
 	color.a = 255;
 	backGndColor.r = backGndColor.g = backGndColor.b = 0;
@@ -92,9 +92,13 @@ void Text::setDestRect(MultiSize rect) {
 	destRect = rect;
 }
 
-void Text::setDestPos(Size x, Size y) {
+void Text::setPosition(Size x, Size y) {
 	destRect.x = x;
 	destRect.y = y;
+}
+
+void Text::setFontScale(float scale) { 
+	fontScale = scale;
 }
 
 void Text::setUseTextureSize(bool use) {

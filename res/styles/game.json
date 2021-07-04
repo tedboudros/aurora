@@ -14,20 +14,21 @@
     },
     "font": {
       "filename": "res/fonts/Oxygen-Regular.ttf",
-      "size": 24,
-      "x": 2,
-      "y": 95
+      "scale": 1,
+      "size": 28,
+      "x": 1.75,
+      "y": 94
     }
   },
   "game-container": {
-    "normalTransition": 200,
+    "normalTransition": 120,
     "spamTransition": 150,
     "y": {
-      "value": 2,
+      "value": 3,
       "%": "HEIGHT"
     },
     "x": {
-      "value": 2,
+      "value": 3,
       "%": "HEIGHT"
     },
     "spacing": {

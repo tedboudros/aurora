@@ -25,7 +25,8 @@ public:
 	void setText(const std::string &str);
 	void setRenderMethod(RenderMethod method);
 	void setDestRect(MultiSize rect);
-	void setDestPos(Size x, Size y);
+	void setPosition(Size x, Size y);
+	void setFontScale(float scale);
 	void setUseTextureSize(bool use);
 	
 	TTF_Font* getFont() const				{ return font; }
@@ -41,6 +42,7 @@ public:
 	SDL_Texture* getTexture()				{ return texture; }
 	int getTextureWidth() const				{ return texW; }
 	int getTextureHeight() const			{ return texH; }
+	float getFontScale() const 				{ return fontScale; }
 	bool getUseTextureSize() const			{ return useTextureSize; }
 	
 	void updateTexture(SDL_Renderer *renderer);
@@ -51,6 +53,7 @@ private:
 	int outline;
 	int hinting;
 	bool kerning;
+	float fontScale;
 	SDL_Color color;
 	SDL_Color backGndColor;
 	RenderMethod renderMethod;
