@@ -35,12 +35,12 @@ fi
 
 HAS_OUTPUT="&> /dev/null"
 
-if [[ "$2" == "-v" ]];
+if [[ -n "-v" ]];
   then
     HAS_OUTPUT=""
 fi
 
-clear
+#clear
 
 FOLDER_ENV="build-debug"
 ENV="Debug"
@@ -75,15 +75,14 @@ else
   die " Build failed. Please run the command with -v to see more details"
 fi
 
-for i in "$@" ; do
-    if [[ $i == "-zip" ]] ; then
-        info "Generating the .zip file"
-        eval "cmake --build . --target make_zip $HAS_OUTPUT"
-        success "Generated the .zip file"
-    elif [[ $i == "-run" ]] ; then
-        info "Launching Aurora..."
-        cd ..
-        eval "./bin/$ENV/Aurora $HAS_OUTPUT"
-    fi
-done
+if [[ -n "-zip" ]] ; then
+    info "Generating the .zip file"
+    eval "cmake --build . --target make_zip $HAS_OUTPUT"
+    success "Generated the .zip file"
+fi
 
+if [[ -n "-run" ]] ; then
+    info "Launching Aurora..."
+    cd ..
+    eval "./bin/$ENV/Aurora $HAS_OUTPUT"
+fi

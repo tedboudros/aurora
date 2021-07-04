@@ -69,8 +69,18 @@ int main(int argc, char* args[]) {
 	readGameStyles();
 
 	// CONSTANTS HERE FOR NOW:
+
+
+	const std::vector<std::string> gameNames = {
+		"Counter Strike: Global Offensive",
+		"Minecraft",
+		"Overwatch",
+		"Rocket Leauge",
+		"Everspace 2",
+		"Tomb Raider",
+	};
 	
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 5; i++) {
 		{
 			const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
 
@@ -85,16 +95,6 @@ int main(int argc, char* args[]) {
 	TTF_Font *font = NULL;
 	font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
 	
-	auto setGameTitleFont = [&] () { 
-		gameTitle.setFont(font);
-		gameTitle.setColor(SDL_Color{255, 255, 255, 255});
-		gameTitle.setText("Sample Text (Solid Method)");
-		gameTitle.setRenderMethod(Text::RenderMethod::Blended);
-		gameTitle.setDestPos(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
-	};
-
-	setGameTitleFont();
-
 	bool isGameRunning = true;
 	SDL_Event event;
 
@@ -104,6 +104,15 @@ int main(int argc, char* args[]) {
 	Vector2f windowSize = window.getWindowDimensions();
 	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
 
+	auto setGameTitleFont = [&] () { 
+		gameTitle.setFont(font);
+		gameTitle.setColor(SDL_Color{255, 255, 255, 255});
+		gameTitle.setText(gameNames[selectedGame]);
+		gameTitle.setRenderMethod(Text::RenderMethod::Blended);
+		gameTitle.setDestPos(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+	};
+
+	setGameTitleFont();
 	
 	Entity wallpaperEntity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
 	
@@ -198,6 +207,7 @@ int main(int argc, char* args[]) {
 
 		if(selectedGame != prevSelectedGame) {
 			animateGames();	
+			setGameTitleFont();
 			prevSelectedGame = selectedGame;
 		}
 
