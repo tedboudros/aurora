@@ -35,7 +35,7 @@ fi
 
 HAS_OUTPUT="&> /dev/null"
 
-if [[ -n "-v" ]];
+if [[ $@ == *'-v'* ]];
   then
     HAS_OUTPUT=""
 fi
@@ -75,13 +75,20 @@ else
   die " Build failed. Please run the command with -v to see more details"
 fi
 
-if [[ -n "-zip" ]] ; then
+if [[ $@ == *'-zip'* ]] ; then
     info "Generating the .zip file"
     eval "cmake --build . --target make_zip $HAS_OUTPUT"
     success "Generated the .zip file"
 fi
 
-if [[ -n "-run" ]] ; then
+
+SHOULD_RUN=true
+
+if [[ $@ == *'-dontRun'* ]] ; then
+    SHOULD_RUN=false
+fi
+
+if [ $SHOULD_RUN == true ]; then
     info "Launching Aurora..."
     cd ..
     eval "./bin/$ENV/Aurora $HAS_OUTPUT"

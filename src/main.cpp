@@ -20,9 +20,9 @@ int main(int argc, char* args[]) {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
 		std::cout << "ERROR: SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << std::endl;
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
-		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;
-	if (!TTF_Init()) {
-		std::cout << "ERROR: TTF init has failed. TTF error: " << TTF_GetError() << std::endl;
+		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;		
+	if(!TTF_WasInit() && TTF_Init() == -1) {
+		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
 	
 	RenderWindow window("Aurora v0.1", 1920, 1080);
