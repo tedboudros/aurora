@@ -25,7 +25,7 @@ int main(int argc, char* args[]) {
 		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
 	
-	RenderWindow window("Aurora v0.1", 1920, 1080);
+	RenderWindow window("Aurora v0.2.1", 1920, 1080);
 
 	//window.setFullScreen(true);
 
