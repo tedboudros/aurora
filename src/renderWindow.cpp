@@ -20,7 +20,18 @@ RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :wind
 
 	SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" );
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);// );//
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	
+	if(renderer == NULL) {
+		std::cout << "Accelerated renderer has failed to initialize. Error: " << SDL_GetError() << std::endl; 
+		std::cout << "Using fallback renderer..." << std::endl << std::endl; 
+		renderer = SDL_CreateRenderer(window, -1, NULL);
+	}
+
+	if(renderer == NULL) {
+		std::cout << "Fallback renderer has failed to init. Error: " << SDL_GetError() << std::endl; 
+	}
+
 	SDL_ShowCursor(false); // Hides the cursor;
 };
 
