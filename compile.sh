@@ -69,7 +69,7 @@ eval "cmake$BUILD_EXTRA_PARAMS .. -DCMAKE_BUILD_TYPE=$ENV $HAS_OUTPUT"
 eval "cmake --build . $HAS_OUTPUT"
 eval "cmake --install . $HAS_OUTPUT"
 
-if [ -f "Aurora.exe" ]; then
+if [ -f "Aurora.exe" ] || [ -f "Aurora" ]; then
   success "Built for $ENV env"
 else
   die " Build failed. Please run the command with -v to see more details"
