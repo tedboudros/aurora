@@ -42,21 +42,21 @@ fi
 
 #clear
 
-FOLDER_ENV="build-debug"
+CLIENT_FOLDER_ENV="client/build-debug"
 ENV="Debug"
 
 if [[ "$1" == "release" ]]; then # Checks first argument: Compilation Environment - Release
-    FOLDER_ENV="build-release"
+    CLIENT_FOLDER_ENV="client/build-release"
     ENV="Release"
 fi
 
 info "Building for ${ENV} env"
 
 # Checking if folder exists
-if [ -d "$FOLDER_ENV" ]; then
-    eval "cd $FOLDER_ENV && rm -rf * $HAS_OUTPUT"
+if [ -d "$CLIENT_FOLDER_ENV" ]; then
+    eval "cd $CLIENT_FOLDER_ENV && rm -rf * $HAS_OUTPUT"
 else
-    eval "mkdir $FOLDER_ENV && cd $FOLDER_ENV $HAS_OUTPUT"
+    eval "mkdir $CLIENT_FOLDER_ENV && cd $CLIENT_FOLDER_ENV $HAS_OUTPUT"
 fi
 
 BUILD_EXTRA_PARAMS=""

@@ -1,0 +1,39 @@
+{
+  "game": {
+    "normal": {
+      "size": {
+        "value": 15,
+        "%": "HEIGHT"
+      }
+    },
+    "active": {
+      "size": {
+        "value": 18,
+        "%": "HEIGHT"
+      }
+    },
+    "font": {
+      "filename": "res/fonts/Oxygen-Regular.ttf",
+      "scale": 1,
+      "size": 28,
+      "x": 1.75,
+      "y": 94
+    }
+  },
+  "game-container": {
+    "normalTransition": 120,
+    "spamTransition": 150,
+    "y": {
+      "value": 3,
+      "%": "HEIGHT"
+    },
+    "x": {
+      "value": 3,
+      "%": "HEIGHT"
+    },
+    "spacing": {
+      "value": 0.5,
+      "%": "HEIGHT"
+    }
+  }
+}
