@@ -18,7 +18,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE "include")
 if(MINGW)
     target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
 endif()
-
 # TODO: Couldn't find some portable way of setting this.
 #       If CMake will add something in future, replace this.
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
@@ -28,12 +27,9 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 target_compile_features(${PROJECT_NAME} PRIVATE c_std_11)
 
 find_package(SDL2 REQUIRED)
-
-if(WIN32)
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::main SDL2::SDL2)
-else()
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
-endif()
+# Fixes WinMain bug
+add_definitions(-DSDL_MAIN_HANDLED)
 
 # SDL2_image doesn't have a script for find_package(), so using find_library().
 find_library(SDL2_IMAGE_LIB SDL2_image)
