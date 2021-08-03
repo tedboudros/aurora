@@ -1,0 +1,14 @@
+*.o
+*.sublime-workspace
+
+# Client stuff
+build-debug/
+build-release/
+bin/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CMakeFiles/
+Makefile
+Aurora
+Aurora.exe
