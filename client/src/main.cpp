@@ -37,21 +37,8 @@ int main(int argc, char* args[]) {
 	SDL_Texture* gameBorder = window.loadTexture("res/images/game.png");
 	SDL_Texture* wallpaper = window.loadTexture("res/images/bg.png");
 
-	std::vector<Entity> games = {};
-
-	try
-	{
-		// you can pass http::InternetProtocol::V6 to Request to make an IPv6 request
-		http::Request request{"http://test.com/test"};
-
-		// send a get request
-		const auto response = request.send("GET");
-		std::cout << std::string{response.body.begin(), response.body.end()} << '\n'; // print the result
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Request failed, error: " << e.what() << '\n';
-	}
+	std::vector<Entity> gameEntities = {};
+	std::vector<std::string> gameNames = {};
 
 	std::ifstream gameStylesJSON("res/styles/game.json");
 	json gameStyles;
@@ -60,6 +47,45 @@ int main(int argc, char* args[]) {
 	float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY, gameTitleFontScale, gameTitleX, gameTitleY;
 	int normalTransitionTime, spamTransitionTime, gameTitleFontSize;
 	std::string gameFontFamilyName;
+
+	
+	auto createGameEntities = [&] (int num_of_entities) {	
+		for (int i = 0; i < num_of_entities; i++) {
+			{
+				
+			}
+		}
+	};
+
+	auto createGameEntity = [&] (int i, std::string name) {
+		const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
+		const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
+		
+		Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
+		gameEntities.push_back(anotherGame);
+
+		gameNames.push_back(name);
+	};
+
+	auto requestSteamGamesFromServer = [&] () {
+		try {
+			http::Request request{"http://127.0.0.1:8000/steam"};
+
+			const auto response = request.send("GET");
+			const std::string response_str = std::string{response.body.begin(), response.body.end()};
+
+			auto gamesResponse = json::parse(response_str);
+			std::cout << "Got " << gamesResponse.size() << " games from the server!" <<  std::endl;
+
+			for (int i = 0; i < gamesResponse.size(); i++) {
+				createGameEntity(i, gamesResponse[i]["name"]);
+			}
+		}
+		catch (const std::exception& e) {
+			std::cerr << "Request failed, error: " << e.what() << '\n';
+		}
+	};
+
 
 	auto readGameStyles = [&] () {	
 		std::ifstream gameStylesJSON("res/styles/game.json");
@@ -82,30 +108,10 @@ int main(int argc, char* args[]) {
 	};
 
 	readGameStyles();
+	requestSteamGamesFromServer();
 
 	// CONSTANTS HERE FOR NOW:
 
-
-	const std::vector<std::string> gameNames = {
-		"Counter Strike: Global Offensive",
-		"Minecraft",
-		"Overwatch",
-		"Rocket Leauge",
-		"Everspace 2",
-		"Tomb Raider",
-	};
-	
-	for (int i = 0; i < 6; i++) {
-		{
-			const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
-
-			const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
-
-			Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
-			games.push_back(anotherGame);
-		}
-	}
-	
 	Text gameTitle;
 	TTF_Font *font = NULL;
 	
@@ -123,7 +129,9 @@ int main(int argc, char* args[]) {
 
 		gameTitle.setFont(font);
 		gameTitle.setColor(SDL_Color{255, 255, 255, 255});
-		gameTitle.setText(gameNames[selectedGame]);
+		if(gameNames.size() >= 1) {
+			gameTitle.setText(gameNames[selectedGame]);
+		}
 		gameTitle.setFontScale(gameTitleFontScale);
 		gameTitle.setRenderMethod(Text::RenderMethod::Blended);
 		gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
@@ -145,7 +153,7 @@ int main(int argc, char* args[]) {
 
 
 	auto animateGames = [&] () {
-		for(int i = 0; i < static_cast<int>(games.size()); i++) {
+		for(int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
 			int newX,newY,newW,newH;
 
 			newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
@@ -162,7 +170,7 @@ int main(int argc, char* args[]) {
 				newX += selectedGameOffset;
 			}
 
-			games[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
+			gameEntities[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
 		}
 	};
 
@@ -197,7 +205,7 @@ int main(int argc, char* args[]) {
 					}else if(gamepadController.onRight()){		
 						isSpamming = false;		
 
-			    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
+			    		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
 			    			selectedGame += 1;
 			    		}
 					}
@@ -217,7 +225,7 @@ int main(int argc, char* args[]) {
 		}else if(gamepadController.onRightSpam()){		
 			isSpamming = true;
 
-    		if(selectedGame != (static_cast<int>(games.size()) -1)) {
+    		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
     			selectedGame += 1;
     		}
 		}
@@ -233,7 +241,7 @@ int main(int argc, char* args[]) {
 
 		window.render(wallpaperEntity);
 
-		for(Entity& game : games) {
+		for(Entity& game : gameEntities) {
 			game.animate(deltaTime);
 			window.render(game);
 		}
