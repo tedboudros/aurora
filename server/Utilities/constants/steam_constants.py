@@ -3,7 +3,6 @@ steam_constants = {
         "win32": "C:/Program Files (x86)/Steam",
         "linux": "~/.local/share/steam",
     },
-    "encoding": "utf8",
-    "platform": "Steam",
+    "platform_name": "steam",
     "blacklisted_game_ids": [228980]
 }
