@@ -68,7 +68,9 @@ Arguments
 
 Let's say you want to compile and run the debug environment with some extra info in case something breaks :boom:
 
-`./compile.sh debug -v`
+```sh
+./compile.sh debug -v
+```
 
 ## :hammer_and_wrench: Support
 
