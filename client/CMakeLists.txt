@@ -15,6 +15,11 @@ file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
 
+# For windows networking
+IF(WIN32)
+	target_link_libraries(${PROJECT_NAME} PRIVATE -lwsock32 -lWs2_32)
+endif()
+
 if(MINGW)
     target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
 endif()
