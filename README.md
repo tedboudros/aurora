@@ -17,7 +17,8 @@ Aurora is a set of utilities aiming to take PC couch gaming to the next level!
 ### Windows:
 
 - Install [MSYS2](https://www.msys2.org/)
-- Open a new MSYS2 MinGW 64-bit terminal (C:\msys64\mingw64.exe)
+- Open a new **MSYS2 MinGW 64-bit** terminal (C:\msys64\mingw64.exe)
+- Clone the repository
 - Update MSYS2 and install dependencies:
 
 ```sh
@@ -25,7 +26,7 @@ pacman -Syuu && pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-
 ```
 
 ### Linux:
-
+- Clone the repository
 - Install dependencies:
 
 ```sh
@@ -67,7 +68,9 @@ Arguments
 
 Let's say you want to compile and run the debug environment with some extra info in case something breaks :boom:
 
-`./compile.sh debug -v`
+```sh
+./compile.sh debug -v
+```
 
 ## :hammer_and_wrench: Support
 
