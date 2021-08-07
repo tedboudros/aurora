@@ -1,8 +1,10 @@
+import os
+
 steam_constants = {
     "base_dir": {
         "win32": "C:/Program Files (x86)/Steam",
-        "linux": "~/.local/share/steam",
-        "darwin": "~/Library/Application\ Support/Steam"
+        "linux": os.path.expanduser("~/.local/share/steam"),
+        "darwin": os.path.expanduser("~/Library/Application Support/Steam")
     },
     "platform_name": "steam",
     "blacklisted_game_ids": [228980]
