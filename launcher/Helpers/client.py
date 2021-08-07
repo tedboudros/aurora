@@ -1,12 +1,12 @@
 from datetime import datetime
 import subprocess
 import os
-import time
 from pathlib import Path
 import logging
 
-CLIENT_DIR = "../client"
-MSYS2_MINGW64_EXECUTABLE = "C:\\msys64\\mingw64.exe"
+# Constants
+CLIENT_DIR = "client"
+MSYS2_MINGW64_EXECUTABLE = "C:\\msys64\\mingw64.exe" # windows (msys2) specific
 TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK = 0.2 # in seconds / windows (msys2) specific
 
 logging.basicConfig(level=logging.INFO,
@@ -59,32 +59,57 @@ def run_cmake_command(args_list):
 
     return process
 
+class AuroraClient:
+    def __init__(self, env, options):
+        self.client = None
+        self.env = env
+        self.options = options
+        self.run()
 
-def compile_client(env):
-    current_working_dir = os.path.abspath(os.getcwd())
+    def refresh(self):
+        self.compile()
+        self.kill()
+        self.run()
 
-    client_logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {env}")
-    build_dir = f"{CLIENT_DIR}/build-{env}"
+    def kill(self):
+        if self.client:
+            self.client.kill()
+            self.client.wait()
 
-    build_path = Path(build_dir)
-    if not build_path.exists():
-        os.mkdir(build_dir)
+    def compile(self):
+        current_working_dir = os.path.abspath(os.getcwd())
 
-    extra_build_args = []
+        client_logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {self.env}")
+        build_dir = f"{CLIENT_DIR}/build-{self.env}"
 
-    if os.name == 'nt':
-        extra_build_args = ['-G', "MinGW Makefiles"]
+        build_path = Path(build_dir)
+        if not build_path.exists():
+            os.mkdir(build_dir)
 
-    os.chdir(build_dir)
+        extra_build_args = []
 
-    run_cmake_command(extra_build_args + ['..', f"-DCMAKE_BUILD_TYPE={env}"])
-    run_cmake_command(['--build', "."])
-    run_cmake_command(['--install', "."])
+        if os.name == 'nt':
+            extra_build_args = ['-G', "MinGW Makefiles"]
 
-    os.chdir(current_working_dir)
+        os.chdir(build_dir)
 
+        run_cmake_command(extra_build_args + ['..', f"-DCMAKE_BUILD_TYPE={self.env}"])
+        run_cmake_command(['--build', "."])
+        run_cmake_command(['--install', "."])
 
-    client_logger.log(level=logging.INFO, msg=f"Finished compilation of the client!")
+        os.chdir(current_working_dir)
 
+        client_logger.log(level=logging.INFO, msg=f"Finished compilation of the client!")
 
-compile_client('debug')
+    def run(self):
+        current_working_dir = os.path.abspath(os.getcwd())
+
+        os.chdir(CLIENT_DIR)
+
+        executable = f"./bin/{self.env}/Aurora"
+        client = subprocess.Popen(executable)
+
+        os.chdir(current_working_dir)
+
+        self.client = client
+        return client
