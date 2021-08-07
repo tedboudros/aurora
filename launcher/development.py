@@ -14,19 +14,22 @@ os.chdir(f"{file_path}/../")
 
 env = 'debug'
 
-client = AuroraClient(env, {})
 server = AuroraServer(env, {})
+client = AuroraClient(env, {})
 
 if __name__ == "__main__":
-    client_event_handler = ClientEventHandler(client)
-    client_observer = Observer()
-    client_observer.schedule(client_event_handler, f"./{CLIENT_DIR}", recursive=True)
-    client_observer.start()
+    server.refresh()
+    client.refresh()
 
     server_event_handler = ClientEventHandler(server)
     server_observer = Observer()
     server_observer.schedule(server_event_handler, f"./{SERVER_DIR}", recursive=True)
     server_observer.start()
+
+    client_event_handler = ClientEventHandler(client)
+    client_observer = Observer()
+    client_observer.schedule(client_event_handler, f"./{CLIENT_DIR}", recursive=True)
+    client_observer.start()
 
     try:
         while True:

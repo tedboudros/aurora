@@ -62,7 +62,6 @@ class AuroraClient:
         self.client = None
         self.env = env
         self.options = options
-        self.run()
 
     def refresh(self):
         self.compile()

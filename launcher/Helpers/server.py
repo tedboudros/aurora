@@ -17,7 +17,6 @@ class AuroraServer:
         self.server = None
         self.env = env
         self.options = options
-        self.run()
 
     def refresh(self):
         self.kill()
