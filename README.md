@@ -87,32 +87,10 @@ pip3 install -r requirements.txt
 
 ---
 
-## :rocket: Client Compilation
-
-#### To compile (and run) Aurora, you will have to use the `./compile.sh` script.
+## :rocket: Development
 
 ```sh
-cd aurora/client
-./compile.sh <build-env> (args)
-```
-
-Build environments:
-
-- `debug`
-- `release`
-
-Arguments
-
-- `-v` - Verbose mode (more debugging yay :cry:)
-- `-dontRun` - By default, running the compile script will also run Aurora. If you want to stop that behaviour pass this argument.
-- `-zip` - This will make a portable **.zip** file of the whole installation.
-
-#### Example:
-
-Let's say you want to compile and run the debug environment with some extra info in case something breaks :boom:
-
-```sh
-./compile.sh debug -v
+python3 launcher/development.py
 ```
 
 ## :hammer_and_wrench: Support

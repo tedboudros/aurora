@@ -5,14 +5,12 @@ from pathlib import Path
 import logging
 
 # Constants
-CLIENT_DIR = "client"
-MSYS2_MINGW64_EXECUTABLE = "C:\\msys64\\mingw64.exe" # windows (msys2) specific
-TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK = 0.2 # in seconds / windows (msys2) specific
+from Helpers.constants import CLIENT_DIR, MSYS2_MINGW64_EXECUTABLE, TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
-client_logger = logging.getLogger('Client Compilation')
+client_logger = logging.getLogger('Client')
 
 
 def run_cmake_command(args_list):

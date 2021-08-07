@@ -1,60 +1,40 @@
 import time
 import os
 import pathlib
-from datetime import datetime
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 
 from Helpers.client import AuroraClient
-
-CLIENT_DIR = 'client'
-SERVER_DIR = 'server'
-
-DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["src\\", "include\\", "src/", "include/"]
+from Helpers.server import AuroraServer
+from Helpers.constants import CLIENT_DIR, SERVER_DIR
+from Helpers.event_handlers import ClientEventHandler
 
 
-def ch_dir_to_root():
-    file_path = pathlib.Path(__file__).parent.resolve()
-    os.chdir(f"{file_path}/../")
+file_path = pathlib.Path(__file__).parent.resolve()
+os.chdir(f"{file_path}/../")
 
+env = 'debug'
 
-ch_dir_to_root()
-client = AuroraClient('debug', {})
-
-TIME_TO_ELAPSE_SINCE_LAST_COMPILATION = 5 # in seconds
-
-
-class ClientEventHandler(FileSystemEventHandler):
-    modified_files = []
-
-    def __init__(self):
-        super().__init__()
-        self.has_compilation_started = False
-        self.last_compilation_at = datetime.now()
-
-    def on_modified(self, event):
-        super().on_modified(event)
-
-        seconds_since_last_compilation = (datetime.now() - self.last_compilation_at).seconds
-
-        if not event.is_directory:
-            for dir_to_watch in DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION:
-                if event.src_path.find(dir_to_watch) != -1 and seconds_since_last_compilation >= TIME_TO_ELAPSE_SINCE_LAST_COMPILATION:
-                    # If the changed file is inside the directories we're watching for, recompile
-                    client.refresh()
-                    self.last_compilation_at = datetime.now()
-
+client = AuroraClient(env, {})
+server = AuroraServer(env, {})
 
 if __name__ == "__main__":
-    event_handler = ClientEventHandler()
-    observer = Observer()
-    observer.schedule(event_handler, f"./{CLIENT_DIR}", recursive=True)
-    observer.start()
+    client_event_handler = ClientEventHandler(client)
+    client_observer = Observer()
+    client_observer.schedule(client_event_handler, f"./{CLIENT_DIR}", recursive=True)
+    client_observer.start()
+
+    server_event_handler = ClientEventHandler(server)
+    server_observer = Observer()
+    server_observer.schedule(server_event_handler, f"./{SERVER_DIR}", recursive=True)
+    server_observer.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         client.kill()
-        observer.stop()
-    observer.join()
+        server.kill()
+        client_observer.stop()
+        server_observer.stop()
+    client_observer.join()
+    server_observer.join()

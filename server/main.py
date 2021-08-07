@@ -23,4 +23,7 @@ if __name__ == '__main__':
         print('Serving on port 8000...')
 
         # Serve until process is killed
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except:
+            httpd.server_close()
