@@ -15,6 +15,11 @@ file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PRIVATE "include")
 
+# For mac os
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	target_include_directories(${PROJECT_NAME} PRIVATE "/usr/local/include")
+endif()
+
 # For windows networking
 IF(WIN32)
 	target_link_libraries(${PROJECT_NAME} PRIVATE -lwsock32 -lWs2_32)
@@ -32,7 +37,14 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
 target_compile_features(${PROJECT_NAME} PRIVATE c_std_11)
 
 find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL_LIBRARY})
+	target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
+else()
+	target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
+endif()
+
 # Fixes WinMain bug
 add_definitions(-DSDL_MAIN_HANDLED)
 

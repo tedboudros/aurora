@@ -42,11 +42,11 @@ fi
 
 #clear
 
-CLIENT_FOLDER_ENV="client/build-debug"
+CLIENT_FOLDER_ENV="build-debug"
 ENV="Debug"
 
 if [[ "$1" == "release" ]]; then # Checks first argument: Compilation Environment - Release
-    CLIENT_FOLDER_ENV="client/build-release"
+    CLIENT_FOLDER_ENV="build-release"
     ENV="Release"
 fi
 
