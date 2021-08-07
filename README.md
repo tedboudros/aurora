@@ -22,23 +22,38 @@ Aurora is a set of utilities aiming to take PC couch gaming to the next level!
 - Update MSYS2 and install dependencies:
 
 ```sh
-pacman -Syuu && pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
+pacman -Syuu
+pacman -S python3 python3-pip mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
 ```
-
+- Install python dependencies
+```sh
+cd utilities
+pip install -r requirements.txt
+cd ../server
+pip install -r requirements.txt
+```
+----
 ### Linux:
 - Clone the repository
 - Install dependencies:
 
 ```sh
-sudo apt install cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0
+sudo apt install python3 python3-pip cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0
 ```
-
+- Install python dependencies
+```sh
+cd utilities
+pip install -r requirements.txt
+cd ../server
+pip install -r requirements.txt
+```
+----
 - **Fix for Ubuntu 21.04:**
 
 ```sh
 sudo apt install libudev1=247.3-3ubuntu3.1
 ```
-
+----
 ### Mac OS:
 
 Sorry but you're out of luck...
