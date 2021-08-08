@@ -97,11 +97,11 @@ pip3 install -r requirements.txt
 
 ### Script Arguments:
 
-| Argument | Description |
-|----------|-------------|
-|--verbose|Verbose mode. Provides more debugging logs from mostly **cmake**|
-|--port **PORT**|The TCP port used for the internal server/client communication **(Default: 8000)**|
-|--env **ENVIRONMENT**|The env to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
+| Argument | Short Argument | Description |
+|----------|----------------|-------------|
+|--verbose|-v|Verbose mode. Provides more debugging logs from mostly **cmake**|
+|--port **PORT**|-p|The TCP port used for the internal server/client communication **(Default: 8000)**|
+|--env **ENV**|-e|The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
 
 
 ## :hammer_and_wrench: Support
