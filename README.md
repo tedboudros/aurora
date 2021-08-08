@@ -97,7 +97,7 @@ pip3 install -r requirements.txt
 
 ### Script Arguments:
 
-| Argument &nbsp; | Short Argument | Description |
+| Argument &nbsp; | Short Argument &nbsp; &nbsp;  | Description |
 |----------|----------------|-------------|
 |`--verbose`|`-v`|Verbose mode. Provides more debugging logs from mostly **cmake**|
 |`--port PORT`|`-p PORT`|The TCP port used for the internal server/client communication **(Default: 8000)**|
