@@ -90,8 +90,19 @@ pip3 install -r requirements.txt
 ## :rocket: Development
 
 ```sh
-python3 launcher/development.py
+./develop.sh <args>
 ```
+#### This is just an alias to `python3 launcher/development.py`
+
+
+### Script Arguments:
+
+| Argument | Description |
+|----------|-------------|
+|--verbose|Verbose mode. Provides more debugging logs from mostly **cmake**|
+|--port **PORT**|The TCP port used for the internal server/client communication **(Default: 8000)**|
+|--env **ENVIRONMENT**|The env to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
+
 
 ## :hammer_and_wrench: Support
 

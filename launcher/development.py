@@ -5,14 +5,13 @@ from watchdog.observers import Observer
 
 from Helpers.client import AuroraClient
 from Helpers.server import AuroraServer
-from Helpers.constants import CLIENT_DIR, SERVER_DIR
+from Helpers.constants import CLIENT_DIR, SERVER_DIR, get_arg_exist, get_arg_value
 from Helpers.event_handlers import ClientEventHandler
-
 
 file_path = pathlib.Path(__file__).parent.resolve()
 os.chdir(f"{file_path}/../")
 
-env = 'debug'
+env = get_arg_value('env')
 
 server = AuroraServer(env, {})
 client = AuroraClient(env, {})
