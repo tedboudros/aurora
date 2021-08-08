@@ -1,17 +1,15 @@
 from datetime import datetime
 import subprocess
 import os
+import sys
 from pathlib import Path
 import logging
 
 # Constants
 from Helpers.constants import CLIENT_DIR, MSYS2_MINGW64_EXECUTABLE, TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK
+from Helpers.logger import make_logger
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-client_logger = logging.getLogger('Client')
-
+logger = make_logger('Launcher')
 
 def run_cmake_command(args_list):
     if os.name == 'nt':
@@ -22,7 +20,7 @@ def run_cmake_command(args_list):
     process = subprocess.Popen(cmake_args + args_list, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE)
 
-    client_logger.info(f"Running | cmake {' '.join(args_list)} | with PID: {process.pid}")
+    logger.log(level=logging.INFO, msg=f"Running | cmake {' '.join(args_list)} | with PID: {process.pid}")
 
     if os.name == 'nt':
         import psutil
@@ -53,9 +51,10 @@ def run_cmake_command(args_list):
             if time_elapsed_since_started_searching_for_cmake.seconds > TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK and not has_found_cmake:
                 is_running = False
     else:
-        process.communicate()
+        process.wait()
 
     return process
+
 
 class AuroraClient:
     def __init__(self, env, port):
@@ -72,11 +71,22 @@ class AuroraClient:
         if self.client:
             self.client.kill()
             self.client.wait()
+            self.client = None
+
+    def poll(self):
+        if self.client:
+            return self.client.poll()
+        return None
+
+    def readline(self):
+        if self.client:
+            return self.client.stdout.readline()
+        return ''
 
     def compile(self):
         current_working_dir = os.path.abspath(os.getcwd())
 
-        client_logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {self.env}")
+        logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {self.env}")
         build_dir = f"{CLIENT_DIR}/build-{self.env}"
 
         build_path = Path(build_dir)
@@ -96,7 +106,7 @@ class AuroraClient:
 
         os.chdir(current_working_dir)
 
-        client_logger.log(level=logging.INFO, msg=f"Finished compilation of the client!")
+        logger.log(level=logging.INFO, msg=f"Finished compilation of the client!")
 
     def run(self):
         current_working_dir = os.path.abspath(os.getcwd())
@@ -104,7 +114,7 @@ class AuroraClient:
         os.chdir(CLIENT_DIR)
 
         executable = f"./bin/{self.env}/Aurora"
-        client = subprocess.Popen([executable, str(self.port)])
+        client = subprocess.Popen([executable, str(self.port)], stdout=subprocess.PIPE, universal_newlines=True)
 
         os.chdir(current_working_dir)
 

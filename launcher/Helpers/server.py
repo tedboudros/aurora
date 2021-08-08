@@ -1,22 +1,20 @@
 import subprocess
 import os
-import logging
 
 # Constants
 from Helpers.constants import SERVER_DIR
-SERVER_DIR = "server"
+from Helpers.logger import make_logger
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-client_logger = logging.getLogger('Server')
+logger = make_logger('Launcher')
+SERVER_DIR = "server"
 
 
 class AuroraServer:
-    def __init__(self, env, port):
+    def __init__(self, env, port, should_log):
         self.server = None
         self.env = env
         self.port = port
+        self.should_log = should_log
 
     def refresh(self):
         self.kill()
@@ -31,10 +29,11 @@ class AuroraServer:
         current_working_dir = os.path.abspath(os.getcwd())
 
         os.chdir(SERVER_DIR)
-        print(os.getcwd())
-        server = subprocess.Popen(["python3", "main.py", str(self.port)])
+
+        server = subprocess.Popen(["python3", "main.py", str(self.port), '-v' if self.should_log else None])
 
         os.chdir(current_working_dir)
 
         self.server = server
+        logger.info("Starting up server!")
         return server

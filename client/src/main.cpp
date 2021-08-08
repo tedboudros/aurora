@@ -111,7 +111,7 @@ int main(int argc, char* args[]) {
 	int prevSelectedGame = 0;
 
 	Vector2f windowSize = window.getWindowDimensions();
-	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
+	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl;
 
 	auto setGameTitleFont = [&] () { 
 		font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
