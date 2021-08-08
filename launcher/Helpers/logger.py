@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 
 from Helpers.root_dir import ROOT_DIR
+from pathlib import Path
 
 existing_loggers = {};
 
@@ -16,6 +17,8 @@ def make_logger(name):
     now_str = now.strftime("%d_%m_%Y_%H_%M_%S")
 
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+    Path(f"{ROOT_DIR}/Logs").mkdir(parents=True, exist_ok=True)
 
     file_handler = logging.handlers.WatchedFileHandler(
         os.environ.get("LOGFILE", f"{ROOT_DIR}/Logs/aurora_launcher_{now_str}.log"))
