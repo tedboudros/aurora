@@ -100,8 +100,8 @@ pip3 install -r requirements.txt
 | Argument | Short Argument | Description |
 |----------|----------------|-------------|
 |--verbose|-v|Verbose mode. Provides more debugging logs from mostly **cmake**|
-|--port **PORT**|-p|The TCP port used for the internal server/client communication **(Default: 8000)**|
-|--env **ENV**|-e|The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
+|--port **PORT**|-p **PORT**|The TCP port used for the internal server/client communication **(Default: 8000)**|
+|--env **ENV**|-e **ENV**|The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
 
 
 ## :hammer_and_wrench: Support
