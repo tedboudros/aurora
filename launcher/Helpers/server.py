@@ -13,10 +13,10 @@ client_logger = logging.getLogger('Server')
 
 
 class AuroraServer:
-    def __init__(self, env, options):
+    def __init__(self, env, port):
         self.server = None
         self.env = env
-        self.options = options
+        self.port = port
 
     def refresh(self):
         self.kill()
@@ -32,7 +32,7 @@ class AuroraServer:
 
         os.chdir(SERVER_DIR)
         print(os.getcwd())
-        server = subprocess.Popen(["python3", "main.py"])
+        server = subprocess.Popen(["python3", "main.py", str(self.port)])
 
         os.chdir(current_working_dir)
 

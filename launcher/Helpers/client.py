@@ -53,15 +53,15 @@ def run_cmake_command(args_list):
             if time_elapsed_since_started_searching_for_cmake.seconds > TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK and not has_found_cmake:
                 is_running = False
     else:
-        process.wait()
+        process.communicate()
 
     return process
 
 class AuroraClient:
-    def __init__(self, env, options):
+    def __init__(self, env, port):
         self.client = None
         self.env = env
-        self.options = options
+        self.port = port
 
     def refresh(self):
         self.compile()
@@ -104,7 +104,7 @@ class AuroraClient:
         os.chdir(CLIENT_DIR)
 
         executable = f"./bin/{self.env}/Aurora"
-        client = subprocess.Popen(executable)
+        client = subprocess.Popen([executable, str(self.port)])
 
         os.chdir(current_working_dir)
 

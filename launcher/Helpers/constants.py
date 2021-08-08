@@ -17,6 +17,7 @@ arguments_default_values = {
     'verbose': False
 }
 
+
 def get_arg_index(arg_name):
     index = -1
 

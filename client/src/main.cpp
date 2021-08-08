@@ -46,15 +46,6 @@ int main(int argc, char* args[]) {
 	int normalTransitionTime, spamTransitionTime, gameTitleFontSize;
 	std::string gameFontFamilyName;
 
-	
-	auto createGameEntities = [&] (int num_of_entities) {	
-		for (int i = 0; i < num_of_entities; i++) {
-			{
-				
-			}
-		}
-	};
-
 	auto createGameEntity = [&] (int i, std::string name) {
 		const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
 		const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
@@ -67,7 +58,7 @@ int main(int argc, char* args[]) {
 
 	auto requestSteamGamesFromServer = [&] () {
 		try {
-			http::Request request{"http://127.0.0.1:8000/steam"};
+			http::Request request{"http://127.0.0.1:" + std::string(args[1]) + "/steam"};
 
 			const auto response = request.send("GET");
 			const std::string response_str = std::string{response.body.begin(), response.body.end()};

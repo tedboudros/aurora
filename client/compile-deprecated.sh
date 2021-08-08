@@ -1,6 +1,11 @@
 #!/bin/bash
 # Tested with (Ubuntu 21.04 w/ G++, Windows 10 w/ MSYS MinGW64)
 
+
+# This script is old, please don't use it (Use the updated python one on ../launcher).
+# I left it on purpose in the repo just to have as a guide if you're going down the path of trying to manually compile!
+# On that note, good luck!
+
 RED_COLOR='\033[0;31m'
 GREEN_COLOR='\033[1;32m'
 BLUE_COLOR='\033[1;34m'

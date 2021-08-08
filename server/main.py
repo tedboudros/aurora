@@ -2,7 +2,7 @@ from Integrations.steam import get_all_steam_games_from_filesystem
 from wsgiref.simple_server import make_server
 
 import falcon
-
+import sys
 
 class SteamGamesResource:
     def on_get(self, req, resp):
@@ -19,8 +19,8 @@ steam = SteamGamesResource()
 app.add_route('/steam', steam)
 
 if __name__ == '__main__':
-    with make_server('', 8000, app) as httpd:
-        print('Serving on port 8000...')
+    with make_server('', int(sys.argv[1]), app) as httpd:
+        print(f'Serving on port {sys.argv[1]}...')
 
         # Serve until process is killed
         try:

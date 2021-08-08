@@ -12,9 +12,10 @@ file_path = pathlib.Path(__file__).parent.resolve()
 os.chdir(f"{file_path}/../")
 
 env = get_arg_value('env')
+port = get_arg_value('port')
 
-server = AuroraServer(env, {})
-client = AuroraClient(env, {})
+server = AuroraServer(env, port)
+client = AuroraClient(env, port)
 
 if __name__ == "__main__":
     server.refresh()
