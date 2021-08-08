@@ -7,12 +7,18 @@
 #include "Text.hpp"
 #include "Math.hpp"
 
+#ifdef __APPLE__
+	#define RENDERING_ARGS NULL
+#else
+	#define RENDERING_ARGS SDL_WINDOW_VULKAN
+#endif
+
 float calculateSize(Size value, Vector2f windowDimensions) {
 	return (value.val / 100)  * (value.type == SIZE_HEIGHT ? windowDimensions.y : windowDimensions.x);
 }
 
 RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL), windowDims(Vector2f(p_width, p_height)) {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | SDL_WINDOW_VULKAN );//| SDL_WINDOW_FULLSCREEN_DESKTOP );
+	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | RENDERING_ARGS );//| SDL_WINDOW_FULLSCREEN_DESKTOP );
 
 	if(window == NULL) {
 		std::cout << "Window has failed to init. Error: " << SDL_GetError() << std::endl; 
@@ -32,7 +38,7 @@ RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :wind
 		std::cout << "Fallback renderer has failed to init. Error: " << SDL_GetError() << std::endl; 
 	}
 
-	SDL_ShowCursor(false); // Hides the cursor;
+	// SDL_ShowCursor(false); // Hides the cursor;
 };
 
 void RenderWindow::cleanUp() {

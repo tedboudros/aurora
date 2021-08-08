@@ -12,7 +12,12 @@ def get_all_steam_libraries_fs():
     steam_libraries = [f"{steam_base_dir}/steamapps/"]
     extra_steam_libraries_vdf = vdf.load(open(f"{steam_base_dir}/steamapps/libraryfolders.vdf"))
 
-    for key, extra_steam_library in extra_steam_libraries_vdf['LibraryFolders'].items():
+    try:
+        library_folders = extra_steam_libraries_vdf['LibraryFolders']
+    except:
+        library_folders = extra_steam_libraries_vdf['libraryfolders']
+
+    for key, extra_steam_library in library_folders.items():
         if key.isnumeric():  # Steam libraries inside the vdf will have numeric only keys
             steam_libraries.append(f"{extra_steam_library}/steamapps/")
 

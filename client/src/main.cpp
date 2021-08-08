@@ -25,10 +25,8 @@ int main(int argc, char* args[]) {
 	if(!TTF_WasInit() && TTF_Init() == -1) {
 		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
-	
-	RenderWindow window("Aurora v0.3.0", 1920, 1080);
 
-	//window.setFullScreen(true);
+	RenderWindow window("Aurora v0.3.1", 1280, 720);
 
 	int windowRefreshRate = window.getRefreshRate();
 
@@ -48,15 +46,6 @@ int main(int argc, char* args[]) {
 	int normalTransitionTime, spamTransitionTime, gameTitleFontSize;
 	std::string gameFontFamilyName;
 
-	
-	auto createGameEntities = [&] (int num_of_entities) {	
-		for (int i = 0; i < num_of_entities; i++) {
-			{
-				
-			}
-		}
-	};
-
 	auto createGameEntity = [&] (int i, std::string name) {
 		const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
 		const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
@@ -69,7 +58,7 @@ int main(int argc, char* args[]) {
 
 	auto requestSteamGamesFromServer = [&] () {
 		try {
-			http::Request request{"http://127.0.0.1:8000/steam"};
+			http::Request request{"http://127.0.0.1:" + std::string(args[1]) + "/steam"};
 
 			const auto response = request.send("GET");
 			const std::string response_str = std::string{response.body.begin(), response.body.end()};
@@ -122,7 +111,7 @@ int main(int argc, char* args[]) {
 	int prevSelectedGame = 0;
 
 	Vector2f windowSize = window.getWindowDimensions();
-	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl << std::endl;
+	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl;
 
 	auto setGameTitleFont = [&] () { 
 		font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
@@ -188,10 +177,10 @@ int main(int argc, char* args[]) {
 		while(SDL_PollEvent(&event)){
 			switch(event.type) {
 				case SDL_QUIT:
-					readGameStyles();
-					animateGames();
-					setGameTitleFont();	
-					//isGameRunning = false;
+					// readGameStyles();
+					// animateGames();
+					// setGameTitleFont();	
+					isGameRunning = false;
 					break;
 
 				case SDL_JOYAXISMOTION:

@@ -22,16 +22,40 @@ Aurora is a set of utilities aiming to take PC couch gaming to the next level!
 - Update MSYS2 and install dependencies:
 
 ```sh
-pacman -Syuu && pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
+pacman -Syuu
+pacman -S python3 python3-pip mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
 ```
 
+- Install python dependencies
+
+```sh
+cd utilities
+pip3 install -r requirements.txt
+cd ../server
+pip3 install -r requirements.txt
+```
+
+---
+
 ### Linux:
+
 - Clone the repository
 - Install dependencies:
 
 ```sh
-sudo apt install cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0
+sudo apt install python3 python3-pip cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0
 ```
+
+- Install python dependencies
+
+```sh
+cd utilities
+pip3 install -r requirements.txt
+cd ../server
+pip3 install -r requirements.txt
+```
+
+---
 
 - **Fix for Ubuntu 21.04:**
 
@@ -39,38 +63,46 @@ sudo apt install cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsd
 sudo apt install libudev1=247.3-3ubuntu3.1
 ```
 
+---
+
 ### Mac OS:
 
-Sorry but you're out of luck...
-If you really want to try Aurora try to run it in a virtual machine with Linux!
+#### You are going to need to have [Homebrew](https://brew.sh/) installed
 
-## :rocket: Compilation
-
-#### To compile (and run) Aurora, you will have to use the `./compile.sh` script.
+- Install dependencies
 
 ```sh
-cd aurora
-./compile.sh <build-env> (args)
+brew install python3 sdl2 sdl2_image sdl2_ttf
 ```
 
-Build environments:
-
-- `debug`
-- `release`
-
-Arguments
-
-- `-v` - Verbose mode (more debugging yay :cry:)
-- `-dontRun` - By default, running the compile script will also run Aurora. If you want to stop that behaviour pass this argument.
-- `-zip` - This will make a portable **.zip** file of the whole installation.
-
-#### Example:
-
-Let's say you want to compile and run the debug environment with some extra info in case something breaks :boom:
+- Clone the repository
+- Install python dependencies
 
 ```sh
-./compile.sh debug -v
+cd utilities
+pip3 install -r requirements.txt
+cd ../server
+pip3 install -r requirements.txt
 ```
+
+---
+
+## :rocket: Development
+
+```sh
+./develop.sh <args>
+```
+#### This is just an alias to `python3 launcher/development.py`
+
+
+### Script Arguments:
+
+| Argument | Short Argument | Description |
+|----------|----------------|--------------|
+|--verbose|-v|Verbose mode. Provides more debugging logs from mostly **cmake**|
+|--port **PORT**|-p|The TCP port used for the internal server/client communication **(Default: 8000)**|
+|--env **ENV**|-e|The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
+
 
 ## :hammer_and_wrench: Support
 
