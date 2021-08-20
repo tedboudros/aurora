@@ -32,14 +32,21 @@ pip3 install -r requirements.txt
 
 ---
 
-### Linux:
+### Debian:
 
 - Clone the repository
 - Install dependencies:
 
 ```sh
-sudo apt install python3 python3-pip cmake g++ gcc libsdl2-dev libsdl2-2.0-0 libsdl2-image-dev libsdl2-image-2.0-0 libsdl2-ttf-dev libsdl2-ttf-2.0-0
+sudo apt update
+sudo apt upgrade
+
+sudo apt install python3 python3-pip cmake g++ gcc
+sudo apt install libsdl2-2.0-0 libsdl2-image-2.0-0 libsdl2-ttf-2.0-0
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 ```
+
+**Tip! If you're having problems installing the SDL2 dev libraries, you may need to change your apt mirror to "Main Server"**
 
 - Install python dependencies
 
@@ -49,16 +56,6 @@ pip3 install -r requirements.txt
 cd ../server
 pip3 install -r requirements.txt
 ```
-
----
-
-- **Fix for Ubuntu 21.04:**
-
-```sh
-sudo apt install libudev1=247.3-3ubuntu3.1
-```
-
----
 
 ### Mac OS:
 
