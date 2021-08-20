@@ -1,21 +1,29 @@
 import sys
+import os
 
 CLIENT_DIR="client"
 SERVER_DIR="server"
 
-MSYS2_MINGW64_EXECUTABLE = "C:\\msys64\\mingw64.exe" # windows (msys2) specific
-TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK = 0.2 # in seconds / windows (msys2) specific
-
 TIME_TO_ELAPSE_FROM_LAST_CLIENT_COMPILATION = 5 # in seconds
 TIME_TO_ELAPSE_FROM_LAST_SERVER_COMPILATION = 5 # in seconds
 
-DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["src\\", "include\\", "src/", "include/"]
+DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["client\\src\\", "client\\include\\", "client/src/", "client/include/"]
+DIRECTORIES_TO_WATCH_FOR_SERVER_RECOMPILATION = ["server\\", "server/"]
 
 arguments_default_values = {
-    "port": 8000,
+    "port": 42069,
     "env": 'debug',
     'verbose': False
 }
+
+def get_msys2_mingw64_terminal():
+    dir = os.getcwd()
+    return f"c:\\msys64\\usr\\bin\\env MSYSTEM=MINGW64 HOME=\"{dir}\" c:\\msys64\\usr\\bin\\bash -l -c"
+
+
+def get_cmake_win_cmd(cmd):
+    msys2_mingw64_terminal = get_msys2_mingw64_terminal()
+    return f"{msys2_mingw64_terminal} \'cmake {cmd}\'"
 
 
 def get_arg_index(arg_name):
@@ -43,3 +51,16 @@ def get_arg_value(arg_name):
 
 def get_arg_exist(arg_name):
     return get_arg_index(arg_name) != -1
+
+
+AURORA_ASCII_ART=r"""
+__________________________________________
+
+     /\                                  
+    /  \   _   _  _ __  ___   _ __  __ _ 
+   / /\ \ | | | || '__|/ _ \ | '__|/ _` |
+  / ____ \| |_| || |  | (_) || |  | (_| |
+ /_/    \_\\__,_||_|   \___/ |_|   \__,_|
+
+__________________________________________
+"""

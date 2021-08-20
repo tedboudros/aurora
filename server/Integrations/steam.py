@@ -52,8 +52,9 @@ def get_steam_games_from_dir_fs(library_dir):
             try:
                 games.append(format_steam_game_from_vdf(library_dir, game_vdf))
             except KeyError:
-                logger.warn(f"Couldn't format '{file}'. If the file is appmanifest_228980.acf, completely ignore "
-                            f"this. If not, a value might be missing from the .acf file")
+                if not 'appmanifest_228980.acf' in file:
+                    # If the file is appmanifest_228980.acf, completely ignore this.
+                    logger.warn(f"Couldn't format '{file}'. A value might be missing from the .acf file")
 
     return games
 
@@ -64,7 +65,7 @@ def get_all_steam_games_from_filesystem():
 
     for library_dir in steam_libraries:
         games = get_steam_games_from_dir_fs(library_dir)
-        logger.info(f"Successfully read {len(games)} steam games from '{library_dir}'")
+        logger.info(f"Found {len(games)} steam games inside '{library_dir}'")
         all_games = all_games + games
 
     return all_games
