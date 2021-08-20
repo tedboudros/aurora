@@ -6,20 +6,19 @@ from pathlib import Path
 import logging
 
 # Constants
-from Helpers.constants import CLIENT_DIR, MSYS2_MINGW64_EXECUTABLE, TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK
+from Helpers.constants import CLIENT_DIR, get_cmake_win_cmd, TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK
 from Helpers.logger import make_logger
 
 logger = make_logger('Launcher')
 
-def run_cmake_command(args_list):
-    quotation_str = '\''
-    cmake_args = f"{MSYS2_MINGW64_EXECUTABLE} {quotation_str}cmake" if os.name == 'nt' else 'cmake'
-    command = f"{cmake_args} {args_list}{quotation_str if os.name == 'nt' else ''}"
+def run_cmake_command(arguments):
+    posix_command = f"cmake {arguments}"
+    win_command = get_cmake_win_cmd(arguments)
 
-    process = subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
+    process = subprocess.Popen(win_command if os.name == 'nt' else posix_command, shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE)
 
-    logger.log(level=logging.INFO, msg=f"Running cmake {args_list} | with PID: {process.pid}")
+    logger.log(level=logging.INFO, msg=f"Running cmake {posix_command} | with PID: {process.pid}")
     process.wait()
 
     return process
@@ -96,7 +95,7 @@ class AuroraClient:
         
         try:
             client = subprocess.Popen([f"./{self.executable}", str(self.port)], stdout=subprocess.PIPE, universal_newlines=True)
-            logger.log(level=logging.INFO, msg=f"Successfully launched the client")
+            logger.log(level=logging.INFO, msg=f"Launching the client")
         except:
             logger.log(level=logging.ERROR, msg=f"Cannot launch the client")
         

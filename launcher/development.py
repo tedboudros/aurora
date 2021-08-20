@@ -5,7 +5,7 @@ from watchdog.observers import Observer
 
 from Helpers.client import AuroraClient
 from Helpers.server import AuroraServer
-from Helpers.constants import CLIENT_DIR, SERVER_DIR, get_arg_exist, get_arg_value
+from Helpers.constants import CLIENT_DIR, SERVER_DIR, get_arg_exist, get_arg_value, AURORA_ASCII_ART
 from Helpers.event_handlers import ClientEventHandler
 from Helpers.logger import make_logger
 
@@ -23,6 +23,8 @@ client = AuroraClient(env, port)
 server = AuroraServer(env, port, should_log)
 
 if __name__ == "__main__":
+    print(AURORA_ASCII_ART)
+
     client.refresh()
     server.refresh()
 

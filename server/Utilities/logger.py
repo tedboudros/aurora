@@ -9,7 +9,7 @@ from pathlib import Path
 now = datetime.now()
 now_str = now.strftime("%d_%m_%Y_%H_%M_%S")
 
-formatter = logging.Formatter("%(asctime)s - %(name)s   - %(levelname)s - %(message)s")
+formatter = logging.Formatter("%(asctime)s | %(name)s   | %(levelname)s - %(message)s")
 
 Path(f"{ROOT_DIR}/Logs").mkdir(parents=True, exist_ok=True)
 

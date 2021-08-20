@@ -1,5 +1,6 @@
 import subprocess
 import os
+import logging
 
 # Constants
 from Helpers.constants import SERVER_DIR
@@ -32,8 +33,12 @@ class AuroraServer:
 
         verbose_arr = ['-v'] if self.should_log else []
 
-        server = subprocess.Popen(["python3", "main.py", str(self.port)] + verbose_arr)
-        logger.info("Successfully launched the server")
+        try:
+            server = subprocess.Popen(["python3", "main.py", str(self.port)] + verbose_arr)
+            logger.log(level=logging.INFO, msg=f"Launching the server")
+        except:
+            logger.log(level=logging.ERROR, msg=f"Cannot launch the server")
+
 
         os.chdir(current_working_dir)
 
