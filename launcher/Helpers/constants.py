@@ -3,8 +3,8 @@ import sys
 CLIENT_DIR="client"
 SERVER_DIR="server"
 
-MSYS2_MINGW64_EXECUTABLE = "C:\\msys64\\mingw64.exe" # windows (msys2) specific
-TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK = 0.2 # in seconds / windows (msys2) specific
+MSYS2_MINGW64_EXECUTABLE = "c:\\msys64\\usr\\bin\\env MSYSTEM=MINGW64 HOME=\"C:\\msys64\\home\\Ted\\aurora\\client\\build-debug\" c:\\msys64\\usr\\bin\\bash -l -c" # windows (msys2) specific
+TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK = 0.5 # in seconds / windows (msys2) specific
 
 TIME_TO_ELAPSE_FROM_LAST_CLIENT_COMPILATION = 5 # in seconds
 TIME_TO_ELAPSE_FROM_LAST_SERVER_COMPILATION = 5 # in seconds

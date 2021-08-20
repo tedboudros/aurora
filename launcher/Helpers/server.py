@@ -33,9 +33,9 @@ class AuroraServer:
         verbose_arr = ['-v'] if self.should_log else []
 
         server = subprocess.Popen(["python3", "main.py", str(self.port)] + verbose_arr)
+        logger.info("Successfully launched the server")
 
         os.chdir(current_working_dir)
 
         self.server = server
-        logger.info("Starting up server!")
         return server
