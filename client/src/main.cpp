@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "RenderWindow.hpp"
+#include "Pages/MainMenu.hpp"
+
 #include "Entity.hpp"
 #include "Text.hpp"
 #include "Math.hpp"
@@ -19,22 +21,13 @@
 using json = nlohmann::json;
 
 int main(int argc, char* args[]) {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
-		std::cout << "ERROR: SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << std::endl;
-	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
-		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;		
-	if(!TTF_WasInit() && TTF_Init() == -1) {
-		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
-	}
-
 	RenderWindow window("Aurora", 1600, 900);
+	MainMenuPage mainMenu(&window);
 
 	int windowRefreshRate = window.getRefreshRate();
-
-	std::cout << "Window Info:" << std::endl << "Current display refresh rate: " << windowRefreshRate << std::endl;
+	std::cout << "Refresh rate: " << windowRefreshRate << "hz" << std::endl;
 
 	SDL_Texture* gameBorder = window.loadTexture("res/images/game.png");
-	SDL_Texture* wallpaper = window.loadTexture("res/images/bg.png");
 
 	std::vector<Entity> gameEntities = {};
 	std::vector<std::string> gameNames = {};
@@ -105,14 +98,14 @@ int main(int argc, char* args[]) {
 	Text gameTitle;
 	TTF_Font *font = NULL;
 	
-	bool isGameRunning = true;
+	bool isRunning = true;
 	SDL_Event event;
 
 	int selectedGame = 0;
 	int prevSelectedGame = 0;
 
 	Vector2f windowSize = window.getWindowDimensions();
-	std::cout << "Width: " << windowSize.x << ", Height: " << windowSize.y << std::endl;
+	std::cout << "Resolution: " << windowSize.x << "x" << windowSize.y << std::endl;
 
 	auto setGameTitleFont = [&] () { 
 		font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
@@ -128,9 +121,6 @@ int main(int argc, char* args[]) {
 	};
 
 	setGameTitleFont();
-	
-	Entity wallpaperEntity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
-	
 
 	Uint64 currentTime = utils::hireTime();
 
@@ -201,7 +191,7 @@ int main(int argc, char* args[]) {
 	};
 
 	// Game loop:
-	while(isGameRunning) {
+	while(isRunning) {
 		Uint64 newTime = utils::hireTime();
 		double deltaTime = ((newTime - currentTime)*1000 / (double)SDL_GetPerformanceFrequency() );
 		currentTime = newTime;
@@ -215,7 +205,7 @@ int main(int argc, char* args[]) {
 					// readGameStyles();
 					// animateGames();
 					// setGameTitleFont();	
-					isGameRunning = false;
+					isRunning = false;
 					break;
 
 				case SDL_JOYAXISMOTION:
@@ -263,7 +253,7 @@ int main(int argc, char* args[]) {
 		// Actual Rendering
 		window.clear();
 
-		window.render(wallpaperEntity);
+		mainMenu.render(deltaTime);
 
 		for(Entity& game : gameEntities) {
 			game.animate(deltaTime);

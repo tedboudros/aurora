@@ -8,6 +8,7 @@
 class Entity {
 
 public: 
+	Entity();
 	Entity(MultiSize p_dest, SDL_Texture* p_texture);
 
 	MultiSize& getDest() {
