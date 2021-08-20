@@ -22,6 +22,7 @@ endif()
 
 # For windows networking
 IF(WIN32)
+	target_link_libraries(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -lpthread)
 	target_link_libraries(${PROJECT_NAME} PRIVATE -lwsock32 -lWs2_32)
 endif()
 

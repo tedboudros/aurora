@@ -30,7 +30,9 @@ class AuroraServer:
 
         os.chdir(SERVER_DIR)
 
-        server = subprocess.Popen(["python3", "main.py", str(self.port), '-v' if self.should_log else None])
+        verbose_arr = ['-v'] if self.should_log else []
+
+        server = subprocess.Popen(["python3", "main.py", str(self.port)] + verbose_arr)
 
         os.chdir(current_working_dir)
 
