@@ -11,6 +11,7 @@
 #include "Math.hpp"
 #include "Utils.hpp"
 #include "Gamepad/GamepadController.hpp"
+#include "Keyboard/KeyboardController.hpp"
 #include <Parsers/JSON.hpp>
 #include "HTTPRequest.hpp"
 
@@ -26,7 +27,7 @@ int main(int argc, char* args[]) {
 		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
 
-	RenderWindow window("Aurora v0.3.1", 1280, 720);
+	RenderWindow window("Aurora v0.3.3", 1280, 720);
 
 	int windowRefreshRate = window.getRefreshRate();
 
@@ -134,6 +135,7 @@ int main(int argc, char* args[]) {
 	Uint64 currentTime = utils::hireTime();
 
 	GamepadController gamepadController;
+	KeyboardController keyboardController;
 
 	int lastLeftRightAxisValue = 0;
 	const int axisThreshold = 20000;
@@ -165,6 +167,39 @@ int main(int argc, char* args[]) {
 
 	animateGames();
 
+	
+	auto navigateLeft = [&] () {
+		isSpamming = false;
+
+		if(selectedGame != 0) {
+			selectedGame -= 1;
+		}
+	};
+
+	auto navigateRight = [&] () {
+		isSpamming = false;		
+
+		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+			selectedGame += 1;
+		}
+	};
+	
+	auto spamLeft = [&] () {
+		isSpamming = true;
+
+		if(selectedGame != 0) {
+			selectedGame -= 1;
+		}
+	};
+
+	auto spamRight = [&] () {
+		isSpamming = true;
+
+		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+			selectedGame += 1;
+		}
+	};
+
 	// Game loop:
 	while(isGameRunning) {
 		Uint64 newTime = utils::hireTime();
@@ -186,37 +221,37 @@ int main(int argc, char* args[]) {
 				case SDL_JOYAXISMOTION:
 					gamepadController.execFrame(event);
 					if(gamepadController.onLeft()) {
-						isSpamming = false;
-
-			    		if(selectedGame != 0) {
-			    			selectedGame -= 1;
-			    		}
+						navigateLeft();
 					}else if(gamepadController.onRight()){		
-						isSpamming = false;		
-
-			    		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
-			    			selectedGame += 1;
-			    		}
+						navigateRight();
 					}
 
+					break;
+
+				case SDL_KEYDOWN:
+					keyboardController.execFrame(event);
+					
+					if(keyboardController.onLeft()) {
+						navigateLeft();
+					}else if(keyboardController.onRight()){		
+						navigateRight();
+					}
+
+					break;
+
+				case SDL_KEYUP:
+					keyboardController.execFrame(event);
 					break;
 			}
 		}
 
 		gamepadController.spamController(deltaTime);
+		keyboardController.spamKeyboard(deltaTime);
 
-		if(gamepadController.onLeftSpam()) {
-			isSpamming = true;
-
-    		if(selectedGame != 0) {
-    			selectedGame -= 1;
-    		}
-		}else if(gamepadController.onRightSpam()){		
-			isSpamming = true;
-
-    		if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
-    			selectedGame += 1;
-    		}
+		if(gamepadController.onLeftSpam() || keyboardController.onLeftSpam()) {
+			spamLeft();
+		}else if(gamepadController.onRightSpam() || keyboardController.onRightSpam()){	
+			spamRight();
 		}
 
 		if(selectedGame != prevSelectedGame) {

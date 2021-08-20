@@ -2,14 +2,16 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
+#include <vector>
 
 #include "Math.hpp"
 #include "Animation/Easing.h"
 
-class GamepadController {
+class KeyboardController {
 
 public: 
-	GamepadController();
+	KeyboardController();
 
 	bool onLeft() {
 		return (isLeftIn && !prevIsLeftIn);
@@ -28,10 +30,10 @@ public:
 	};
 
 	void execFrame(SDL_Event& event);
-	void spamController(double deltaTime);
+	void spamKeyboard(double deltaTime);
 
 private:
 	bool isLeftIn = false, isRightIn = false, prevIsLeftIn = false, prevIsRightIn = false, isRightSpamming = false, isLeftSpamming = false, isLeftFirstIn = false, isRightFirstIn = false;
-	int lastAxisZeroValue = 0;
+    const Uint8* keyboardKeys = SDL_GetKeyboardState(NULL);
 	double currentSpamTime = 0;
 };
