@@ -26,10 +26,10 @@ pacman -Syuu
 pacman -S python3 python3-pip mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
 ```
 
-- Install python dependencies
+- Install python dependencies - From powershell
 
 ```sh
-cd utilities
+cd launcher
 pip3 install -r requirements.txt
 cd ../server
 pip3 install -r requirements.txt
@@ -49,7 +49,7 @@ sudo apt install python3 python3-pip cmake g++ gcc libsdl2-dev libsdl2-2.0-0 lib
 - Install python dependencies
 
 ```sh
-cd utilities
+cd launcher
 pip3 install -r requirements.txt
 cd ../server
 pip3 install -r requirements.txt
