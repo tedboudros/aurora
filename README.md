@@ -108,7 +108,7 @@ python3 launcher/development.py <args>
 | Argument        | Short Argument | Description                                                                                                             |
 | --------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | --verbose       | -v             | Verbose mode. Provides more debugging logs from mostly **cmake**                                                        |
-| --port **PORT** | -p             | The TCP port used for the internal server/client communication **(Default: 8000)**                                      |
+| --port **PORT** | -p             | The TCP port used for the internal server/client communication **(Default: 42069)**                                     |
 | --env **ENV**   | -e             | The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)** |
 
 ## :hammer_and_wrench: Support

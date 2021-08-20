@@ -7,7 +7,8 @@ SERVER_DIR="server"
 TIME_TO_ELAPSE_FROM_LAST_CLIENT_COMPILATION = 5 # in seconds
 TIME_TO_ELAPSE_FROM_LAST_SERVER_COMPILATION = 5 # in seconds
 
-DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["src\\", "include\\", "src/", "include/"]
+DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["client\\src\\", "client\\include\\", "client/src/", "client/include/"]
+DIRECTORIES_TO_WATCH_FOR_SERVER_RECOMPILATION = ["server\\", "server/"]
 
 arguments_default_values = {
     "port": 42069,

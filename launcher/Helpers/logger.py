@@ -18,10 +18,10 @@ def make_logger(name):
 
     formatter = logging.Formatter("%(asctime)s | %(name)s | %(levelname)s - %(message)s")
 
-    Path(f"{ROOT_DIR}/Logs").mkdir(parents=True, exist_ok=True)
+    Path(f"{ROOT_DIR}/../logs").mkdir(parents=True, exist_ok=True)
 
     file_handler = logging.handlers.WatchedFileHandler(
-        os.environ.get("LOGFILE", f"{ROOT_DIR}/Logs/aurora_launcher_{now_str}.log"))
+        os.environ.get("LOGFILE", f"{ROOT_DIR}/../logs/aurora_launcher_client_{now_str}.log"))
     file_handler.setFormatter(formatter)
 
     console_handler = logging.StreamHandler()

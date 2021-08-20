@@ -6,7 +6,7 @@ from watchdog.observers import Observer
 from Helpers.client import AuroraClient
 from Helpers.server import AuroraServer
 from Helpers.constants import CLIENT_DIR, SERVER_DIR, get_arg_exist, get_arg_value, AURORA_ASCII_ART
-from Helpers.event_handlers import ClientEventHandler
+from Helpers.event_handlers import ClientEventHandler, ServerEventHandler
 from Helpers.logger import make_logger
 
 client_logger = make_logger('Client  ')
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     client_observer.schedule(client_event_handler, f"./{CLIENT_DIR}", recursive=True)
     client_observer.start()
 
-    server_event_handler = ClientEventHandler(server)
+    server_event_handler = ServerEventHandler(server)
     server_observer = Observer()
     server_observer.schedule(server_event_handler, f"./{SERVER_DIR}", recursive=True)
     server_observer.start()
@@ -48,12 +48,12 @@ if __name__ == "__main__":
 
     try:
         while True:
-            output = client.readline()
-            if client.poll() is None and output == '':
+            client_output = client.readline()
+            if client.poll() is None and client_output == '':
                 destroy()
                 break
-            if output and should_log:
-                client_logger.info(output.strip())
+            if client_output and should_log:
+                client_logger.info(client_output.strip())
         
     except KeyboardInterrupt:
         destroy()
