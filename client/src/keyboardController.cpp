@@ -12,7 +12,7 @@ KeyboardController::KeyboardController() {
 };
 
 void KeyboardController::execFrame(SDL_Event& event) {	
-    prevIsRightIn = isRightIn;
+    prevIsRightIn = isRightIn;s
     prevIsLeftIn = isLeftIn;
  
     if (keyboardKeys[SDL_SCANCODE_RIGHT] && !isRightIn) {

@@ -9,16 +9,26 @@ import logging
 from Helpers.constants import CLIENT_DIR, get_cmake_win_cmd
 from Helpers.logger import make_logger
 
-logger = make_logger('Launcher')
+launcher_logger = make_logger('Launcher')
+cmake_logger = make_logger('CMake   ')
 
 def run_cmake_command(arguments):
     posix_command = f"cmake {arguments}"
     win_command = get_cmake_win_cmd(arguments)
 
-    process = subprocess.Popen(win_command if os.name == 'nt' else posix_command, shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
-                               stdout=subprocess.PIPE)
+    process = subprocess.Popen(win_command if os.name == 'nt' else posix_command, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE, universal_newlines=True)
 
-    logger.log(level=logging.INFO, msg=f"Running: | {posix_command} | with PID: {process.pid}")
+    launcher_logger.log(level=logging.INFO, msg=f"Running: | {posix_command} | with PID: {process.pid}")
+
+    while True:
+        error_output = process.stderr.readline()
+
+        if process.poll() is None and error_output == '':
+            break
+        if error_output:
+            cmake_logger.error(error_output.strip())
+
     process.wait()
 
     return process
@@ -32,9 +42,9 @@ class AuroraClient:
         self.executable = f"bin/{self.env}/Aurora{'.exe' if os.name == 'nt' else ''}"
 
     def refresh(self):
-        self.compile()
+        has_compiled = self.compile()
         self.kill()
-        self.run()
+        if has_compiled: self.run()
 
     def kill(self):
         if self.client:
@@ -55,7 +65,7 @@ class AuroraClient:
     def compile(self):
         current_working_dir = os.path.abspath(os.getcwd())
 
-        logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {self.env}")
+        launcher_logger.log(level=logging.INFO, msg=f"Starting compilation of the client | ENV: {self.env}")
         build_dir = f"{CLIENT_DIR}/build-{self.env}"
 
         build_path = Path(build_dir)
@@ -83,9 +93,12 @@ class AuroraClient:
         executable_exists = os.path.isfile(f"{CLIENT_DIR}/{self.executable}")
 
         if(executable_exists):
-            logger.log(level=logging.INFO, msg=f"Successfully compiled the client")
+            launcher_logger.log(level=logging.INFO, msg=f"Successfully compiled the client")
         else:
-            logger.log(level=logging.ERROR, msg=f"Cannot compile the client - Probably a cmake error")
+            launcher_logger.log(level=logging.ERROR, msg=f"Cannot compile the client - Probably a cmake error")
+            return False
+
+        return True
         
 
     def run(self):
@@ -95,9 +108,9 @@ class AuroraClient:
         
         try:
             client = subprocess.Popen([f"./{self.executable}", str(self.port)], stdout=subprocess.PIPE, universal_newlines=True)
-            logger.log(level=logging.INFO, msg=f"Launching the client")
+            launcher_logger.log(level=logging.INFO, msg=f"Launching the client")
         except:
-            logger.log(level=logging.ERROR, msg=f"Cannot launch the client")
+            launcher_logger.log(level=logging.ERROR, msg=f"Cannot launch the client")
         
 
         os.chdir(current_working_dir)
