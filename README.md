@@ -6,27 +6,22 @@ Aurora is a set of utilities aiming to take PC couch gaming to the next level!
 
 ## :books: Table of Contents
 
-- [Installation](#package-installation)
-- [Compilation](#rocket-compilation)
-- [Support](#hammer_and_wrench-support)
-- [Contributing](#memo-contributing)
-- [License](#scroll-license)
+- [Installation](#package-installation) | [Compilation](#rocket-compilation) | [Support](#hammer_and_wrench-support) | [Contributing](#memo-contributing) | [License](#scroll-license)
 
 ## :package: Installation
 
 ### Windows:
 
-- Install [MSYS2](https://www.msys2.org/)
-- Open a new **MSYS2 MinGW 64-bit** terminal (C:\msys64\mingw64.exe)
-- Clone the repository
-- Update MSYS2 and install dependencies:
+- Install [MSYS2](https://www.msys2.org/) as well as [Python 3.6+](https://www.python.org/downloads/)
+- Clone the repository - Inside a MSYS2 MinGW64 terminal
+- Update MSYS2 and install dependencies - Inside a MSYS2 MinGW64 terminal
 
 ```sh
 pacman -Syuu
-pacman -S python3 python3-pip mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_image mingw-w64-x86_64-SDL2_ttf
 ```
 
-- Install python dependencies - From powershell
+- Install python dependencies - Inside a PowerShell terminal
 
 ```sh
 cd launcher
@@ -79,7 +74,7 @@ brew install python3 sdl2 sdl2_image sdl2_ttf
 - Install python dependencies
 
 ```sh
-cd utilities
+cd launcher
 pip3 install -r requirements.txt
 cd ../server
 pip3 install -r requirements.txt
@@ -89,20 +84,35 @@ pip3 install -r requirements.txt
 
 ## :rocket: Development
 
+**MacOS** | **Linux**
+
 ```sh
 ./develop.sh <args>
 ```
-#### This is just an alias to `python3 launcher/development.py`
 
+**Windows** (PowerShell or Command Prompt):
+
+```sh
+./develop.bat <args>
+```
+
+---
+
+#### Both of those are just an alias to
+
+```sh
+python3 launcher/development.py <args>
+```
+
+---
 
 ### Script Arguments:
 
-| Argument | Short Argument | Description |
-|----------|----------------|--------------|
-|--verbose|-v|Verbose mode. Provides more debugging logs from mostly **cmake**|
-|--port **PORT**|-p|The TCP port used for the internal server/client communication **(Default: 8000)**|
-|--env **ENV**|-e|The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)**
-
+| Argument        | Short Argument | Description                                                                                                             |
+| --------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| --verbose       | -v             | Verbose mode. Provides more debugging logs from mostly **cmake**                                                        |
+| --port **PORT** | -p             | The TCP port used for the internal server/client communication **(Default: 8000)**                                      |
+| --env **ENV**   | -e             | The environment to compile for. Mostly used for the client. Options: **"debug"** or **"release"**. **(Default: debug)** |
 
 ## :hammer_and_wrench: Support
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import logging
 
 # Constants
-from Helpers.constants import CLIENT_DIR, get_cmake_win_cmd, TIME_TO_WAIT_IF_IT_DIDNT_FIND_CMAKE_TASK
+from Helpers.constants import CLIENT_DIR, get_cmake_win_cmd
 from Helpers.logger import make_logger
 
 logger = make_logger('Launcher')
@@ -18,7 +18,7 @@ def run_cmake_command(arguments):
     process = subprocess.Popen(win_command if os.name == 'nt' else posix_command, shell=True, stdin=subprocess.PIPE, stderr=subprocess.PIPE,
                                stdout=subprocess.PIPE)
 
-    logger.log(level=logging.INFO, msg=f"Running cmake {posix_command} | with PID: {process.pid}")
+    logger.log(level=logging.INFO, msg=f"Running: | {posix_command} | with PID: {process.pid}")
     process.wait()
 
     return process
