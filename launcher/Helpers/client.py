@@ -116,6 +116,8 @@ class AuroraClient:
         executable = f"./bin/{self.env}/Aurora"
         client = subprocess.Popen([executable, str(self.port)], stdout=subprocess.PIPE, universal_newlines=True)
 
+        print(os.getcwd(), CLIENT_DIR, executable, client)
+
         os.chdir(current_working_dir)
 
         self.client = client
