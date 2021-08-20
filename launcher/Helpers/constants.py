@@ -10,7 +10,7 @@ TIME_TO_ELAPSE_FROM_LAST_SERVER_COMPILATION = 5 # in seconds
 DIRECTORIES_TO_WATCH_FOR_CLIENT_RECOMPILATION = ["src\\", "include\\", "src/", "include/"]
 
 arguments_default_values = {
-    "port": 8000,
+    "port": 42069,
     "env": 'debug',
     'verbose': False
 }
