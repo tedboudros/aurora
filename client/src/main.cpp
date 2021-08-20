@@ -27,7 +27,7 @@ int main(int argc, char* args[]) {
 		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
 
-	RenderWindow window("Aurora v0.3.3", 1280, 720);
+	RenderWindow window("Aurora", 1600, 900);
 
 	int windowRefreshRate = window.getRefreshRate();
 
