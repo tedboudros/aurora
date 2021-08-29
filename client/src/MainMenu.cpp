@@ -1,12 +1,15 @@
 #include <iostream>
 #include <fstream>
 
+#include <SDL2/SDL_ttf.h>
+
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
 #include "Math.hpp"
 #include "Pages/MainMenu.hpp"
 #include <Parsers/JSON.hpp>
 #include "HTTPRequest.hpp"
+#include "Text.hpp"
 
 
 MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
@@ -17,23 +20,29 @@ MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_wind
 
 	this->readGameStyles();
 	this->requestSteamGamesFromServer();
+    this->setGameTitleFont();
 };
 
 void MainMenuPage::render(double deltaTime) {
-
     if(selectedGame != prevSelectedGame) {
         this->animateGames();	
-        //setGameTitleFont();
+        this->setGameTitleFont();
         prevSelectedGame = selectedGame;
     }
 
 	window->render(wallpaperEntity);
+    window->render(gameTitle); 
 
     for(Entity& game : gameEntities) {
         game.animate(deltaTime);
 		window->render(game);
 	}
-};
+}
+
+void MainMenuPage::cleanUp() {
+	TTF_CloseFont(font);
+	TTF_Quit();
+}
 
 void MainMenuPage::onRight() {
     isSpamming = false;		
@@ -97,6 +106,24 @@ void MainMenuPage::executeSpamEvents(GamepadController* gamepad_controller, Keyb
     }
 }
 
+void MainMenuPage::setGameTitleFont() { 
+    font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
+
+    if (!font) {
+        std::cerr << "Failed to open font." << '\n';
+    }
+  
+    gameTitle.setFont(font);
+    gameTitle.setColor(SDL_Color{255, 255, 255, 255});
+    if(gameNames.size() >= 1) {
+        gameTitle.setText(gameNames[selectedGame]);
+    }
+    gameTitle.setFontScale(gameTitleFontScale);
+    gameTitle.setRenderMethod(Text::RenderMethod::Blended);
+    gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+
+};
+
 void MainMenuPage::animateGames() {
     for(int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
         int newX,newY,newW,newH;
@@ -137,7 +164,7 @@ void MainMenuPage::readGameStyles() {
     gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
     gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
     selectedGameOffset = (gameSizeSelected - gameSizeNormal);
-   // gameFontFamilyName = gameStyles["game"]["font"]["filename"];
+    gameFontFamilyName = gameStyles["game"]["font"]["filename"];
     gameTitleFontSize = gameStyles["game"]["font"]["size"];
     gameTitleFontScale = gameStyles["game"]["font"]["scale"];
     gameTitleX = gameStyles["game"]["font"]["x"];

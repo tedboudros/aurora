@@ -2,12 +2,14 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
 #include "Server.hpp"
 #include "Gamepad/GamepadController.hpp"
 #include "Keyboard/KeyboardController.hpp"
+#include "Text.hpp"
 
 #include <iostream>
 #include <vector>
@@ -23,12 +25,13 @@ class MainMenuPage {
         void executeSpamEvents(GamepadController* gamepad_controller, KeyboardController* keyboard_controller);
 
         void initialize(SDL_Event& event);
-        void clear();
+        void cleanUp();
 
         void requestSteamGamesFromServer();
         void createGameEntity(int i, std::string name);
         void animateGames();
         void readGameStyles();
+        void setGameTitleFont();
 
         void onRight();
         void onLeft();
@@ -43,8 +46,11 @@ class MainMenuPage {
         float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY, gameTitleFontScale, gameTitleX, gameTitleY;
         int normalTransitionTime, spamTransitionTime, gameTitleFontSize, selectedGame = 0, prevSelectedGame = 0;
         bool isSpamming = false;
+        std::string gameFontFamilyName;
         SDL_Texture* gameBorder;
         Server* api;
 	    GamepadController gamepadController;
 	    KeyboardController keyboardController;
+        Text gameTitle;
+        TTF_Font *font = NULL;
 };

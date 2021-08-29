@@ -1,6 +1,4 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -9,7 +7,6 @@
 #include "Pages/MainMenu.hpp"
 
 #include "Entity.hpp"
-#include "Text.hpp"
 #include "Math.hpp"
 #include "Utils.hpp"
 #include "Gamepad/GamepadController.hpp"
@@ -23,6 +20,7 @@ int main(int argc, char* args[]) {
 	Server api(args[1]);
 	
 	RenderWindow window("Aurora", 1600, 900);
+
 	MainMenuPage mainMenu(&window, &api);
 
 	// Diagnostic stuff:
@@ -34,24 +32,6 @@ int main(int argc, char* args[]) {
 
 
 	SDL_Event event;
-
-	// Text gameTitle;
-	// TTF_Font *font = NULL;
-
-	// auto setGameTitleFont = [&] () { 
-	// 	font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
-
-	// 	gameTitle.setFont(font);
-	// 	gameTitle.setColor(SDL_Color{255, 255, 255, 255});
-	// 	if(gameNames.size() >= 1) {
-	// 		gameTitle.setText(gameNames[selectedGame]);
-	// 	}
-	// 	gameTitle.setFontScale(gameTitleFontScale);
-	// 	gameTitle.setRenderMethod(Text::RenderMethod::Blended);
-	// 	gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
-	// };
-
-	// setGameTitleFont();
 
 	GamepadController gamepadController;
 	KeyboardController keyboardController;
@@ -96,18 +76,13 @@ int main(int argc, char* args[]) {
 		// Rendering
 		window.clear();
 
-		mainMenu.render(deltaTime);
-		
-		// if (font) {
-		// 	window.render(gameTitle);
-		// }
+		mainMenu.render(deltaTime);	
 
 		window.display();
 
 	}
 
-	// TTF_CloseFont(font);
-	// TTF_Quit();
+	mainMenu.cleanUp();
 	window.cleanUp();
 	SDL_Quit();
 
