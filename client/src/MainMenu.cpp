@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
@@ -7,20 +8,115 @@
 #include <Parsers/JSON.hpp>
 #include "HTTPRequest.hpp"
 
-// for convenience
-using json = nlohmann::json;
 
-MainMenuPage::MainMenuPage(RenderWindow* p_window, int p_server_port) :window(p_window), server_port(p_server_port)  {
+MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
 	SDL_Texture* wallpaper = window->loadTexture("res/images/bg.png");
 	wallpaperEntity = Entity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
 
-    
+    gameBorder = window->loadTexture("res/images/game.png");
+
 	this->readGameStyles();
 	this->requestSteamGamesFromServer();
 };
 
 void MainMenuPage::render(double deltaTime) {
+
+    if(selectedGame != prevSelectedGame) {
+        this->animateGames();	
+        //setGameTitleFont();
+        prevSelectedGame = selectedGame;
+    }
+
 	window->render(wallpaperEntity);
+
+    for(Entity& game : gameEntities) {
+        game.animate(deltaTime);
+		window->render(game);
+	}
+};
+
+void MainMenuPage::onRight() {
+    isSpamming = false;		
+
+    if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+        selectedGame += 1;
+    }
+}
+
+void MainMenuPage::onLeft() {
+    isSpamming = false;
+
+    if(selectedGame != 0) {
+        selectedGame -= 1;
+    }
+}
+
+void MainMenuPage::onRightSpam() {
+    isSpamming = true;
+
+    if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+        selectedGame += 1;
+    }
+}
+
+void MainMenuPage::onLeftSpam() {
+    isSpamming = true;
+
+    if(selectedGame != 0) {
+        selectedGame -= 1;
+    }
+}
+
+void MainMenuPage::executeControllerEvent(GamepadController* gamepad_controller) {
+    if(gamepad_controller->onLeft()) {
+        this->onLeft();
+    }else if(gamepad_controller->onRight()){		
+        this->onRight();
+    }
+}
+
+void MainMenuPage::executeKeyboardEvent(KeyboardController* keyboard_controller) {
+    if(keyboard_controller->onLeft()) {
+        this->onLeft();
+    }else if(keyboard_controller->onRight()){		
+        this->onRight();
+    }
+}
+
+void MainMenuPage::executeSpamEvents(GamepadController* gamepad_controller, KeyboardController* keyboard_controller) {
+    if(gamepad_controller->onLeftSpam()) {
+        this->onLeftSpam();
+    }else if(gamepad_controller->onRightSpam()){		
+        this->onRightSpam();
+    }
+
+    if(keyboard_controller->onLeftSpam()) {
+        this->onLeftSpam();
+    }else if(keyboard_controller->onRightSpam()){		
+        this->onRightSpam();
+    }
+}
+
+void MainMenuPage::animateGames() {
+    for(int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
+        int newX,newY,newW,newH;
+
+        newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
+        newY = normalY;
+        newW = gameSizeNormal;
+        newH = gameSizeNormal;
+
+        if(i == selectedGame) {
+            newW = gameSizeSelected;
+            newH = gameSizeSelected;
+        }
+
+        if(i > selectedGame) {
+            newX += selectedGameOffset;
+        }
+
+        gameEntities[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
+    }
 };
 
 void MainMenuPage::createGameEntity(int i, std::string name) {
@@ -55,17 +151,14 @@ void MainMenuPage::readGameStyles() {
 
 void MainMenuPage::requestSteamGamesFromServer() {
     try {
-        http::Request request{"http://127.0.0.1:" + std::string(args[1]) + "/steam"};
-
-        const auto response = request.send("GET");
-        const std::string response_str = std::string{response.body.begin(), response.body.end()};
-
-        auto gamesResponse = json::parse(response_str);
+        auto gamesResponse = api->get("steam");
         std::cout << "Got " << gamesResponse.size() << " games from the server!" <<  std::endl;
 
         for (int i = 0; i < static_cast<int>(gamesResponse.size()); i++) {
             this->createGameEntity(i, gamesResponse[i]["name"]);
         }
+
+        this->animateGames();
     }
     catch (const std::exception& e) {
         std::cerr << "Request failed, error: " << e.what() << '\n';
