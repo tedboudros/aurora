@@ -16,6 +16,13 @@ Entity::Entity(MultiSize p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(
 	originalDimensions.h = h;
 }; 
 
+Entity::Entity() {
+	originalDimensions.x = 0;
+	originalDimensions.y = 0;
+	originalDimensions.w = 0;
+	originalDimensions.h = 0;
+}; 
+
 void Entity::animate(float p_deltaTime) {
 
 	if(isAnimationActive == true){

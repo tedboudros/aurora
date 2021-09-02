@@ -10,9 +10,7 @@
 
 class KeyboardController {
 
-public: 
-	KeyboardController();
-
+public:
 	bool onLeft() {
 		return (isLeftIn && !prevIsLeftIn);
 	};
