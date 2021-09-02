@@ -1,6 +1,7 @@
 from Integrations.steam import get_all_steam_games_from_filesystem
 from wsgiref.simple_server import WSGIRequestHandler, make_server
 from Utilities.logger import logger
+from database.database import init_database
 
 import falcon
 import sys
@@ -35,6 +36,7 @@ app.add_route('/steam', steam)
 if __name__ == '__main__':
     with make_server('', int(sys.argv[1]), app, handler_class=NoLoggingWSGIRequestHandler) as httpd:
         logger.info(f'Serving on port {sys.argv[1]}...')
+        init_database()
 
         # Serve until process is killed
         try:
