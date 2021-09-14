@@ -2,6 +2,7 @@
 *.sublime-workspace
 
 # Client stuff
+cmake-*/
 build-debug/
 build-release/
 bin/

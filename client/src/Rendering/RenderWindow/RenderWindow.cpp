@@ -2,10 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 
-#include "RenderWindow.hpp"
-#include "Entity.hpp"
-#include "Text.hpp"
-#include "Math.hpp"
+#include "Rendering/RenderWindow/RenderWindow.hpp"
 
 #ifdef __APPLE__
 	#define RENDERING_ARGS NULL

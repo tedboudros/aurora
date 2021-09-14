@@ -3,13 +3,16 @@
 
 #include <SDL2/SDL_ttf.h>
 
-#include "RenderWindow.hpp"
-#include "Entity.hpp"
-#include "Math.hpp"
-#include "Pages/MainMenu.hpp"
-#include <Parsers/JSON.hpp>
-#include "HTTPRequest.hpp"
-#include "Text.hpp"
+#include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Rendering/Entity/Entity.hpp"
+#include "Rendering/Text/Text.hpp"
+
+#include "Utilities/Math/Math.hpp"
+
+#include "Pages/MainMenu/MainMenu.hpp"
+
+#include "Networking/JSON/JSON.hpp"
+#include "Networking/HTTPRequest/HTTPRequest.hpp"
 
 
 MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
