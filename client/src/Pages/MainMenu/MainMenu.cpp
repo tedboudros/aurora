@@ -4,15 +4,10 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "Rendering/RenderWindow/RenderWindow.hpp"
-#include "Rendering/Entity/Entity.hpp"
-#include "Rendering/Text/Text.hpp"
 
-#include "Utilities/Math/Math.hpp"
+#include "Utilities/Sound/Sound.h"
 
 #include "Pages/MainMenu/MainMenu.hpp"
-
-#include "Networking/JSON/JSON.hpp"
-#include "Networking/HTTPRequest/HTTPRequest.hpp"
 
 
 MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
@@ -20,6 +15,7 @@ MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_wind
 	wallpaperEntity = Entity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
 
     gameBorder = window->loadTexture("res/images/game.png");
+    scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME / 2);
 
 	this->readGameStyles();
 	this->requestSteamGamesFromServer();
@@ -28,8 +24,11 @@ MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_wind
 
 void MainMenuPage::render(double deltaTime) {
     if(selectedGame != prevSelectedGame) {
-        this->animateGames();	
+        playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME);
+
+        this->animateGames();
         this->setGameTitleFont();
+
         prevSelectedGame = selectedGame;
     }
 
@@ -43,6 +42,9 @@ void MainMenuPage::render(double deltaTime) {
 }
 
 void MainMenuPage::cleanUp() {
+
+    freeAudio(scrollSound);
+
 	TTF_CloseFont(font);
 	TTF_Quit();
 }

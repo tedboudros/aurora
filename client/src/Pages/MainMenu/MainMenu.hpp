@@ -10,6 +10,8 @@
 
 #include "Networking/Server/Server.hpp"
 
+#include "Utilities/Sound/Sound.h"
+
 #include "Controllers/GamepadController/GamepadController.hpp"
 #include "Controllers/KeyboardController/KeyboardController.hpp"
 
@@ -55,4 +57,5 @@ class MainMenuPage {
 	    KeyboardController keyboardController;
         Text gameTitle;
         TTF_Font *font = NULL;
+        Audio * scrollSound = NULL;
 };

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Utilities/Sound/Sound.h"
 
 #ifdef __APPLE__
 	#define RENDERING_ARGS NULL
@@ -10,19 +11,28 @@
 	#define RENDERING_ARGS SDL_WINDOW_VULKAN
 #endif
 
+
 float calculateSize(Size value, Vector2f windowDimensions) {
 	return (value.val / 100)  * (value.type == SIZE_HEIGHT ? windowDimensions.y : windowDimensions.x);
 }
 
 RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :window(NULL), renderer(NULL), windowDims(Vector2f(p_width, p_height)) {
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) 
+
+    // Fix for windows
+    #if EE_CURRENT_PLATFORM == EE_PLATFORM_WINDOWS
+        SDL_setenv("SDL_AUDIODRIVER", "directsound", true);
+    #endif
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO ) < 0)
 		std::cout << "ERROR: SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << std::endl;
 	if (!(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG))) 
 		std::cout << "ERROR: IMG_Init has failed. IMG_ERROR: " << SDL_GetError() << std::endl;		
 	if(!TTF_WasInit() && TTF_Init() == -1) {
 		std::cout << "ERROR: TTF_Init has failed. TTF_ERROR: " << TTF_GetError() << std::endl;	
 	}
-	
+
+    initAudio();
+
 	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height, SDL_WINDOW_SHOWN | RENDERING_ARGS );//| SDL_WINDOW_FULLSCREEN_DESKTOP );
 
 	if(window == NULL) {
@@ -47,6 +57,7 @@ RenderWindow::RenderWindow(const char* p_title, int p_width, int p_height) :wind
 };
 
 void RenderWindow::cleanUp() {
+    endAudio();
 	SDL_DestroyWindow(window);
 }
 
