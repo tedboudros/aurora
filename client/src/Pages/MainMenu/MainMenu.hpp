@@ -4,12 +4,16 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "RenderWindow.hpp"
-#include "Entity.hpp"
-#include "Server.hpp"
-#include "Gamepad/GamepadController.hpp"
-#include "Keyboard/KeyboardController.hpp"
-#include "Text.hpp"
+#include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Rendering/Entity/Entity.hpp"
+#include "Rendering/Text/Text.hpp"
+
+#include "Networking/Server/Server.hpp"
+
+#include "Utilities/Sound/Sound.h"
+
+#include "Controllers/GamepadController/GamepadController.hpp"
+#include "Controllers/KeyboardController/KeyboardController.hpp"
 
 #include <iostream>
 #include <vector>
@@ -53,4 +57,5 @@ class MainMenuPage {
 	    KeyboardController keyboardController;
         Text gameTitle;
         TTF_Font *font = NULL;
+        Audio * scrollSound = NULL;
 };

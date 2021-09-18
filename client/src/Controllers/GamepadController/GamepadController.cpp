@@ -1,9 +1,8 @@
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <iostream>
 
-#include "Gamepad/GamepadController.hpp"
+#include "GamepadController.hpp"
 
 const int axisThreshold = 20000;
 const int spamInterval = 135;

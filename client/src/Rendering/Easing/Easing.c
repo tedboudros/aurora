@@ -11,7 +11,7 @@
 //
 
 #include <math.h>
-#include "Animation/Easing.h"
+#include "Easing.h"
 
 // Modeled after the line y = x
 AHFloat LinearInterpolation(AHFloat p)

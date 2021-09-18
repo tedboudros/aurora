@@ -1,6 +1,4 @@
-#include "Server.hpp"
-#include "HTTPRequest.hpp"
-#include "Parsers/JSON.hpp"
+#include "Networking/Server/Server.hpp"
 
 // for convenience
 using json = nlohmann::json;

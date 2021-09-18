@@ -1,9 +1,7 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
-#include "Entity.hpp"
-#include "Math.hpp"
-#include "Animation/Easing.h"
+#include "Rendering/Entity/Entity.hpp"
+#include "Rendering/Easing/Easing.h"
 
 Entity::Entity(MultiSize p_dest, SDL_Texture* p_texture) :dest(p_dest), texture(p_texture) {
 	int w, h;

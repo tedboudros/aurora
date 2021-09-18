@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.13)
 project(Aurora)
 
 if(WIN32 AND NOT MINGW)
@@ -10,10 +10,15 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-file(GLOB_RECURSE SRC_LIST src/*.cpp src/*.c include/*.hpp include/*.h)
+file(GLOB_RECURSE SRC_LIST
+		src/*.cpp
+		src/*.c
+		src/*.hpp
+		src/*.h
+)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
-target_include_directories(${PROJECT_NAME} PRIVATE "include")
+target_include_directories(${PROJECT_NAME} PRIVATE "src")
 
 # For mac os
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -28,7 +33,9 @@ endif()
 
 if(MINGW)
     target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lmingw32)
 endif()
+
 # TODO: Couldn't find some portable way of setting this.
 #       If CMake will add something in future, replace this.
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)

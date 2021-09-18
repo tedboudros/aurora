@@ -19,7 +19,7 @@ def get_all_steam_libraries_fs():
 
     for key, extra_steam_library in library_folders.items():
         if key.isnumeric():  # Steam libraries inside the vdf will have numeric only keys
-            steam_libraries.append(f"{extra_steam_library}/steamapps/")
+            steam_libraries.append(f"{extra_steam_library['path']}/steamapps/")
 
     logger.info(f"Found in total {len(steam_libraries)} steam libraries!")
     return steam_libraries
