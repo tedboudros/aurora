@@ -1,0 +1,2 @@
+def seed(database):
+    data = []

@@ -17,7 +17,6 @@ class Database:
 
         try:
             self.conn = sqlite3.connect(os.path.abspath(DB_PATH_FILE))
-            logger.info(f"Connected to the database")
         except:
             logger.error(f"Error while connecting to the database")
             return None
@@ -51,7 +50,7 @@ class Database:
 
             return c
         except Exception as e:
-            logger.warn(f"SQLITE: {e}")
+            logger.warn(f"SQLite: {e}")
             pass
 
     def _getAll(self, query):
