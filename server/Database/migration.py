@@ -7,7 +7,9 @@ from Utilities.logger import logger
 
 class Migration:
     migration = None
+    database = None
 
+    migration_name = ""
     old_path = ""
 
     def backupAndChangePath(self):
@@ -18,45 +20,23 @@ class Migration:
     def restorePath(self):
         os.chdir(self.old_path)
 
-    def __init__(self, database, migration_file_name):
+    def __init__(self, database, migration_name):
         self.backupAndChangePath()
-        filepath = os.path.abspath(f"./Migrations/{migration_file_name}.py")
-        import_name = f"Database.Migrations.{migration_file_name}"
+        filepath = os.path.abspath(f"./Migrations/{migration_name}.py")
+        import_name = f"Database.Migrations.{migration_name}"
         self.restorePath()
 
         file_exists = os.path.isfile(filepath)
 
         if not file_exists:
-            logger.error(f'Cannot find specified migration ("{migration_file_name}")')
+            logger.error(f'Cannot find specified migration ("{migration_name}")')
             return None
 
         self.migration = importlib.import_module(import_name)
+        self.database = database
+        self.migration_name = migration_name
 
-        self.migration.run(database)
+    def run(self):
+        self.database.insert('migrations', {"name": self.migration_name})
+        self.migration.run(self.database)
 
-
-# def run(self):
-
-
-def run_migrations(database):
-    old_path = ""
-
-    def getOldPathAndChangeToNew():
-        temp_old_path = os.getcwd()
-        path = Path(__file__)
-        os.chdir(path.parent)
-        return temp_old_path
-
-    def restorePath():
-        os.chdir(old_path)
-
-    old_path = getOldPathAndChangeToNew()
-    directory = os.path.abspath(f"./Migrations")
-    restorePath()
-
-    from os import listdir
-    from os.path import isfile, join
-    migration_files = [f for f in listdir(directory) if isfile(join(directory, f))]
-
-    for migration_file in migration_files:
-        Migration(database, os.path.basename(migration_file.replace('.py', '')))
