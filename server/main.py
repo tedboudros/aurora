@@ -35,9 +35,11 @@ app.add_route('/steam', steam)
 if __name__ == '__main__':
     with make_server('', int(sys.argv[1]), app, handler_class=NoLoggingWSGIRequestHandler) as httpd:
         logger.info(f'Serving on port {sys.argv[1]}...')
+        from Database.database import database
 
         # Serve until process is killed
         try:
             httpd.serve_forever()
         except:
+            database.closeConnection()
             httpd.server_close()
