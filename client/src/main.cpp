@@ -1,18 +1,10 @@
 #include <SDL2/SDL.h>
 #include <iostream>
-#include <fstream>
-#include <vector>
 
-#include "RenderWindow.hpp"
-#include "Pages/MainMenu.hpp"
+#include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Pages/MainMenu/MainMenu.hpp"
 
-#include "Entity.hpp"
-#include "Math.hpp"
-#include "Utils.hpp"
-#include "Gamepad/GamepadController.hpp"
-#include "Keyboard/KeyboardController.hpp"
-#include <Parsers/JSON.hpp>
-#include "Server.hpp"
+#include "Utilities/Helpers/Helpers.hpp"
 
 int main(int argc, char* args[]) {
  	bool isRunning = true;

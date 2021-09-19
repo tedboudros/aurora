@@ -1,7 +1,8 @@
 #pragma once
 
-#include "HTTPRequest.hpp"
-#include "Parsers/JSON.hpp"
+#include "Networking/HTTPRequest/HTTPRequest.hpp"
+#include "Networking/JSON/JSON.hpp"
+
 #include <iostream>
 
 // for convenience

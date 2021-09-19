@@ -2,8 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "Math.hpp"
-#include "Animation/Easing.h"
+#include "Utilities/Math/Math.hpp"
+
+#include "Rendering/Easing/Easing.h"
 
 class Entity {
 

@@ -2,9 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "Entity.hpp"
-#include "Text.hpp"
-#include "Math.hpp"
+#include "Rendering/Entity/Entity.hpp"
+#include "Rendering/Text/Text.hpp"
+#include "Utilities/Math/Math.hpp"
 
 class RenderWindow {
 

@@ -1,9 +1,7 @@
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <iostream>
 
-#include "Keyboard/KeyboardController.hpp"
+#include "KeyboardController.hpp"
 
 const int spamInterval = 135;
 const int spamTimeout = 400;
