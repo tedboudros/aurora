@@ -1,2 +1,0 @@
-def seed(database):
-    data = []

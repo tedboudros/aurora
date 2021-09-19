@@ -39,6 +39,7 @@ def _help(args):
         print(f"\t- {_command} {commands[_command]['arguments'] + ' ' if 'arguments' in commands[_command].keys() else ''}: {commands[_command]['description']}")
     print("")
 
+
 all_commands = {
     **commands,
     'help': {
