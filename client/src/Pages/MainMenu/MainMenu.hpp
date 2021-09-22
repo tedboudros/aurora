@@ -55,7 +55,9 @@ class MainMenuPage {
         Server* api;
 	    GamepadController gamepadController;
 	    KeyboardController keyboardController;
-        Text gameTitle;
-        TTF_Font *font = NULL;
+        Text gameTitle, clockText;
+        TTF_Font *gameTitleFont = NULL, *clockTextFont = NULL;
         Audio * scrollSound = NULL;
+        std::string clockFontFamilyName;
+        float clockTextFontSize, clockTextFontScale, clockTextX, clockTextY;
 };
