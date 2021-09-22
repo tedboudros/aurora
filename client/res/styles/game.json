@@ -35,5 +35,12 @@
       "value": 0.5,
       "%": "HEIGHT"
     }
+  },
+  "clock": {
+    "x": 92,
+    "y":  94,
+    "filename": "res/fonts/Oxygen-Regular.ttf",
+    "scale": 1,
+    "size": 28
   }
 }

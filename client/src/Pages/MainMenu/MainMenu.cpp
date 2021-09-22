@@ -6,16 +6,18 @@
 #include "Rendering/RenderWindow/RenderWindow.hpp"
 
 #include "Utilities/Sound/Sound.h"
+#include "Utilities/Helpers/Helpers.hpp"
 
 #include "Pages/MainMenu/MainMenu.hpp"
 
+const std::string clockFormat = "%X";
 
 MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
 	SDL_Texture* wallpaper = window->loadTexture("res/images/bg.png");
 	wallpaperEntity = Entity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
 
     gameBorder = window->loadTexture("res/images/game.png");
-    scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME / 2);
+    scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME);
 
 	this->readGameStyles();
 	this->requestSteamGamesFromServer();
@@ -24,7 +26,7 @@ MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_wind
 
 void MainMenuPage::render(double deltaTime) {
     if(selectedGame != prevSelectedGame) {
-        playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME);
+        playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME / 4);
 
         this->animateGames();
         this->setGameTitleFont();
@@ -32,8 +34,12 @@ void MainMenuPage::render(double deltaTime) {
         prevSelectedGame = selectedGame;
     }
 
+    clockText.setText(utils::currentDateTime(clockFormat));
+
 	window->render(wallpaperEntity);
-    window->render(gameTitle); 
+
+    window->render(gameTitle);
+    window->render(clockText);
 
     for(Entity& game : gameEntities) {
         game.animate(deltaTime);
@@ -45,7 +51,8 @@ void MainMenuPage::cleanUp() {
 
     freeAudio(scrollSound);
 
-	TTF_CloseFont(font);
+    TTF_CloseFont(gameTitleFont);
+    TTF_CloseFont(clockTextFont);
 	TTF_Quit();
 }
 
@@ -111,14 +118,15 @@ void MainMenuPage::executeSpamEvents(GamepadController* gamepad_controller, Keyb
     }
 }
 
-void MainMenuPage::setGameTitleFont() { 
-    font = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
+void MainMenuPage::setGameTitleFont() {
+    gameTitleFont = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
+    clockTextFont = TTF_OpenFont( clockFontFamilyName.c_str(), clockTextFontSize);
 
-    if (!font) {
+    if (!gameTitleFont || !clockTextFont) {
         std::cerr << "Failed to open font." << '\n';
     }
   
-    gameTitle.setFont(font);
+    gameTitle.setFont(gameTitleFont);
     gameTitle.setColor(SDL_Color{255, 255, 255, 255});
     if(gameNames.size() >= 1) {
         gameTitle.setText(gameNames[selectedGame]);
@@ -126,6 +134,13 @@ void MainMenuPage::setGameTitleFont() {
     gameTitle.setFontScale(gameTitleFontScale);
     gameTitle.setRenderMethod(Text::RenderMethod::Blended);
     gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+
+    clockText.setFont(clockTextFont);
+    clockText.setColor(SDL_Color{255, 255, 255, 255});
+    clockText.setText(utils::currentDateTime(clockFormat));
+    clockText.setFontScale(clockTextFontScale);
+    clockText.setRenderMethod(Text::RenderMethod::Blended);
+    clockText.setPosition(Size(clockTextX, SIZE_WIDTH), Size(clockTextY, SIZE_HEIGHT));
 
 };
 
@@ -169,14 +184,24 @@ void MainMenuPage::readGameStyles() {
     gameSizeNormal = gameStyles["game"]["normal"]["size"]["value"];
     gameSizeSelected = gameStyles["game"]["active"]["size"]["value"];
     selectedGameOffset = (gameSizeSelected - gameSizeNormal);
+
     gameFontFamilyName = gameStyles["game"]["font"]["filename"];
     gameTitleFontSize = gameStyles["game"]["font"]["size"];
     gameTitleFontScale = gameStyles["game"]["font"]["scale"];
     gameTitleX = gameStyles["game"]["font"]["x"];
     gameTitleY = gameStyles["game"]["font"]["y"];
+
+    clockFontFamilyName = gameStyles["clock"]["filename"];
+    clockTextFontSize = gameStyles["clock"]["size"];
+    clockTextFontScale = gameStyles["clock"]["scale"];
+    clockTextX = gameStyles["clock"]["x"];
+    clockTextY = gameStyles["clock"]["y"];
+
     gameOffset = gameStyles["game-container"]["x"]["value"];
     marginBetweenGames = gameStyles["game-container"]["spacing"]["value"];
+
     normalY = gameStyles["game-container"]["y"]["value"];
+
     normalTransitionTime = gameStyles["game-container"]["normalTransition"];
     spamTransitionTime = gameStyles["game-container"]["spamTransition"];
 };
