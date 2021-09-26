@@ -1,5 +1,6 @@
 import glob
 import vdf
+import webbrowser
 
 from Utilities.constants import get_constant
 from Utilities.logger import logger
@@ -68,4 +69,11 @@ def get_all_steam_games_from_filesystem():
         logger.info(f"Found {len(games)} steam games inside '{library_dir}'")
         all_games = all_games + games
 
+    all_games.sort(key=lambda game: game['name'])
+
     return all_games
+
+
+def open_steam_game(app_id):
+    logger.info(f"Launching steam game with app_id: {app_id}")
+    # webbrowser.open(f"steam://rungameid/{app_id}")

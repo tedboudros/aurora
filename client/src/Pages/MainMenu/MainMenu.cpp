@@ -26,6 +26,7 @@ MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_wind
 
 void MainMenuPage::render(double deltaTime) {
     if(selectedGame != prevSelectedGame) {
+        api->post("steam", json{{"app_id", games[selectedGame].steam_app_id}});
         playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME / 4);
 
         this->animateGames();
@@ -128,8 +129,8 @@ void MainMenuPage::setGameTitleFont() {
   
     gameTitle.setFont(gameTitleFont);
     gameTitle.setColor(SDL_Color{255, 255, 255, 255});
-    if(gameNames.size() >= 1) {
-        gameTitle.setText(gameNames[selectedGame]);
+    if(games.size() >= 1) {
+        gameTitle.setText(games[selectedGame].name);
     }
     gameTitle.setFontScale(gameTitleFontScale);
     gameTitle.setRenderMethod(Text::RenderMethod::Blended);
@@ -166,14 +167,13 @@ void MainMenuPage::animateGames() {
     }
 };
 
-void MainMenuPage::createGameEntity(int i, std::string name) {
+void MainMenuPage::createGameEntity(int i) {
     const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
     const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
     
     Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 
     gameEntities.push_back(anotherGame);
-    gameNames.push_back(name);
 };
 
 void MainMenuPage::readGameStyles() {	
@@ -212,7 +212,8 @@ void MainMenuPage::requestSteamGamesFromServer() {
         std::cout << "Got " << gamesResponse.size() << " games from the server!" <<  std::endl;
 
         for (int i = 0; i < static_cast<int>(gamesResponse.size()); i++) {
-            this->createGameEntity(i, gamesResponse[i]["name"]);
+            this->createGameEntity(i);
+            games.push_back({gamesResponse[i]["name"], gamesResponse[i]["steam_app_id"]});
         }
 
         this->animateGames();

@@ -32,7 +32,6 @@ class MainMenuPage {
         void cleanUp();
 
         void requestSteamGamesFromServer();
-        void createGameEntity(int i, std::string name);
         void animateGames();
         void readGameStyles();
         void setGameTitleFont();
@@ -43,10 +42,11 @@ class MainMenuPage {
         void onLeftSpam();
 
     private:
+        void createGameEntity(int i);
+
         RenderWindow* window;
         Entity wallpaperEntity;
         std::vector<Entity> gameEntities = {};
-        std::vector<std::string> gameNames = {};
         float gameSizeNormal, gameSizeSelected, selectedGameOffset, gameOffset, marginBetweenGames, normalY, gameTitleFontScale, gameTitleX, gameTitleY;
         int normalTransitionTime, spamTransitionTime, gameTitleFontSize, selectedGame = 0, prevSelectedGame = 0;
         bool isSpamming = false;
@@ -60,4 +60,11 @@ class MainMenuPage {
         Audio * scrollSound = NULL;
         std::string clockFontFamilyName;
         float clockTextFontSize, clockTextFontScale, clockTextX, clockTextY;
+
+        struct game {
+            std::string name;
+            std::string steam_app_id;
+        };
+
+        std::vector<game> games;
 };
