@@ -126,8 +126,6 @@ func GetAllSteamGames() []formattedGame {
 		}
 	}
 
-	fmt.Println(formattedGames)
-
 	return formattedGames
 }
 

@@ -12,20 +12,22 @@
 
 const std::string clockFormat = "%X";
 
-MainMenuPage::MainMenuPage(RenderWindow* p_window, Server* p_api) :window(p_window), api(p_api)  {
-	SDL_Texture* wallpaper = window->loadTexture("res/images/bg.png");
-	wallpaperEntity = Entity(MultiSize(Size(0, SIZE_WIDTH),Size(0, SIZE_HEIGHT),Size(100, SIZE_WIDTH),Size(100, SIZE_HEIGHT)), wallpaper);
+MainMenuPage::MainMenuPage(RenderWindow *p_window, Server *p_api) : window(p_window), api(p_api) {
+    SDL_Texture *wallpaper = window->loadTexture("res/images/bg.png");
+    wallpaperEntity = Entity(
+            MultiSize(Size(0, SIZE_WIDTH), Size(0, SIZE_HEIGHT), Size(100, SIZE_WIDTH), Size(100, SIZE_HEIGHT)),
+            wallpaper);
 
     gameBorder = window->loadTexture("res/images/game.png");
     scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME);
 
-	this->readGameStyles();
-	this->requestSteamGamesFromServer();
+    this->readGameStyles();
+    this->requestSteamGamesFromServer();
     this->setGameTitleFont();
 };
 
 void MainMenuPage::render(double deltaTime) {
-    if(selectedGame != prevSelectedGame) {
+    if (selectedGame != prevSelectedGame) {
         api->post("steam", json{{"app_id", games[selectedGame].steam_app_id}});
         playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME / 4);
 
@@ -37,15 +39,15 @@ void MainMenuPage::render(double deltaTime) {
 
     clockText.setText(utils::currentDateTime(clockFormat));
 
-	window->render(wallpaperEntity);
+    window->render(wallpaperEntity);
 
     window->render(gameTitle);
     window->render(clockText);
 
-    for(Entity& game : gameEntities) {
+    for (Entity &game: gameEntities) {
         game.animate(deltaTime);
-		window->render(game);
-	}
+        window->render(game);
+    }
 }
 
 void MainMenuPage::cleanUp() {
@@ -54,13 +56,13 @@ void MainMenuPage::cleanUp() {
 
     TTF_CloseFont(gameTitleFont);
     TTF_CloseFont(clockTextFont);
-	TTF_Quit();
+    TTF_Quit();
 }
 
 void MainMenuPage::onRight() {
-    isSpamming = false;		
+    isSpamming = false;
 
-    if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+    if (selectedGame != (static_cast<int>(gameEntities.size()) - 1)) {
         selectedGame += 1;
     }
 }
@@ -68,7 +70,7 @@ void MainMenuPage::onRight() {
 void MainMenuPage::onLeft() {
     isSpamming = false;
 
-    if(selectedGame != 0) {
+    if (selectedGame != 0) {
         selectedGame -= 1;
     }
 }
@@ -76,7 +78,7 @@ void MainMenuPage::onLeft() {
 void MainMenuPage::onRightSpam() {
     isSpamming = true;
 
-    if(selectedGame != (static_cast<int>(gameEntities.size()) -1)) {
+    if (selectedGame != (static_cast<int>(gameEntities.size()) - 1)) {
         selectedGame += 1;
     }
 }
@@ -84,52 +86,52 @@ void MainMenuPage::onRightSpam() {
 void MainMenuPage::onLeftSpam() {
     isSpamming = true;
 
-    if(selectedGame != 0) {
+    if (selectedGame != 0) {
         selectedGame -= 1;
     }
 }
 
-void MainMenuPage::executeControllerEvent(GamepadController* gamepad_controller) {
-    if(gamepad_controller->onLeft()) {
+void MainMenuPage::executeControllerEvent(GamepadController *gamepad_controller) {
+    if (gamepad_controller->onLeft()) {
         this->onLeft();
-    }else if(gamepad_controller->onRight()){		
+    } else if (gamepad_controller->onRight()) {
         this->onRight();
     }
 }
 
-void MainMenuPage::executeKeyboardEvent(KeyboardController* keyboard_controller) {
-    if(keyboard_controller->onLeft()) {
+void MainMenuPage::executeKeyboardEvent(KeyboardController *keyboard_controller) {
+    if (keyboard_controller->onLeft()) {
         this->onLeft();
-    }else if(keyboard_controller->onRight()){		
+    } else if (keyboard_controller->onRight()) {
         this->onRight();
     }
 }
 
-void MainMenuPage::executeSpamEvents(GamepadController* gamepad_controller, KeyboardController* keyboard_controller) {
-    if(gamepad_controller->onLeftSpam()) {
+void MainMenuPage::executeSpamEvents(GamepadController *gamepad_controller, KeyboardController *keyboard_controller) {
+    if (gamepad_controller->onLeftSpam()) {
         this->onLeftSpam();
-    }else if(gamepad_controller->onRightSpam()){		
+    } else if (gamepad_controller->onRightSpam()) {
         this->onRightSpam();
     }
 
-    if(keyboard_controller->onLeftSpam()) {
+    if (keyboard_controller->onLeftSpam()) {
         this->onLeftSpam();
-    }else if(keyboard_controller->onRightSpam()){		
+    } else if (keyboard_controller->onRightSpam()) {
         this->onRightSpam();
     }
 }
 
 void MainMenuPage::setGameTitleFont() {
     gameTitleFont = TTF_OpenFont(gameFontFamilyName.c_str(), gameTitleFontSize);
-    clockTextFont = TTF_OpenFont( clockFontFamilyName.c_str(), clockTextFontSize);
+    clockTextFont = TTF_OpenFont(clockFontFamilyName.c_str(), clockTextFontSize);
 
     if (!gameTitleFont || !clockTextFont) {
         std::cerr << "Failed to open font." << '\n';
     }
-  
+
     gameTitle.setFont(gameTitleFont);
     gameTitle.setColor(SDL_Color{255, 255, 255, 255});
-    if(games.size() >= 1) {
+    if (games.size() >= 1) {
         gameTitle.setText(games[selectedGame].name);
     }
     gameTitle.setFontScale(gameTitleFontScale);
@@ -146,37 +148,43 @@ void MainMenuPage::setGameTitleFont() {
 };
 
 void MainMenuPage::animateGames() {
-    for(int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
-        int newX,newY,newW,newH;
+    for (int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
+        int newX, newY, newW, newH;
 
-        newX = (i*(gameSizeNormal + (marginBetweenGames * 2))) - selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
+        newX = (i * (gameSizeNormal + (marginBetweenGames * 2))) -
+               selectedGame * (gameSizeNormal + (marginBetweenGames * 2)) + gameOffset;
         newY = normalY;
         newW = gameSizeNormal;
         newH = gameSizeNormal;
 
-        if(i == selectedGame) {
+        if (i == selectedGame) {
             newW = gameSizeSelected;
             newH = gameSizeSelected;
         }
 
-        if(i > selectedGame) {
+        if (i > selectedGame) {
             newX += selectedGameOffset;
         }
 
-        gameEntities[i].setAnimation(MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT), Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
+        gameEntities[i].setAnimation(
+                MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT),
+                          Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
     }
 };
 
 void MainMenuPage::createGameEntity(int i) {
-    const MultiSize normalGameDims(Size(i*(gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT) );
-    const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT) );
-    
+    const MultiSize normalGameDims(
+            Size(i * (gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT),
+            Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT));
+    const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT),
+                                     Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT));
+
     Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 
     gameEntities.push_back(anotherGame);
 };
 
-void MainMenuPage::readGameStyles() {	
+void MainMenuPage::readGameStyles() {
     std::ifstream gameStylesJSON("res/styles/game.json");
     json gameStyles;
     gameStylesJSON >> gameStyles;
@@ -209,16 +217,16 @@ void MainMenuPage::readGameStyles() {
 void MainMenuPage::requestSteamGamesFromServer() {
     try {
         auto gamesResponse = api->get("steam");
-        std::cout << "Got " << gamesResponse.size() << " games from the server!" <<  std::endl;
+        std::cout << "Got " << gamesResponse.size() << " games from the server!" << std::endl;
 
         for (int i = 0; i < static_cast<int>(gamesResponse.size()); i++) {
             this->createGameEntity(i);
-            games.push_back({gamesResponse[i]["name"], gamesResponse[i]["steam_app_id"]});
+            games.push_back({gamesResponse[i]["Name"], gamesResponse[i]["SteamAppID"]});
         }
 
         this->animateGames();
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e) {
         std::cerr << "Request failed, error: " << e.what() << '\n';
     }
 };

@@ -4,14 +4,15 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 	"github.com/tedboudros/aurora/server/Integrations"
 	"log"
-
-	//"fmt"
 )
 
 func main() {
-	app := fiber.New(fiber.Config{
-		Prefork: true,
-	})
+	app := fiber.New()
+	// Future performance improvement: Add this to fiber.New()
+	//	fiber.Config{
+	//		Prefork: true,
+	//	}
+	//	to make it multithreaded
 
 	app.Get("/steam", Integrations.HandleSteamGamesGet)
 
