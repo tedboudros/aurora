@@ -2,3 +2,6 @@
 .idea
 logs/*
 .log
+
+pkg
+server/AuroraServer*

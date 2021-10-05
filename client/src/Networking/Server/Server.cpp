@@ -40,3 +40,9 @@ json Server::post(std::string p_url, json p_body) {
 
     return safeReturnResponse(response);
 };
+
+std::string Server::getSetting(std::string p_setting) {
+    json setting = get("settings?setting=" + p_setting);
+    std::string setting_value = setting['value'];
+    return setting_value;
+}

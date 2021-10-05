@@ -36,7 +36,7 @@ class Migration:
         self.database = database
         self.migration_name = migration_name
 
-    def run(self):
+    def run(self, batch):
         self.database.insert('migrations', {"name": self.migration_name})
-        self.migration.run(self.database)
+        self.migration.up(self.database)
 

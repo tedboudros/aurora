@@ -1,0 +1,5 @@
+package Constants
+
+func GetConstant() {
+
+}

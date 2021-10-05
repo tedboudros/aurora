@@ -116,6 +116,16 @@ class Database:
         self.cleanUp()
         return item_to_return
 
+    def dropTable(self, table_name):
+        self.prepare(table_name)
+
+        self.do(f"""
+            DROP TABLE {table_name}
+        """)
+
+        self.cleanUp()
+        return None;
+
     def makeUnique(self, table_name, column):
         self.prepare(table_name)
 
@@ -128,8 +138,11 @@ class Database:
     def text(self):
         return f'TEXT'
 
-    def datetime(selfl):
+    def datetime(self):
         return f"DATETIME DEFAULT CURRENT_TIMESTAMP"
+
+    def int(self):
+        return "INTEGER"
 
     def id(self, table_name):
         return f'INTEGER NOT NULL CONSTRAINT {table_name}_pk PRIMARY KEY AUTOINCREMENT'

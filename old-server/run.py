@@ -3,30 +3,35 @@ import sys
 from Scripts.make_migration import make_migration
 from Scripts.make_seeder import make_seeder
 from Scripts.run_migrations import run_migrations
+from Scripts.rollback_migrations import rollback_migrations
 from Scripts.run_seeder import run_seeder
 
 HELP_MSG = "For help do: 'python3 run.py help'"
 
 commands = {
-    'migrate:make': {
+    'make:migration': {
         "function": make_migration,
         "arguments": "[NAME]",
         "description": "Creates a new migration."
     },
-    'migrate:run': {
-        "function": run_migrations,
-        "description": "Runs all of the necessary migrations."
-    },
-    'seed:make': {
+    'make:seed': {
         "function": make_seeder,
         "arguments": "[NAME]",
         "description": "Creates a new seeder."
     },
-    'seed:run': {
+    'migrate': {
+        "function": run_migrations,
+        "description": "Runs all of the necessary migrations."
+    },
+    'migrate:rollback': {
+        "function": rollback_migrations,
+        "description": "Runs all of the necessary migrations."
+    },
+    'seed': {
         "function": run_seeder,
         "arguments": "[NAME]",
         "description": "Runs the specified seeder."
-    },
+    }
 }
 
 
