@@ -3,6 +3,7 @@ package SteamIntegration
 import (
 	"errors"
 	"github.com/andygrunwald/vdf"
+    "github.com/pkg/browser"
 	"log"
 	"os"
 	"path/filepath"
@@ -124,4 +125,9 @@ func GetAllSteamGames() []formattedGame {
 	}
 
 	return formattedGames
+}
+
+
+func OpenSteamGame(appID string) {
+	browser.OpenURL("steam://rungameid/" + appID)
 }

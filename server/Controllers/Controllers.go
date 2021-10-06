@@ -7,6 +7,8 @@ import (
 )
 
 func AddRoutes(app *fiber.App) {
-	app.Get("/steam", SteamController.HandleSteamGamesGet)
+	app.Get("/steam", SteamController.GetSteamGames)
+	app.Post("/steam", SteamController.LaunchSteamGame)
+
 	app.Get("/setting/:setting", SettingsController.GetSetting)
 }
