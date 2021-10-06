@@ -1,20 +1,22 @@
 package main
 
 import (
+	"aurora/server/Controllers"
+	"aurora/server/Database"
 	fiber "github.com/gofiber/fiber/v2"
-	"github.com/tedboudros/aurora/server/Integrations"
 	"log"
 )
 
 func main() {
-	app := fiber.New()
-	// Future performance improvement: Add this to fiber.New()
-	//	fiber.Config{
-	//		Prefork: true,
-	//	}
-	//	to make it multithreaded
+	app := fiber.New(fiber.Config{
+		ServerHeader: "Aurora",
+		AppName:      "Aurora Server",
+	})
 
-	app.Get("/steam", Integrations.HandleSteamGamesGet)
+	Database.InitDB()
+	defer Database.DBConn.Close()
+
+	Controllers.AddRoutes(app)
 
 	log.Fatal(app.Listen(":8000"))
 }

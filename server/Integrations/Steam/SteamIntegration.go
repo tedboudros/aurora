@@ -1,11 +1,8 @@
-package Integrations
+package SteamIntegration
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/andygrunwald/vdf"
-	fiber "github.com/gofiber/fiber/v2"
 	"log"
 	"os"
 	"path/filepath"
@@ -127,12 +124,4 @@ func GetAllSteamGames() []formattedGame {
 	}
 
 	return formattedGames
-}
-
-func HandleSteamGamesGet(c *fiber.Ctx) error {
-	c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
-
-	allSteamGames := GetAllSteamGames()
-
-	return json.NewEncoder(c.Response().BodyWriter()).Encode(allSteamGames)
 }
