@@ -3,7 +3,7 @@
 // for convenience
 using json = nlohmann::json;
 
-Server::Server(std::string p_server_port) :server_port(p_server_port) {};
+Server::Server(std::string p_server_port) : server_port(p_server_port) {};
 
 std::string Server::getApiURL(std::string p_url) {
     return api_url + ":" + server_port + "/" + p_url;
@@ -20,14 +20,14 @@ json Server::safeReturnResponse(http::Response p_response) {
     try {
         const std::string response_str = std::string{p_response.body.begin(), p_response.body.end()};
         return json::parse(response_str);
-    }catch (...) {
+    } catch (...) {
         return NULL;
     }
 }
 
 json Server::get(std::string p_url) {
     http::Request request = getRequestFromURL(p_url);
-	http::Response response = request.send("GET");
+    http::Response response = request.send("GET");
 
     return safeReturnResponse(response);
 };
@@ -43,6 +43,6 @@ json Server::post(std::string p_url, json p_body) {
 
 std::string Server::getSetting(std::string p_setting) {
     json setting = get("settings?setting=" + p_setting);
-    std::string setting_value = setting['value'];
+    std::string setting_value = setting["value"];
     return setting_value;
 }

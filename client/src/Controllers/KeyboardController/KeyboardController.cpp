@@ -6,15 +6,20 @@
 const int spamInterval = 135;
 const int spamTimeout = 400;
 
-void KeyboardController::execFrame(SDL_Event& event) {	
+void KeyboardController::handleUpdateControllerState(SDL_Event &event, ControllerState *p_controllerState) {
+
+    p_controllerState->updateKeyboardState(event.key.keysym.scancode, keyboardKeys[event.key.keysym.scancode]);
+}
+
+void KeyboardController::handleNavigationEvents(SDL_Event &event) {
     prevIsRightIn = isRightIn;
     prevIsLeftIn = isLeftIn;
- 
+
     if (keyboardKeys[SDL_SCANCODE_RIGHT] && !isRightIn) {
         // Right In
         isRightIn = true;
         isRightFirstIn = true;
-    }else if(!keyboardKeys[SDL_SCANCODE_RIGHT] && isRightIn) {
+    } else if (!keyboardKeys[SDL_SCANCODE_RIGHT] && isRightIn) {
         // Right Out
         isRightIn = false;
         isRightFirstIn = false;
@@ -24,7 +29,7 @@ void KeyboardController::execFrame(SDL_Event& event) {
         // Left In
         isLeftIn = true;
         isLeftFirstIn = true;
-    }else if(!keyboardKeys[SDL_SCANCODE_LEFT] && isLeftIn) {
+    } else if (!keyboardKeys[SDL_SCANCODE_LEFT] && isLeftIn) {
         // Left Out
         isLeftIn = false;
         isLeftFirstIn = false;
@@ -36,20 +41,20 @@ void KeyboardController::spamKeyboard(double deltaTime) {
     isRightSpamming = false;
     isLeftSpamming = false;
 
-    if(isLeftIn || isRightIn) {
-        currentSpamTime += deltaTime; 
+    if (isLeftIn || isRightIn) {
+        currentSpamTime += deltaTime;
 
-        if(currentSpamTime >= ((isRightFirstIn || isLeftFirstIn) ? spamTimeout : spamInterval)) {
-            if(isLeftIn) {
+        if (currentSpamTime >= ((isRightFirstIn || isLeftFirstIn) ? spamTimeout : spamInterval)) {
+            if (isLeftIn) {
                 isLeftSpamming = true;
 
-                if(isLeftFirstIn && isLeftIn) {
+                if (isLeftFirstIn && isLeftIn) {
                     isLeftFirstIn = false;
                 }
-            }else if(isRightIn) {
+            } else if (isRightIn) {
                 isRightSpamming = true;
 
-                if(isRightFirstIn && isRightIn) {
+                if (isRightFirstIn && isRightIn) {
                     isRightFirstIn = false;
                 }
             }
@@ -57,7 +62,7 @@ void KeyboardController::spamKeyboard(double deltaTime) {
             currentSpamTime = 0;
         }
 
-    }else {
+    } else {
         currentSpamTime = 0;
         isLeftFirstIn = false;
         isRightFirstIn = false;

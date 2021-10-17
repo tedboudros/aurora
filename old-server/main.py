@@ -1,38 +1,26 @@
-from wsgiref.simple_server import WSGIRequestHandler, make_server
-from Utilities.logger import logger
-from Resources.SteamResource import SteamResource
+denominations = [0.01, 0.05, 0.1, 0.25, 0.5, 1]
 
-import falcon
-import sys
+def getChange (M, P):
+    changeLeft = M - P
+    changeToReturn = [0, 0, 0, 0, 0, 0]
 
-should_log = False
-if len(sys.argv) >= 3 and sys.argv[2] == '-v':
-    should_log = True
+    denominations.reverse()
 
-if not should_log:
-    logger.disabled = True
-
-
-class NoLoggingWSGIRequestHandler(WSGIRequestHandler):
-    def log_message(self, format, *args):
-        pass
+    for i, denomination in enumerate(denominations):
+        while True:
+            if changeLeft < denomination:
+                break;
+            else:
+                print(denomination)
+                changeLeft -= denomination
+                changeToReturn[i] += 1
 
 
-app = falcon.App()
+    changeToReturn.reverse()
+    return changeToReturn
 
-# Resources:
-steam = SteamResource()
-app.add_route('/steam', steam)
-
-
-if __name__ == '__main__':
-    with make_server('', int(sys.argv[1]), app, handler_class=NoLoggingWSGIRequestHandler) as httpd:
-        logger.info(f'Serving on port {sys.argv[1]}...')
-        from Database.database import database
-
-        # Serve until process is killed
-        try:
-            httpd.serve_forever()
-        except:
-            database.closeConnection()
-            httpd.server_close()
+print(getChange(5, 0.99))
+print(getChange(3.14, 1.99))
+print(getChange(3, 0.01))
+print(getChange(4, 3.14))
+print(getChange(0.45, 0.34))

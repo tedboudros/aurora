@@ -20,6 +20,7 @@ MainMenuPage::MainMenuPage(RenderWindow *p_window, Server *p_api) : window(p_win
 
     gameBorder = window->loadTexture("res/images/game.png");
     scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME);
+    enterSound = createAudio("res/sounds/enter.wav", 0, SDL_MIX_MAXVOLUME);
 
     this->readGameStyles();
     this->requestSteamGamesFromServer();
@@ -28,9 +29,7 @@ MainMenuPage::MainMenuPage(RenderWindow *p_window, Server *p_api) : window(p_win
 
 void MainMenuPage::render(double deltaTime) {
     if (selectedGame != prevSelectedGame) {
-        api->post("steam", json{{"app_id", games[selectedGame].steam_app_id}});
         playSoundFromMemory(scrollSound, SDL_MIX_MAXVOLUME / 4);
-
         this->animateGames();
         this->setGameTitleFont();
 
@@ -88,6 +87,17 @@ void MainMenuPage::onLeftSpam() {
 
     if (selectedGame != 0) {
         selectedGame -= 1;
+    }
+}
+
+void MainMenuPage::executeControllerState(ControllerState *p_controllerState) {
+    const bool isEnterDown = p_controllerState->isDown(ControllerState::enter);
+    if (isEnterDown) {
+        // Launch game
+        api->post("steam", json{{"app_id", games[selectedGame].steam_app_id}});
+        // Play sound
+        playSoundFromMemory(enterSound, SDL_MIX_MAXVOLUME / 6);
+
     }
 }
 
