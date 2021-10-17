@@ -3,7 +3,7 @@
 
 
 # Ted:
-# This script is old, please don't use it (Use the updated python one on ../launcher or the built-in compilation of CLion).
+# This script is old, please don't use it (Use the built-in compilation of CLion or your IDE of choice).
 # I left it on purpose in the repo just to have as a guide if you're going down the path of trying to manually compile!
 # On that note, good luck!
 
