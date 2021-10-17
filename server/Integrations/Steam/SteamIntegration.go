@@ -51,7 +51,7 @@ func ReadVDFFile(filename string) map[string]interface{} {
 
 func GetSteamLibraries(baseLibrary string) []string {
 
-	libraryFolderFile := baseLibrary + "\\libraryfolders.vdf"
+	libraryFolderFile := baseLibrary + "/libraryfolders.vdf"
 	libraryFoldersFromVDF := ReadVDFFile(libraryFolderFile)["libraryfolders"].(map[string]interface{})
 
 	var libraryFolders []string
