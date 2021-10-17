@@ -4,6 +4,8 @@ logs/*
 .log
 server/src
 server/pkg
+server/main.exe
+server/main
 
 pkg
 server/AuroraServer*
