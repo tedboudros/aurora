@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"os/user"
 )
 
 type formattedGame struct {
@@ -20,13 +21,16 @@ type formattedGame struct {
 }
 
 func getSteamBaseDir() string {
+	usr, _ := user.Current()
+	dir := usr.HomeDir
+
 	switch runtime.GOOS {
 		case "windows":
 			return "C:/Program Files (x86)/Steam"
 		case "linux":
-			return "~/.local/share/Steam"
+			return filepath.Join(dir,"/.local/share/Steam")
 		case "darwin":
-			return "~/Library/Application Support/Steam"
+			return filepath.Join(dir,"~/Library/Application Support/Steam")
 	}
 
 	return ""
