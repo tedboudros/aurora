@@ -1,5 +1,0 @@
-package Constants
-
-func GetConstant() {
-
-}

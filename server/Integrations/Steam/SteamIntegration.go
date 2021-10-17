@@ -3,10 +3,11 @@ package SteamIntegration
 import (
 	"errors"
 	"github.com/andygrunwald/vdf"
-    "github.com/pkg/browser"
+	"github.com/pkg/browser"
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 )
 
@@ -16,6 +17,19 @@ type formattedGame struct {
 	Language     string
 	Size         int
 	SteamAppID   string
+}
+
+func getSteamBaseDir() string {
+	switch runtime.GOOS {
+		case "windows":
+			return "C:/Program Files (x86)/Steam"
+		case "linux":
+			return "~/.local/share/Steam"
+		case "darwin":
+			return "~/Library/Application Support/Steam"
+	}
+
+	return ""
 }
 
 func ReadVDFFile(filename string) map[string]interface{} {
@@ -41,7 +55,8 @@ func GetSteamLibraries(baseLibrary string) []string {
 	libraryFoldersFromVDF := ReadVDFFile(libraryFolderFile)["libraryfolders"].(map[string]interface{})
 
 	var libraryFolders []string
-	libraryFolders = append(libraryFolders, baseLibrary)
+	// libraryFolders = append(libraryFolders, baseLibrary) Commented because steam added the base dir inside libraryfolders.vdf
+	// If this not true for most other users this has to be uncommented and we should also make it return only unique directories
 
 	for key, libraryFolderInterface := range libraryFoldersFromVDF {
 		if key != "contentstatsid" {
@@ -63,7 +78,6 @@ func GetSteamGameVDFsFromLibrary(libraryDir string) []string {
 	}
 
 	return gameVDFs
-
 }
 
 func FormatGameFromVDF(libraryFolder string, vdf map[string]interface{}) (formattedGame, error) {
@@ -106,7 +120,7 @@ func FormatGameFromVDF(libraryFolder string, vdf map[string]interface{}) (format
 }
 
 func GetAllSteamGames() []formattedGame {
-	const baseLibrary string = "C:\\Program Files (x86)\\Steam\\steamapps"
+	var baseLibrary string = getSteamBaseDir() + "/steamapps"
 	libraryFolders := GetSteamLibraries(baseLibrary)
 
 	var formattedGames []formattedGame
