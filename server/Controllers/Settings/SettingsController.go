@@ -2,7 +2,7 @@ package SettingsController
 
 import (
 	"aurora/server/Database"
-	"aurora/server/Database/Models"
+	"aurora/server/Models"
 	fiber "github.com/gofiber/fiber/v2"
 )
 
@@ -20,3 +20,4 @@ func GetSetting(c *fiber.Ctx) error {
 
 	return c.JSON(setting.Value)
 }
+

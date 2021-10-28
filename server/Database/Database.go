@@ -1,7 +1,7 @@
 package Database
 
 import (
-	"aurora/server/Database/Models"
+	"aurora/server/Models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"log"

@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cstdio>
 
 #include "Controllers/ControllerState/ControllerState.hpp"
 #include "Controllers/GamepadController/GamepadController.hpp"
@@ -12,6 +13,12 @@
 
 int main(int argc, char *args[]) {
     bool isRunning = true;
+
+    if (argc <= 1) {
+        std::cout << "Missing port argument.\n\nPress any key to exit aurora..." << std::endl;
+        std::getchar();
+        return 1;
+    }
 
     Server api(args[1]);
 
