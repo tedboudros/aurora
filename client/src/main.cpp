@@ -1,82 +1,108 @@
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <cstdio>
+
+#include "Controllers/ControllerState/ControllerState.hpp"
+#include "Controllers/GamepadController/GamepadController.hpp"
+#include "Controllers/KeyboardController/KeyboardController.hpp"
 
 #include "Rendering/RenderWindow/RenderWindow.hpp"
 #include "Pages/MainMenu/MainMenu.hpp"
 
 #include "Utilities/Helpers/Helpers.hpp"
 
-int main(int argc, char* args[]) {
- 	bool isRunning = true;
+int main(int argc, char *args[]) {
+    bool isRunning = true;
 
-	Server api(args[1]);
-	
-	RenderWindow window("Aurora", 1600, 900);
+    if (argc <= 1) {
+        std::cout << "Missing port argument.\n\nPress any key to exit aurora..." << std::endl;
+        std::getchar();
+        return 1;
+    }
 
-	MainMenuPage mainMenu(&window, &api);
+    Server api(args[1]);
 
-	// Diagnostic stuff:
-	int windowRefreshRate = window.getRefreshRate();
-	std::cout << "Refresh rate: " << windowRefreshRate << "hz" << std::endl;
+    RenderWindow window("Aurora", 1600, 900);
 
-	Vector2f windowSize = window.getWindowDimensions();
-	std::cout << "Resolution: " << windowSize.x << "x" << windowSize.y << std::endl;
+    MainMenuPage mainMenu(&window, &api);
+
+    // Diagnostic stuff:
+    int windowRefreshRate = window.getRefreshRate();
+    std::cout << "Refresh rate: " << windowRefreshRate << "hz" << std::endl;
+
+    Vector2f windowSize = window.getWindowDimensions();
+    std::cout << "Resolution: " << windowSize.x << "x" << windowSize.y << std::endl;
 
 
-	SDL_Event event;
+    SDL_Event event;
 
-	GamepadController gamepadController;
-	KeyboardController keyboardController;
+    GamepadController gamepadController;
+    KeyboardController keyboardController;
+    ControllerState controllerState;
 
-	// For delta time
-	Uint64 currentTime = utils::hireTime();
+    // For delta time
+    Uint64 currentTime = utils::hireTime();
 
-	// Game loop:
-	while(isRunning) {
-		Uint64 newTime = utils::hireTime();
-		double deltaTime = ((newTime - currentTime)*1000 / (double)SDL_GetPerformanceFrequency() );
-		currentTime = newTime;
+    // Game loop:
+    while (isRunning) {
+        Uint64 newTime = utils::hireTime();
+        double deltaTime = ((newTime - currentTime) * 1000 / (double) SDL_GetPerformanceFrequency());
+        currentTime = newTime;
 
-		// SDL Events:															
-		while(SDL_PollEvent(&event)){
-			switch(event.type) {
-				case SDL_QUIT:
-					isRunning = false;
-					break;
+        // SDL Events:
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    isRunning = false;
+                    break;
 
-				case SDL_JOYAXISMOTION:
-					gamepadController.execFrame(event);
-					mainMenu.executeControllerEvent(&gamepadController);
-					break;
+                case SDL_JOYBUTTONDOWN:
+                    gamepadController.handleUpdateControllerState(event, &controllerState);
+                    break;
 
-				case SDL_KEYDOWN:
-					keyboardController.execFrame(event);
-					mainMenu.executeKeyboardEvent(&keyboardController);
-					break;
+                case SDL_JOYBUTTONUP:
+                    gamepadController.handleUpdateControllerState(event, &controllerState);
+                    break;
 
-				case SDL_KEYUP:
-					keyboardController.execFrame(event);
-					break;
-			}
-		}
+                case SDL_JOYAXISMOTION:
+                    gamepadController.handleNavigationEvents(event);
+                    mainMenu.executeControllerEvent(&gamepadController);
+                    break;
 
-		gamepadController.spamController(deltaTime);
-		keyboardController.spamKeyboard(deltaTime);
+                case SDL_KEYDOWN:
+                    keyboardController.handleNavigationEvents(event);
+                    keyboardController.handleUpdateControllerState(event, &controllerState);
+                    mainMenu.executeKeyboardEvent(&keyboardController);
+                    break;
 
-		mainMenu.executeSpamEvents(&gamepadController, &keyboardController);
+                case SDL_KEYUP:
+                    keyboardController.handleNavigationEvents(event);
+                    keyboardController.handleUpdateControllerState(event, &controllerState);
+                    break;
+            }
+        }
 
-		// Rendering
-		window.clear();
 
-		mainMenu.render(deltaTime);	
+        mainMenu.executeControllerState(&controllerState);
+        controllerState.syncState();
 
-		window.display();
+        gamepadController.spamController(deltaTime);
+        keyboardController.spamKeyboard(deltaTime);
 
-	}
+        mainMenu.executeSpamEvents(&gamepadController, &keyboardController);
 
-	mainMenu.cleanUp();
-	window.cleanUp();
-	SDL_Quit();
+        // Rendering
+        window.clear();
 
-	return 0;
+        mainMenu.render(deltaTime);
+
+        window.display();
+
+    }
+
+    mainMenu.cleanUp();
+    window.cleanUp();
+    SDL_Quit();
+
+    return 0;
 }
