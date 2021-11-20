@@ -65,7 +65,6 @@ func GetSteamLibraries(baseLibrary string) []string {
 	for key, libraryFolderInterface := range libraryFoldersFromVDF {
 		if key != "contentstatsid" {
 			libraryFolder, _ := libraryFolderInterface.(map[string]interface{})
-			0
 			libraryFolders = append(libraryFolders, libraryFolder["path"].(string)+"/steamapps")
 		}
 	}

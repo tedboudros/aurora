@@ -5,6 +5,7 @@ import (
 	"aurora/server/Database"
 	fiber "github.com/gofiber/fiber/v2"
 	"log"
+	"os"
 )
 
 func main() {
@@ -18,5 +19,13 @@ func main() {
 
 	Controllers.AddRoutes(app)
 
-	log.Fatal(app.Listen(":8000"))
+	port := "40096"
+
+	pPort := os.Args[1:]
+
+	if len(pPort) > 0 {
+		port = pPort[0]
+	}
+
+	log.Fatal(app.Listen(":" + string(port)))
 }

@@ -5,11 +5,11 @@
 #include "Rendering/RenderWindow/RenderWindow.hpp"
 #include "Utilities/Sound/Sound.h"
 
-#ifdef __APPLE__
+//#ifdef __APPLE__
 #define RENDERING_ARGS NULL
-#else
-#define RENDERING_ARGS SDL_WINDOW_VULKAN
-#endif
+//#else
+//#define RENDERING_ARGS SDL_WINDOW_VULKAN
+//#endif
 
 
 float calculateSize(Size value, Vector2f windowDimensions) {
@@ -37,7 +37,7 @@ RenderWindow::RenderWindow(const char *p_title, int p_width, int p_height) : win
     initAudio();
 
     window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_width, p_height,
-                              SDL_WINDOW_SHOWN | RENDERING_ARGS);//| SDL_WINDOW_FULLSCREEN_DESKTOP );
+                              SDL_WINDOW_FULLSCREEN_DESKTOP); // SDL_WINDOW_SHOWN | RENDERING_ARGS);//
 
     if (window == NULL) {
         std::cout << "Window has failed to init. Error: " << SDL_GetError() << std::endl;

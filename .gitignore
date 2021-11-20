@@ -6,6 +6,10 @@ server/src
 server/pkg
 server/main.exe
 server/main
+main.exe
+main
+
+launcher
 
 pkg
 server/AuroraServer*
