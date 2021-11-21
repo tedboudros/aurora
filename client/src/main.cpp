@@ -22,7 +22,7 @@ int main(int argc, char *args[]) {
 
     Server api(args[1]);
 
-    RenderWindow window("Aurora", 1600, 900);
+    RenderWindow window("Aurora", 1920, 1080);
 
     MainMenuPage mainMenu(&window, &api);
 
@@ -83,6 +83,7 @@ int main(int argc, char *args[]) {
         }
 
 
+        // Keyboard & Gamepad:
         mainMenu.executeControllerState(&controllerState);
         controllerState.syncState();
 
@@ -91,15 +92,21 @@ int main(int argc, char *args[]) {
 
         mainMenu.executeSpamEvents(&gamepadController, &keyboardController);
 
-        // Rendering
+
+        // Mouse:
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+        mainMenu.handleMouseMovement(mouseX, mouseY);
+
+
+        // Rendering:
         window.clear();
-
         mainMenu.render(deltaTime);
-
         window.display();
 
     }
 
+    // Cleanup:
     mainMenu.cleanUp();
     window.cleanUp();
     SDL_Quit();

@@ -36,27 +36,35 @@ func getSteamBaseDir() string {
 	return ""
 }
 
-func ReadVDFFile(filename string) map[string]interface{} {
+func ReadVDFFile(filename string) (map[string]interface{}, error) {
 	file, err := os.Open(filename)
 
 	if err != nil {
-		log.Fatal("Error reading VDF file:", err)
+		log.Println("Error reading VDF file:", err)
+		return nil, errors.New("Error reading VDF file:")
 	}
 
 	parser := vdf.NewParser(file)
 	contents, err := parser.Parse()
 
 	if err != nil {
-		log.Fatal("Error parsing VDF file:", err)
+		log.Println("Error parsing VDF file:", err)
+		return nil, errors.New("Error parsing VDF file")
 	}
 
-	return contents
+	return contents, nil
 }
 
 func GetSteamLibraries(baseLibrary string) []string {
 
 	libraryFolderFile := baseLibrary + "/libraryfolders.vdf"
-	libraryFoldersFromVDF := ReadVDFFile(libraryFolderFile)["libraryfolders"].(map[string]interface{})
+	libraryFoldersVDF, err := ReadVDFFile(libraryFolderFile)
+
+	if err != nil {
+		return []string{}
+	}
+
+	libraryFoldersFromVDF := libraryFoldersVDF["libraryfolders"].(map[string]interface{})
 
 	var libraryFolders []string
 	// libraryFolders = append(libraryFolders, baseLibrary) Commented because steam added the base dir inside libraryfolders.vdf
@@ -65,13 +73,11 @@ func GetSteamLibraries(baseLibrary string) []string {
 	for key, libraryFolderInterface := range libraryFoldersFromVDF {
 		if key != "contentstatsid" {
 			libraryFolder, _ := libraryFolderInterface.(map[string]interface{})
-			0
 			libraryFolders = append(libraryFolders, libraryFolder["path"].(string)+"/steamapps")
 		}
 	}
 
 	return libraryFolders
-
 }
 
 func GetSteamGameVDFsFromLibrary(libraryDir string) []string {
@@ -134,11 +140,13 @@ func GetAllSteamGames() []formattedGame {
 		gamesFromLibrary := GetSteamGameVDFsFromLibrary(libraryFolder)
 
 		for _, gameFilepath := range gamesFromLibrary {
-			vdf := ReadVDFFile(gameFilepath)
-			newFormattedGame, err := FormatGameFromVDF(libraryFolder, vdf)
+			vdf, vdfReadErr := ReadVDFFile(gameFilepath)
+			if vdfReadErr == nil {
+				newFormattedGame, vdfFormatter := FormatGameFromVDF(libraryFolder, vdf)
 
-			if err == nil {
-				formattedGames = append(formattedGames, newFormattedGame)
+				if vdfFormatter == nil {
+					formattedGames = append(formattedGames, newFormattedGame)
+				}
 			}
 		}
 	}

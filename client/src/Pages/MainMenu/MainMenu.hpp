@@ -33,6 +33,8 @@ public:
 
     void executeSpamEvents(GamepadController *gamepad_controller, KeyboardController *keyboard_controller);
 
+    void handleMouseMovement(int p_mouseX, int p_mouseY);
+
     void initialize(SDL_Event &event);
 
     void cleanUp();

@@ -13,7 +13,7 @@
 const std::string clockFormat = "%X";
 
 MainMenuPage::MainMenuPage(RenderWindow *p_window, Server *p_api) : window(p_window), api(p_api) {
-    SDL_Texture *wallpaper = window->loadTexture("res/images/bg.png");
+    SDL_Texture *wallpaper = window->loadTexture("res/images/wallpaper.jpg");
     wallpaperEntity = Entity(
             MultiSize(Size(0, SIZE_WIDTH), Size(0, SIZE_HEIGHT), Size(100, SIZE_WIDTH), Size(100, SIZE_HEIGHT)),
             wallpaper);
@@ -223,6 +223,12 @@ void MainMenuPage::readGameStyles() {
     normalTransitionTime = gameStyles["game-container"]["normalTransition"];
     spamTransitionTime = gameStyles["game-container"]["spamTransition"];
 };
+
+void MainMenuPage::handleMouseMovement(int p_mouseX, int p_mouseY) {
+//    for (int i = 0; i < static_cast<int>(gameEntities.size()); i++) {
+//        bool isInside = gameEntities[i].isMouseInside(p_mouseX, p_mouseY);
+//    }
+}
 
 void MainMenuPage::requestSteamGamesFromServer() {
     try {
