@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"os"
+	//"os"
 	"os/exec"
 	"runtime"
 	"strconv"
@@ -11,11 +11,11 @@ import (
 func getExecutableName(filename string) string {
 	switch runtime.GOOS {
 	case "windows":
-		return filename + ".exe"
+		return "./" + filename + ".exe"
 	case "linux":
-		return filename
+		return "./" + filename
 	case "darwin":
-		return filename
+		return "./" + filename
 	}
 
 	return ""
@@ -31,28 +31,17 @@ func getClientExecutableName() string {
 	return getExecutableName(executableName)
 }
 
-func openServer(port int) *exec.Cmd {
-	log.Println("Starting server...")
-	server := exec.Command(getServerExecutableName(), strconv.Itoa(port))
-	server.Stdout = os.Stdout
-	err := server.Start()
+func openExecutable(port int, filename string, displayName string) *exec.Cmd {
+	log.Println("Starting " + displayName + "...")
+	executable := exec.Command(filename, strconv.Itoa(port))
+	err := executable.Start()
 	if err != nil {
 		log.Fatal(err)
+	}else {
+		log.Println("Successfully started "+displayName+"...")
 	}
 
-	return server
-}
-
-func openClient(port int) *exec.Cmd {
-	log.Println("Starting client...")
-	client := exec.Command(getClientExecutableName(), strconv.Itoa(port))
-	client.Stdout = os.Stdout
-	err := client.Start()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return client
+	return executable
 }
 
 func closeServer(server *exec.Cmd) {
@@ -61,10 +50,10 @@ func closeServer(server *exec.Cmd) {
 
 
 func main() {
-	const TcpPort int = 8000
+	const TcpPort int = 32815
 
-	server := openServer(TcpPort)
-	client := openClient(TcpPort)
+	server := openExecutable(TcpPort, getServerExecutableName(), "server")
+	client := openExecutable(TcpPort, getClientExecutableName(), "client")
 
 	client.Wait()
 	closeServer(server)

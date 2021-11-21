@@ -38,27 +38,27 @@ announcement "Starting client build"
 
 # Make build dir:
 info "Purging and remaking build directory"
-rm -rf ${SCRIPT_DIR}/build &> /dev/null
-mkdir ${SCRIPT_DIR}/build &> /dev/null
+rm -rf "${SCRIPT_DIR}/build" &> /dev/null
+mkdir "${SCRIPT_DIR}/build" &> /dev/null
 
 # Compile client
 info "Starting compilation of client"
-cd ${SCRIPT_DIR}/client
+cd "${SCRIPT_DIR}/client"
 bash ${CLIENT_COMPILE_SCRIPT} ${BUILD_MODE} --dontRun
 
 # Move client inside build dir
 info "Moving client to build directory"
-mv -v ${SCRIPT_DIR}/client/bin/Debug/* ${SCRIPT_DIR}/build &> /dev/null
+mv -v "${SCRIPT_DIR}"/client/bin/Debug/* "${SCRIPT_DIR}/build" &> /dev/null
 
 # Renaming executable so that the launcher can work
 info "Renaming client executable for launcher"
 if [[ "$OSTYPE" == "msys" ]]; then
-  mv -v ${SCRIPT_DIR}/build/Aurora.exe ${SCRIPT_DIR}/build/${CLIENT_EXECUTABLE_NAME}.exe &> /dev/null
+  mv -v "${SCRIPT_DIR}/build/Aurora.exe" "${SCRIPT_DIR}/build/${CLIENT_EXECUTABLE_NAME}.exe" &> /dev/null
 else
-  mv -v ${SCRIPT_DIR}/build/Aurora ${SCRIPT_DIR}/build/${CLIENT_EXECUTABLE_NAME} &> /dev/null
+  mv -v "${SCRIPT_DIR}/build/Aurora" "${SCRIPT_DIR}/build/${CLIENT_EXECUTABLE_NAME}" &> /dev/null
 fi
 
-# Client cleanup                                         
+# Client cleanup
 info "Cleaning up temporary client directory"
 rm -rf "${SCRIPT_DIR}/client/bin" &> /dev/null
 rm -rf "${SCRIPT_DIR}/client/build-debug" &> /dev/null
@@ -69,16 +69,16 @@ announcement "Starting server build"
 
 # Compile server
 info "Starting compilation of server"
-cd ${SCRIPT_DIR}/server
+cd "${SCRIPT_DIR}/server"
 export CGO_CFLAGS="-g -O2 -Wno-return-local-addr" # Fix for a weird bug with a go package
 go build -o ${SERVER_EXECUTABLE_NAME} main.go
 success "Built server"
 
 info "Moving server to build directory"
 if [[ "$OSTYPE" == "msys" ]]; then
-  mv ${SCRIPT_DIR}/server/${SERVER_EXECUTABLE_NAME} ${SCRIPT_DIR}/build/${SERVER_EXECUTABLE_NAME}.exe &> /dev/null
+  mv "${SCRIPT_DIR}/server/${SERVER_EXECUTABLE_NAME}" "${SCRIPT_DIR}/build/${SERVER_EXECUTABLE_NAME}.exe" &> /dev/null
 else
-  mv ${SCRIPT_DIR}/server/${SERVER_EXECUTABLE_NAME} ${SCRIPT_DIR}/build/${SERVER_EXECUTABLE_NAME} &> /dev/null
+  mv "${SCRIPT_DIR}/server/${SERVER_EXECUTABLE_NAME}" "${SCRIPT_DIR}/build/${SERVER_EXECUTABLE_NAME}" &> /dev/null
 fi
 
 
@@ -87,14 +87,14 @@ announcement "Starting launcher build"
 
 # Compile server
 info "Starting compilation of launcher"
-cd ${SCRIPT_DIR}/launcher
+cd "${SCRIPT_DIR}/launcher"
 export CGO_CFLAGS="-g -O2 -Wno-return-local-addr" # Fix for a weird bug with a go package
 go build -o ${LAUNCHER_EXECUTABLE_NAME} main.go
 success "Built launcher"
 
 info "Moving launcher to build directory"
 if [[ "$OSTYPE" == "msys" ]]; then
-  mv ${SCRIPT_DIR}/launcher/${LAUNCHER_EXECUTABLE_NAME} ${SCRIPT_DIR}/build/${LAUNCHER_EXECUTABLE_NAME}.exe &> /dev/null
+  mv "${SCRIPT_DIR}/launcher/${LAUNCHER_EXECUTABLE_NAME}" "${SCRIPT_DIR}/build/${LAUNCHER_EXECUTABLE_NAME}.exe" &> /dev/null
 else
-  mv ${SCRIPT_DIR}/launcher/${LAUNCHER_EXECUTABLE_NAME} ${SCRIPT_DIR}/build/${LAUNCHER_EXECUTABLE_NAME} &> /dev/null
+  mv "${SCRIPT_DIR}/launcher/${LAUNCHER_EXECUTABLE_NAME}" "${SCRIPT_DIR}/build/${LAUNCHER_EXECUTABLE_NAME}" &> /dev/null
 fi
