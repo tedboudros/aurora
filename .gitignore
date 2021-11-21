@@ -4,12 +4,15 @@ logs/*
 .log
 server/src
 server/pkg
-server/main.exe
+server/*.exe
 server/main
+server/aurora_server
+build
 main.exe
 main
 
-launcher
+launcher/*
+!launcher/*.go
 
 pkg
 server/AuroraServer*

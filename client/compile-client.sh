@@ -1,28 +1,23 @@
 #!/bin/bash
 # Tested with (Ubuntu 21.04 w/ G++, Windows 10 w/ MSYS MinGW64)
 
-
-# Ted:
-# This script is old, please don't use it (Use the built-in compilation of CLion or your IDE of choice).
-# I left it on purpose in the repo just to have as a guide if you're going down the path of trying to manually compile!
-# On that note, good luck!
-
 RED_COLOR='\033[0;31m'
-GREEN_COLOR='\033[1;32m'
+GREEN_COLOR='\033[0;32m'
 BLUE_COLOR='\033[1;34m'
 NO_COLOR='\033[0m' # No Color
 
+LOG_PREFIX="-- BUILD | "
+
 error () {
-    echo -e "🚫 ${RED_COLOR}ERROR - $1!${NO_COLOR}"
+    echo -e "${RED_COLOR}${LOG_PREFIX}ERROR - $1!${NO_COLOR}"
 }
 
 info () {
-    echo -e "👋 ${BLUE_COLOR}INFO - $1...${NO_COLOR}"
+    echo -e "${BLUE_COLOR}${LOG_PREFIX}INFO - $1...${NO_COLOR}"
 }
 
 success () {
-    echo -e "👌 ${GREEN_COLOR}SUCCESSFULLY - $1!${NO_COLOR}"
-    echo -e "\n"
+    echo -e "${GREEN_COLOR}${LOG_PREFIX}SUCCESS - $1!${NO_COLOR}"
 }
 
 die () {
@@ -76,12 +71,12 @@ eval "cmake --build . $HAS_OUTPUT"
 eval "cmake --install . $HAS_OUTPUT"
 
 if [ -f "Aurora.exe" ] || [ -f "Aurora" ]; then
-  success "Built for $ENV env"
+  success "Built client"
 else
   die " Build failed. Please run the command with -v to see more details"
 fi
 
-if [[ $@ == *'-zip'* ]] ; then
+if [[ $@ == *'--zip'* ]] ; then
     info "Generating the .zip file"
     eval "cmake --build . --target make_zip $HAS_OUTPUT"
     success "Generated the .zip file"
@@ -90,7 +85,7 @@ fi
 
 SHOULD_RUN=true
 
-if [[ $@ == *'-dontRun'* ]] ; then
+if [[ $@ == *'--dontRun'* ]] ; then
     SHOULD_RUN=false
 fi
 

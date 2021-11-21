@@ -9,7 +9,7 @@ import (
 
 func openServer(port int) int {
 	log.Println("Starting server...")
-	server := exec.Command("server.exe", strconv.Itoa(port))
+	server := exec.Command("aurora_server.exe", strconv.Itoa(port))
 	server.Stdout = os.Stdout
 	err := server.Start()
 	if err != nil {
@@ -22,7 +22,7 @@ func openServer(port int) int {
 
 func openClient(port int) int {
 	log.Println("Starting client...")
-	server := exec.Command("client.exe", strconv.Itoa(port))
+	server := exec.Command("aurora_client.exe", strconv.Itoa(port))
 	server.Stdout = os.Stdout
 	err := server.Start()
 	if err != nil {
