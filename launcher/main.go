@@ -4,46 +4,68 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strconv"
 )
 
-func openServer(port int) int {
+func getExecutableName(filename string) string {
+	switch runtime.GOOS {
+	case "windows":
+		return filename + ".exe"
+	case "linux":
+		return filename
+	case "darwin":
+		return filename
+	}
+
+	return ""
+}
+
+func getServerExecutableName() string {
+	const executableName string = "aurora_server"
+	return getExecutableName(executableName)
+}
+
+func getClientExecutableName() string {
+	const executableName string = "aurora_client"
+	return getExecutableName(executableName)
+}
+
+func openServer(port int) *exec.Cmd {
 	log.Println("Starting server...")
-	server := exec.Command("aurora_server.exe", strconv.Itoa(port))
+	server := exec.Command(getServerExecutableName(), strconv.Itoa(port))
 	server.Stdout = os.Stdout
 	err := server.Start()
 	if err != nil {
 		log.Fatal(err)
-		return 0 // 0 if something fails
 	}
 
-	return server.Process.Pid
+	return server
 }
 
-func openClient(port int) int {
+func openClient(port int) *exec.Cmd {
 	log.Println("Starting client...")
-	server := exec.Command("aurora_client.exe", strconv.Itoa(port))
-	server.Stdout = os.Stdout
-	err := server.Start()
+	client := exec.Command(getClientExecutableName(), strconv.Itoa(port))
+	client.Stdout = os.Stdout
+	err := client.Start()
 	if err != nil {
 		log.Fatal(err)
-		return 0 // 0 if something fails
 	}
 
-	return server.Process.Pid
+	return client
 }
 
-func closeClient(port int) bool {
-
-	return false // Returns false if it closed successfully
+func closeServer(server *exec.Cmd) {
+	server.Process.Kill()
 }
+
 
 func main() {
 	const TcpPort int = 8000
 
-	//clientPID := openClient(TcpPort)
-	openServer(TcpPort)
-	openClient(TcpPort)
-	//closeClient(clientPID)
+	server := openServer(TcpPort)
+	client := openClient(TcpPort)
 
+	client.Wait()
+	closeServer(server)
 }
