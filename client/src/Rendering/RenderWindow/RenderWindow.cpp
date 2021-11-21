@@ -5,11 +5,11 @@
 #include "Rendering/RenderWindow/RenderWindow.hpp"
 #include "Utilities/Sound/Sound.h"
 
-//#ifdef __APPLE__
+#ifdef __APPLE__
 #define RENDERING_ARGS NULL
-//#else
-//#define RENDERING_ARGS SDL_WINDOW_VULKAN
-//#endif
+#else
+#define RENDERING_ARGS SDL_WINDOW_VULKAN
+#endif
 
 
 float calculateSize(Size value, Vector2f windowDimensions) {
@@ -18,11 +18,10 @@ float calculateSize(Size value, Vector2f windowDimensions) {
 
 RenderWindow::RenderWindow(const char *p_title, int p_width, int p_height) : window(NULL), renderer(NULL),
                                                                              windowDims(Vector2f(p_width, p_height)) {
-
-#if EE_CURRENT_PLATFORM == EE_PLATFORM_WINDOWS
+    // Fix for audio
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     SDL_setenv("SDL_AUDIODRIVER", "directsound", true);
-#endif
-#if EE_CURRENT_PLATFORM == EE_PLATFORM_LINUX
+#elif __linux__
     SDL_setenv("SDL_AUDIODRIVER", "pulseaudio", true);
 #endif
 
