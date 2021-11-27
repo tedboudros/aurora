@@ -106,9 +106,6 @@ int main(int argc, char *args[]) {
 
     }
 
-    // Cleanup:
-    mainMenu.cleanUp();
-    window.cleanUp();
     SDL_Quit();
 
     return 0;

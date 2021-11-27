@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Rendering/Graphics/Graphics.hpp"
 
 #include "Utilities/Sound/Sound.h"
 #include "Utilities/Helpers/Helpers.hpp"
@@ -15,12 +16,15 @@ const std::string clockFormat = "%X";
 MainMenuPage::MainMenuPage(RenderWindow *p_window, Server *p_api) : window(p_window), api(p_api) {
     SDL_Texture *wallpaper = window->loadTexture("res/images/wallpaper.jpg");
     wallpaperEntity = Entity(
-            MultiSize(Size(0, SIZE_WIDTH), Size(0, SIZE_HEIGHT), Size(100, SIZE_WIDTH), Size(100, SIZE_HEIGHT)),
+            MultiSize(Size(0, WW), Size(0, WH), Size(100, WW), Size(100, WH)),
             wallpaper);
 
     gameBorder = window->loadTexture("res/images/game.png");
     scrollSound = createAudio("res/sounds/scroll.wav", 0, SDL_MIX_MAXVOLUME);
     enterSound = createAudio("res/sounds/enter.wav", 0, SDL_MIX_MAXVOLUME);
+
+    roundedRect = Graphics::RoundedRectangle{MultiSize(Size(10, WW), Size(10, WW), Size(10, WW), Size(10, WW)),
+                                             Size(.5, WW)};
 
     this->readGameStyles();
     this->requestSteamGamesFromServer();
@@ -43,14 +47,15 @@ void MainMenuPage::render(double deltaTime) {
     window->render(gameTitle);
     window->render(clockText);
 
+    window->render(roundedRect);
+
     for (Entity &game: gameEntities) {
         game.animate(deltaTime);
         window->render(game);
     }
 }
 
-void MainMenuPage::cleanUp() {
-
+MainMenuPage::~MainMenuPage() {
     freeAudio(scrollSound);
 
     TTF_CloseFont(gameTitleFont);
@@ -146,14 +151,14 @@ void MainMenuPage::setGameTitleFont() {
     }
     gameTitle.setFontScale(gameTitleFontScale);
     gameTitle.setRenderMethod(Text::RenderMethod::Blended);
-    gameTitle.setPosition(Size(gameTitleX, SIZE_WIDTH), Size(gameTitleY, SIZE_HEIGHT));
+    gameTitle.setPosition(Size(gameTitleX, WW), Size(gameTitleY, WH));
 
     clockText.setFont(clockTextFont);
     clockText.setColor(SDL_Color{255, 255, 255, 255});
     clockText.setText(utils::currentDateTime(clockFormat));
     clockText.setFontScale(clockTextFontScale);
     clockText.setRenderMethod(Text::RenderMethod::Blended);
-    clockText.setPosition(Size(clockTextX, SIZE_WIDTH), Size(clockTextY, SIZE_HEIGHT));
+    clockText.setPosition(Size(clockTextX, WW), Size(clockTextY, WH));
 
 };
 
@@ -177,17 +182,17 @@ void MainMenuPage::animateGames() {
         }
 
         gameEntities[i].setAnimation(
-                MultiSize(Size(newX, SIZE_HEIGHT), Size(newY, SIZE_HEIGHT), Size(newW, SIZE_HEIGHT),
-                          Size(newH, SIZE_HEIGHT)), isSpamming ? spamTransitionTime : normalTransitionTime);
+                MultiSize(Size(newX, WH), Size(newY, WH), Size(newW, WH),
+                          Size(newH, WH)), isSpamming ? spamTransitionTime : normalTransitionTime);
     }
 };
 
 void MainMenuPage::createGameEntity(int i) {
     const MultiSize normalGameDims(
-            Size(i * (gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, SIZE_HEIGHT),
-            Size(normalY, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT), Size(gameSizeNormal, SIZE_HEIGHT));
-    const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, SIZE_HEIGHT), Size(normalY, SIZE_HEIGHT),
-                                     Size(gameSizeSelected, SIZE_HEIGHT), Size(gameSizeSelected, SIZE_HEIGHT));
+            Size(i * (gameSizeNormal + (marginBetweenGames * 2) + selectedGameOffset) + gameOffset, WH),
+            Size(normalY, WH), Size(gameSizeNormal, WH), Size(gameSizeNormal, WH));
+    const MultiSize selectedGameDims(Size(gameOffset - selectedGameOffset, WH), Size(normalY, WH),
+                                     Size(gameSizeSelected, WH), Size(gameSizeSelected, WH));
 
     Entity anotherGame(i == 0 ? selectedGameDims : normalGameDims, gameBorder);
 
