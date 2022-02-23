@@ -3,6 +3,8 @@
 #include <iostream>
 
 #include "Rendering/RenderWindow/RenderWindow.hpp"
+#include "Rendering/Graphics/Graphics.hpp"
+
 #include "Utilities/Sound/Sound.h"
 
 #ifdef __APPLE__
@@ -13,8 +15,9 @@
 
 
 float calculateSize(Size value, Vector2f windowDimensions) {
-    return (value.val / 100) * (value.type == SIZE_HEIGHT ? windowDimensions.y : windowDimensions.x);
+    return (value.val / 100) * (value.type == WH ? windowDimensions.y : windowDimensions.x);
 }
+
 
 RenderWindow::RenderWindow(const char *p_title, int p_width, int p_height) : window(NULL), renderer(NULL),
                                                                              windowDims(Vector2f(p_width, p_height)) {
@@ -59,7 +62,7 @@ RenderWindow::RenderWindow(const char *p_title, int p_width, int p_height) : win
     // SDL_ShowCursor(false); // Hides the cursor;
 };
 
-void RenderWindow::cleanUp() {
+RenderWindow::~RenderWindow() {
     endAudio();
     SDL_DestroyWindow(window);
 }
@@ -77,6 +80,39 @@ SDL_Texture *RenderWindow::loadTexture(const char *p_filepath) {
 
 void RenderWindow::clear() {
     SDL_RenderClear(renderer);
+}
+
+void RenderWindow::render(Graphics::RoundedRectangle &p_roundedRect) {
+    int br = calculateSize(p_roundedRect.borderRadius, windowDims);
+
+    int roundedRectX = calculateSize(p_roundedRect.rect.x, windowDims);
+    int roundedRectY = calculateSize(p_roundedRect.rect.y, windowDims);
+    int roundedRectW = calculateSize(p_roundedRect.rect.w, windowDims);
+    int roundedRectH = calculateSize(p_roundedRect.rect.h, windowDims);
+    int topLeftCornerX = roundedRectX;
+    int topLeftCornerY = roundedRectY;
+    int topRightCornerX = roundedRectX + roundedRectW;
+    int topRightCornerY = roundedRectY;
+    int bottomLeftCornerX = roundedRectX;
+    int bottomLeftCornerY = roundedRectY + roundedRectH;
+    int bottomRightCornerX = roundedRectX + roundedRectW;
+    int bottomRightCornerY = roundedRectY + roundedRectH;
+
+    Graphics::setColor(renderer, 255, 255, 255, 255);
+
+    // Draw the 4 corners
+    Graphics::drawEllipse(renderer, topLeftCornerX + br, topLeftCornerY + br, br, br, Graphics::topLeft);
+    Graphics::drawEllipse(renderer, topRightCornerX - br, topRightCornerY + br, br, br, Graphics::topRight);
+    Graphics::drawEllipse(renderer, bottomLeftCornerX + br, bottomLeftCornerY - br, br, br, Graphics::bottomLeft);
+    Graphics::drawEllipse(renderer, bottomRightCornerX - br, bottomRightCornerY - br, br, br, Graphics::bottomRight);
+
+    // Draw the 4 lines
+    Graphics::drawLine(renderer, topLeftCornerX, topLeftCornerY + br, bottomLeftCornerX, bottomLeftCornerY - br);
+    Graphics::drawLine(renderer, topRightCornerX, topRightCornerY + br, bottomRightCornerX, bottomRightCornerY - br);
+    Graphics::drawLine(renderer, bottomLeftCornerX + br, bottomLeftCornerY, bottomRightCornerX - br,
+                       bottomRightCornerY);
+    Graphics::drawLine(renderer, topLeftCornerX + br, topLeftCornerY, topRightCornerX - br, topRightCornerY);
+
 }
 
 void RenderWindow::render(Entity &p_entity) {

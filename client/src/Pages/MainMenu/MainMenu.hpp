@@ -23,6 +23,8 @@ class MainMenuPage {
 public:
     MainMenuPage(RenderWindow *p_window, Server *p_api);
 
+    ~MainMenuPage();
+
     void render(double deltaTime);
 
     void executeKeyboardEvent(KeyboardController *keyboard_controller);
@@ -74,6 +76,7 @@ private:
     Audio *scrollSound = NULL, *enterSound = NULL;
     std::string clockFontFamilyName;
     float clockTextFontSize, clockTextFontScale, clockTextX, clockTextY;
+    Graphics::RoundedRectangle roundedRect;
 
     struct game {
         std::string name;
